@@ -25,16 +25,16 @@ git clone https://git.rnp.br/GT-AMPTo/MfaProvider.git
 
 ## Configuração do Tomcat/Apache para funcionamento do MfaP.
 
-Obs: o roteiro foi desenvolvido considerando o servidor de aplicação tomcat na versão 8.
+*Obs: o roteiro foi desenvolvido considerando o servidor de aplicação tomcat na versão 8.*
 
-- Crie um arquivo xml com o pathname desejado (caminho a ser acessado pelo usuário para acessar o MfaP).
+Crie um arquivo xml com o pathname desejado (caminho a ser acessado pelo usuário para acessar o MfaP).
 Por padrão, o MfaP é configurado em `https://endereco-idp/conta`. Caso desejar utilizar outro pathname, alterar `conta` para o nome desejado.
 
 ```bash
 sudo vi /etc/tomcat8/Catalina/localhost/conta.xml 
 ```
 
-- Insira o seguinte conteúdo dentro do arquivo: 
+Insira o seguinte conteúdo dentro do arquivo: 
 
 ```xml
 <Context docBase="/opt/mfaprovider/mfaprovider.war"
@@ -44,15 +44,13 @@ sudo vi /etc/tomcat8/Catalina/localhost/conta.xml
 </Context>
 ```
 
-
-- Edite o arquivo `/etc/tomcat8/server.xml` para configuração de porta e adicione:
+Edite o arquivo `/etc/tomcat8/server.xml` para configuração de porta e adicione:
 
 ```xml
 <Connector port="9443" address="127.0.0.1" protocol="AJP/1.3" />
 ```
 
-
-- Edite o arquivo `etc/apache2/sistes-enable/01-idp.conf` e adicione o seguinte conteúdo:
+Edite o arquivo `etc/apache2/sistes-enable/01-idp.conf` e adicione o seguinte conteúdo:
 
 ```xml
  ProxyPass /conta ajp://localhost:9443/conta retry=5
@@ -60,9 +58,9 @@ sudo vi /etc/tomcat8/Catalina/localhost/conta.xml
     Require all granted
   </Proxy>
 ```
-* Obs: Caso utilizar outro  pathname, alterar `/conta` para o nome desejado.
+*Obs: Caso utilizar outro  pathname, alterar `/conta` para o nome desejado.*
 
-- Reiniciar o serviço do Apache
+Reinicie o serviço do Apache:
 
 ```bash
 sudo systemctl restart apache2 
@@ -74,30 +72,26 @@ Baixe e instale o mongo de acordo com a versão do sistema operacional, conforme
 https://docs.mongodb.com/manual/tutorial/
 
 Após instalado, é necessário configurar a autenticação do banco.
-
-- Crie o diretório a ser utilizado para salvar os dados do MongoDB:
+Crie o diretório a ser utilizado para salvar os dados do MongoDB:
 
 ```bash
 sudo mkdir /data & mkdir /data/db
 ```
+*Obs: Caso deseje utilizar outro diretório, é necessário passar o parâmetro `--dbpath /diretoriodesejado` ao iniciar o serviço.*
 
-* Obs: Caso deseje utilizar outro diretório, é necessário passar o parâmetro `--dbpath /diretoriodesejado` ao iniciar o serviço.
-
-- Inicie o serviço do MongoDB.
+Inicie o serviço do MongoDB.
 
 ```bash
 sudo mongod &
 ```
-
 * Obs: Ao iniciar o serviço, por padrão o mongo tentará utilizar o caminho `/data/db` para armazenamento de dados, caso o diretório não existir, irá apresentar erro na inicialização do serviço. Para resolução, crie o diretório ou utilize o comando especificando outro diretório, ex: 
 
 ```bash 
 mongod --dbpath /data/mongodb
 ```
 
-- No diretório que foi realizado o download do projeto MfaProvider, edite o arquivo `scriptMongo.js` e altere os valores de `user` e `pwd` de acordo com o desejado e salve o arquivo.
-
-- Após, execute o script para criar o usuário:
+No diretório que foi realizado o download do projeto MfaProvider, edite o arquivo `scriptMongo.js` e defina os valores de `user` e `pwd` (usuário e senha) para segurança do banco e salve o arquivo.
+Após, execute o script para criar o usuário:
 
 ```bash 
 mongo < scritpMongo.js
@@ -108,7 +102,6 @@ mongo < scritpMongo.js
 ```bash
 sudo mongod --auth &`
 ```
-
 
 ## Configurações FCM para Diálogo de Confirmação 
 
@@ -125,7 +118,7 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
 Após criar conta FCM e registrar o app seguindo as instruções, Clique em Configurações do Projeto e na aba Cloud Messaging, anote os valores dos atributos: 
 `chave herdada do servidor` e `código do remetente`.
 
-- No diretório do projeto MfaProvider, altere no arquivo `src/main/resources/mfaprovider.properties` as propriedades:
+No diretório do projeto MfaProvider, altere no arquivo `src/main/resources/mfaprovider.properties` as propriedades:
 
 ```xml
 ##substitua por chave herdada do servidor FCM
@@ -158,8 +151,7 @@ restsecurity.password=xxx
 admin.user=xxx
 admin.password=xxx
 ```
-
-* Os valores definidos neste momento para credenciais rest serão utilizados posteriormente na configuração de autenticação do IdP.
+*Obs: Os valores definidos neste momento para credenciais rest serão utilizados posteriormente na configuração de autenticação do IdP.*
 
 ### SP Metadata
 
@@ -210,21 +202,19 @@ Siga os próximos passos para relizar a configuração no IdP.
    
 ## Download do projeto:
 
-- Faça o download dos fontes do projeto IdP-Customizado-GtAmpto, por exemplo, para o diretório home do usuário.
+Faça o download dos fontes do projeto IdP-Customizado-GtAmpto, por exemplo, para o diretório home do usuário.
 
 ```bash
 git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
 ```
+
 ## Alteração do fluxo principal para Multifator:
 
-- Edite o arquivo `$IDP_HOME/conf/idp.properties` e altere conforme explicação:
+Edite o arquivo `$IDP_HOME/conf/idp.properties` e altere conforme explicação:
 
-. Localize a linha com a entrada  `idp.authn.flows` e altere o controle de fluxo para utilizar MFA:
-
+1. Localize a linha com a entrada  `idp.authn.flows` e altere o controle de fluxo para utilizar MFA:
     `idp.authn.flows= MFA`;
-
-. Localize a linha com a entrada `idp.additionalProperties` e acrescente ao final da linha: `/conf/authn/mfaprovider.properties`. Deve ficar similar ao listado abaixo:
-
+2. Localize a linha com a entrada `idp.additionalProperties` e acrescente ao final da linha: `/conf/authn/mfaprovider.properties`. Deve ficar similar ao listado abaixo:
     `idp.additionalProperties= /conf/ldap.properties, /conf/saml-nameid.properties, /conf/services.properties, /conf/authn/duo.properties, /conf/authn/mfaprovider.properties `
 
 ## Configurações gerais, flows, views, properties, libs e arquivos necessários:
