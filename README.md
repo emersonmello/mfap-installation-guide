@@ -152,7 +152,7 @@ mfapbasepath=conta
 
 ## Configuração do MfaP como Service Provider:
 
-Edite o arquivo  `src/main/resources/sp.properties` e configure conforme explicação abaixo:
+- Edite o arquivo  `src/main/resources/sp.properties` e configure conforme explicação abaixo:
 
 ```xml
 ##Caminho completo do idp com o pathname
