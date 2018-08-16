@@ -17,7 +17,7 @@ Este roteiro está dividido em 3 partes:
 
 ## Baixar o projeto MfaProvider do git
 
-Faça o download do projeto MfaProvider para o diretório de sua preferência.
+- Faça o download do projeto MfaProvider para o diretório de sua preferência.
 
 ```bash
 git clone https://git.rnp.br/GT-AMPTo/MfaProvider.git
@@ -34,7 +34,7 @@ Por padrão, o MfaP é configurado em `https://endereco-idp/conta`. Caso desejar
 sudo vi /etc/tomcat8/Catalina/localhost/conta.xml 
 ```
 
-Insira o seguinte conteúdo dentro do arquivo: 
+- Insira o seguinte conteúdo dentro do arquivo: 
 
 ```xml
 <Context docBase="/opt/mfaprovider/mfaprovider.war"
@@ -44,13 +44,13 @@ Insira o seguinte conteúdo dentro do arquivo:
 </Context>
 ```
 
-Edite o arquivo `/etc/tomcat8/server.xml` para configuração de porta e adicione:
+- Edite o arquivo `/etc/tomcat8/server.xml` para configuração de porta e adicione:
 
 ```xml
 <Connector port="9443" address="127.0.0.1" protocol="AJP/1.3" />
 ```
 
-Edite o arquivo `etc/apache2/sistes-enable/01-idp.conf` e adicione o seguinte conteúdo:
+- Edite o arquivo `etc/apache2/sistes-enable/01-idp.conf` e adicione o seguinte conteúdo:
 
 ```xml
  ProxyPass /conta ajp://localhost:9443/conta retry=5
@@ -60,7 +60,7 @@ Edite o arquivo `etc/apache2/sistes-enable/01-idp.conf` e adicione o seguinte co
 ```
 *Obs: Caso utilizar outro  pathname, alterar `/conta` para o nome desejado.*
 
-Reinicie o serviço do Apache:
+- Reinicie o serviço do Apache:
 
 ```bash
 sudo systemctl restart apache2 
@@ -69,29 +69,36 @@ sudo systemctl restart apache2
 ## Instalação e configuração do banco de dados MongoDB
 
 Baixe e instale o mongo de acordo com a versão do sistema operacional, conforme orientação do manual oficial 
-https://docs.mongodb.com/manual/tutorial/
+https://docs.mongodb.com/manual/tutorial/.
 
-Após instalado, é necessário configurar a autenticação do banco.
-Crie o diretório a ser utilizado para salvar os dados do MongoDB:
+Após instação, é necessário configurar a autenticação do banco.
+
+- Crie o diretório a ser utilizado para salvar os dados do MongoDB:
 
 ```bash
 sudo mkdir /data & mkdir /data/db
 ```
 *Obs: Caso deseje utilizar outro diretório, é necessário passar o parâmetro `--dbpath /diretoriodesejado` ao iniciar o serviço.*
 
-Inicie o serviço do MongoDB.
+- Inicie o serviço do MongoDB.
 
 ```bash
 sudo mongod &
 ```
-* Obs: Ao iniciar o serviço, por padrão o mongo tentará utilizar o caminho `/data/db` para armazenamento de dados, caso o diretório não existir, irá apresentar erro na inicialização do serviço. Para resolução, crie o diretório ou utilize o comando especificando outro diretório, ex: 
+- No diretório que foi realizado o download do projeto MfaProvider, edite o arquivo `scriptMongo.js` e defina os valores de `user` e `pwd` (usuário e senha) para segurança do banco e salve o arquivo:
 
-```bash 
-mongod --dbpath /data/mongodb
+```js
+use mfaprovider
+db.createUser(
+   {
+     user:"VALORDEFINIDO",
+     pwd:"VALORDEFINIDO",
+     roles: ["readWrite","dbAdmin"]
+   }
+)
 ```
 
-No diretório que foi realizado o download do projeto MfaProvider, edite o arquivo `scriptMongo.js` e defina os valores de `user` e `pwd` (usuário e senha) para segurança do banco e salve o arquivo.
-Após, execute o script para criar o usuário:
+- Após, execute o script para criar o usuário:
 
 ```bash 
 mongo < scritpMongo.js
@@ -115,10 +122,10 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
 6. Nas etapas: *Fazer o download do arquivo de configuração* e *Adicionar o SDK do Firebase*, clique em `Próxima`.
 7. Em *Execute seu app para verificar a instalação*, o FCM irá tentar conectar no aplicativo, como ele ja foi configurado previamente, esta etapa pode ser ignora, clique em `Pular esta etapa`.
 
-Após criar conta FCM e registrar o app seguindo as instruções, Clique em Configurações do Projeto e na aba Cloud Messaging, anote os valores dos atributos: 
+- Após criar conta FCM e registrar o app seguindo as instruções, Clique em Configurações do Projeto e na aba Cloud Messaging, anote os valores dos atributos: 
 `chave herdada do servidor` e `código do remetente`.
 
-No diretório do projeto MfaProvider, altere no arquivo `src/main/resources/mfaprovider.properties` as propriedades:
+- No diretório do projeto MfaProvider, altere no arquivo `src/main/resources/mfaprovider.properties` as propriedades:
 
 ```xml
 ##substitua por chave herdada do servidor FCM
@@ -155,13 +162,13 @@ admin.password=xxx
 
 ### SP Metadata
 
-Para gerar metadados para o SP, no diretório do projeto MfaProvider execute o script para realizar o deploy da aplicação para configuraçaõ dos metadados:
+Para gerar metadados para o SP, no diretório do projeto MfaProvider execute o script para realizar o deploy da aplicação para configuraçaõ dos metadados.
 
 ```bash
 ./deploy.sh
 ```
 
-Após, siga os procedimentos abaixo:
+- Após, siga os procedimentos abaixo:
 
 1. Acesse o endereço `https://endereco-idp/pathname/saml/web/metadata`.
 2. Entre com o usuário e senha configurado para o administrador do IdP.
@@ -179,7 +186,7 @@ Por exemplo:
       metadataFile="/opt/shibboleth-idp/metadata/sp-metadata.xml"/>
 ```
 
-Após, entre no diretório `/opt/shibboleth-idp/bin` e realize p build do IdP para utilizar as novas configurações:
+- Entre no diretório `/opt/shibboleth-idp/bin` e realize p build do IdP para utilizar as novas configurações:
 ```bash
 ./build.sh
 ```
@@ -187,10 +194,11 @@ Após, entre no diretório `/opt/shibboleth-idp/bin` e realize p build do IdP pa
 ## Deploy
 
 Execute o script de deploy da aplicação novamente para utilização das novas configurações: 
+
 ```bash
 ./deploy.sh
 ```
-* Obs: Não é possível testar a aplicação antes de realizar as configurações no IdP.
+*Obs: Não é possível testar a aplicação antes de realizar as configurações no IdP.*
 Siga os próximos passos para relizar a configuração no IdP.
 
 # Roteiro de configuração para solução de multifator no Shibboleth IdP
