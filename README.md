@@ -2,9 +2,8 @@
 
 ## Pré-requisitos
 
- * Idp Shibboleth v3.3;
- * Java 8;
- * Servidor de aplicação Tomcat (versão 8 ou mais atual);
+ * Idp Shibboleth v3.3.
+ * Servidor de aplicação Tomcat (versão 8 ou mais atual).
 
 ## Organização do roteiro
 
