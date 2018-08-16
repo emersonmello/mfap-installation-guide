@@ -243,13 +243,13 @@ git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
 
 - A partir do diretório do projeto baixado no git, copie o arquivo `alteracoes/conf/authn/mfaprovider.properties` para `$IDP_HOME/conf/authn/` e altere as propriedades apresentadas abaixo: 
     
-    ```xml
-    ## Enredeço do MfaProvider 
-    idp.mfaprovider.apiHost  = https://exemploidp.br/conta/
-    ## Usuário e senha para autenticação REST configurado no sp.properties do projeto MfaProvider (<diretorio_git_MfaProvider>src/main/resources/sp.properties)
-    idp.mfaprovider.username  = usuario
-    idp.mfaprovider.password  = senha
-    ```
+```xml
+## Enredeço do MfaProvider 
+idp.mfaprovider.apiHost  = https://exemploidp.br/conta/
+## Usuário e senha para autenticação REST configurado no sp.properties do projeto MfaProvider (<diretorio_git_MfaProvider>src/main/resources/sp.properties)
+idp.mfaprovider.username  = usuario
+idp.mfaprovider.password  = senha
+```
 
 1. Edite o arquivo `$IDP_HOME/conf/relying-party.xml` e configure conforme instruções comentadas no arquivo `alteracoes/conf/relying-party.xml` do projeto.
 
