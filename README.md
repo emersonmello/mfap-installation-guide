@@ -2,8 +2,7 @@
 
 ## Pré-requisitos
 
- * Idp Shibboleth v3.3.
- * Servidor de aplicação Tomcat (versão 8 ou mais atual).
+ * IdP Shibboleth v3.3.
 
 ## Organização do roteiro
 
@@ -26,6 +25,7 @@ git clone https://git.rnp.br/GT-AMPTo/MfaProvider.git
 
 ## Configuração do Tomcat/Apache para funcionamento do MfaP.
 
+* Obs: o roteiro foi desenvolvido considerando o servidor de aplicação tomcat na versão 8.
 
 - Crie um arquivo xml com o pathname desejado (caminho a ser acessado pelo usuário para acessar o MfaP).
 Por padrão, o MfaP é configurado em `https://endereco-idp/conta`. Caso desejar utilizar outro pathname, alterar `conta` para o nome desejado.
@@ -255,7 +255,7 @@ git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
 9. Copie o conteúdo do diretório `alteracoes/webapp/images` para  `$IDP_HOME/webapp/images`;
 
 10. Copie o conteúdo do diretório `alteracoes/webapp/WEB-INF/lib` para `$IDP_HOME/webapp/WEB-INF/lib`.
-    * Observação: As dependências contidas neste ditetório foram geradas a partir do projeto: [https://git.rnp.br/GT-AMPTo/mfadialogo](https://git.rnp.br/GT-AMPTo/mfadialogo). 
+    * Observação: As dependências contidas neste ditetório foram geradas a partir do projeto: [MfaProviderIdp](https://git.rnp.br/GT-AMPTo/mfadialogo). 
     
 ## Build IdP
 
