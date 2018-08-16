@@ -1,16 +1,19 @@
 # Roteiro de instalação completo da solução multifator (IdP e MfaProvider).
 
-## Pré-requisitos:
+## Pré-requisitos
 
  * Idp Shibboleth v3.3;
  * Java 8;
  * Servidor de aplicação Tomcat (versão 8 ou mais atual);
 
+## Organização do roteiro
+
 Este roteiro está dividido em 3 partes:
 
 1. Roteiro de instalação da aplicação MfaProvider.
-2. Roteiro de configuração para utilização da solução de multi-fator em um IdP Shibboleth.
+2. Roteiro de configuração para solução de multifator no Shibboleth IdP.
 3. (Extras) Utilitários para Administrador.
+
 
 # Roteiro de instalação da aplicação MfaProvider
 
@@ -202,7 +205,7 @@ Execute o script de deploy da aplicação novamente para utilização das novas 
 Não é possível testar a aplicação antes de realizar as configurações no IdP.
 Siga os próximos passos para relizar a configuração no IdP.
 
-# Roteiro de configuração para utilização da solução de multifator no Shibboleth IdP
+# Roteiro de configuração para solução de multifator no Shibboleth IdP
 
 * Observações: 
 
