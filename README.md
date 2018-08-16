@@ -27,7 +27,7 @@ git clone https://git.rnp.br/GT-AMPTo/MfaProvider.git
 
 *Obs: o roteiro foi desenvolvido considerando o servidor de aplicação tomcat na versão 8.*
 
-Crie um arquivo xml com o pathname desejado (caminho a ser acessado pelo usuário para acessar o MfaP).
+- Crie um arquivo xml com o pathname desejado (caminho a ser acessado pelo usuário para acessar o MfaP).
 Por padrão, o MfaP é configurado em `https://endereco-idp/conta`. Caso desejar utilizar outro pathname, alterar `conta` para o nome desejado.
 
 ```bash
@@ -69,22 +69,22 @@ sudo systemctl restart apache2
 ## Instalação e configuração do banco de dados MongoDB
 
 Baixe e instale o mongo de acordo com a versão do sistema operacional, conforme orientação do manual oficial 
-https://docs.mongodb.com/manual/tutorial/.
-
-Após instação, é necessário configurar a autenticação do banco.
+[Manual de instalação do mongo](https://docs.mongodb.com/manual/tutorial/). Após instação, é necessário configurar a autenticação do banco.
 
 - Crie o diretório a ser utilizado para salvar os dados do MongoDB:
 
 ```bash
 sudo mkdir /data & mkdir /data/db
 ```
+
 *Obs: Caso deseje utilizar outro diretório, é necessário passar o parâmetro `--dbpath /diretoriodesejado` ao iniciar o serviço.*
 
 - Inicie o serviço do MongoDB.
 
 ```bash
-sudo mongod &
+sudo mongod --quiet &
 ```
+
 - No diretório que foi realizado o download do projeto MfaProvider, edite o arquivo `scriptMongo.js` e defina os valores de `user` e `pwd` (usuário e senha) para segurança do banco e salve o arquivo:
 
 ```js
@@ -104,10 +104,21 @@ db.createUser(
 mongo < scritpMongo.js
 ```
 
+- Altere no arquivo `src/main/resources/mongo.properties` as propriedades `mongo.user` e `mongo.pass` com usuário e senha definidos para o banco anteriormente:
+
+```xml
+mongo.host=localhost:27017
+mongo.port=27017
+mongo.db=mfaprovider
+mongo.user=VALORDEFINIDO
+mongo.pass=VALORDEFINIDO
+
+```
+
 - Inicie o Mongo com a opção --auth
 
 ```bash
-sudo mongod --auth &`
+sudo mongod --quiet --auth &`
 ```
 
 ## Configurações FCM para Diálogo de Confirmação 
@@ -158,17 +169,18 @@ restsecurity.password=xxx
 admin.user=xxx
 admin.password=xxx
 ```
+
 *Obs: Os valores definidos neste momento para credenciais rest serão utilizados posteriormente na configuração de autenticação do IdP.*
 
 ### SP Metadata
 
-Para gerar metadados para o SP, no diretório do projeto MfaProvider execute o script para realizar o deploy da aplicação para configuraçaõ dos metadados.
+- No diretório do projeto MfaProvider execute o script para realizar o deploy da aplicação para configuraçaõ dos metadados.
 
 ```bash
 ./deploy.sh
 ```
 
-- Após, siga os procedimentos abaixo:
+- Após, siga os procedimentos abaixo para gerar os metadados do MfaProvider:
 
 1. Acesse o endereço `https://endereco-idp/pathname/saml/web/metadata`.
 2. Entre com o usuário e senha configurado para o administrador do IdP.
@@ -178,7 +190,7 @@ Para gerar metadados para o SP, no diretório do projeto MfaProvider execute o s
 
 ### Configurar SP Metadata no IdP
 
-Os metadados do SP recém-gerados precisam ser carregados pelo IdP, copie o arquivo `sp-metadata.xml` para o diretório "metadata" no IdP (`/opt/shibboleth-idp/metadata`) e referencie, também no IdP, o path no arquivo `/conf/metadata-providers.xml`. 
+- Os metadados do MfaProvider recém-gerados precisam ser carregados pelo IdP, copie o arquivo `sp-metadata.xml` para o diretório "metadata" no IdP (`/opt/shibboleth-idp/metadata`) e referencie, também no IdP, o path no arquivo `/conf/metadata-providers.xml`. 
 Por exemplo:
 
 ```xml
@@ -187,18 +199,20 @@ Por exemplo:
 ```
 
 - Entre no diretório `/opt/shibboleth-idp/bin` e realize p build do IdP para utilizar as novas configurações:
+
 ```bash
 ./build.sh
 ```
 
 ## Deploy
 
-Execute o script de deploy da aplicação novamente para utilização das novas configurações: 
+- Execute o script de deploy da aplicação novamente para utilização das novas configurações: 
 
 ```bash
 ./deploy.sh
 ```
 *Obs: Não é possível testar a aplicação antes de realizar as configurações no IdP.*
+
 Siga os próximos passos para relizar a configuração no IdP.
 
 # Roteiro de configuração para solução de multifator no Shibboleth IdP
@@ -210,7 +224,7 @@ Siga os próximos passos para relizar a configuração no IdP.
    
 ## Download do projeto:
 
-Faça o download dos fontes do projeto IdP-Customizado-GtAmpto, por exemplo, para o diretório home do usuário.
+- Faça o download dos fontes do projeto IdP-Customizado-GtAmpto, por exemplo, para o diretório home do usuário.
 
 ```bash
 git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
@@ -218,7 +232,7 @@ git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
 
 ## Alteração do fluxo principal para Multifator:
 
-Edite o arquivo `$IDP_HOME/conf/idp.properties` e altere conforme explicação:
+- Edite o arquivo `$IDP_HOME/conf/idp.properties` e altere conforme explicação:
 
 1. Localize a linha com a entrada  `idp.authn.flows` e altere o controle de fluxo para utilizar MFA:
     `idp.authn.flows= MFA`;
@@ -273,7 +287,7 @@ Edite o arquivo `$IDP_HOME/conf/idp.properties` e altere conforme explicação:
 
 #### Remover segundo fator de determinado usuário:
 
-Na pasta do projeto do MfaProvider,  utilize o script abaixo e informe o login do usuário para remover as configurações de segundo fator
+- Na pasta do projeto do MfaProvider,  utilize o script abaixo e informe o login do usuário para remover as configurações de segundo fator
 
 ```bash
 ./removeSecondFactor.sh
@@ -281,4 +295,4 @@ Na pasta do projeto do MfaProvider,  utilize o script abaixo e informe o login d
 
 #### Habilitar e desabilitar métodos de segundo fator:
 
-Na pasta do projeto do MfaProvider, edite o arquivo  `src/main/resource/factor.properties` e utilize `true` para habilitar ou `false` para desabilitar o fator desejado.
+- Na pasta do projeto do MfaProvider, edite o arquivo  `src/main/resource/factor.properties` e utilize `true` para habilitar ou `false` para desabilitar o fator desejado.
