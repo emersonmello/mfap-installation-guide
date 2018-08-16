@@ -25,7 +25,7 @@ git clone https://git.rnp.br/GT-AMPTo/MfaProvider.git
 
 ## Configuração do Tomcat/Apache para funcionamento do MfaP.
 
-* Obs: o roteiro foi desenvolvido considerando o servidor de aplicação tomcat na versão 8.
+Obs: o roteiro foi desenvolvido considerando o servidor de aplicação tomcat na versão 8.
 
 - Crie um arquivo xml com o pathname desejado (caminho a ser acessado pelo usuário para acessar o MfaP).
 Por padrão, o MfaP é configurado em `https://endereco-idp/conta`. Caso desejar utilizar outro pathname, alterar `conta` para o nome desejado.
