@@ -114,13 +114,13 @@ sudo mongod --auth &`
 
 Para funcionamento da opção multi-fator de diálogo de confirmação, é necessário possuir uma conta Google com o projeto FCM configurado. Siga os passos a seguir:
 
-- Acesse a pagina de console do FCM e faça login com a conta google: https://console.firebase.google.com/
-- Clique em `Adicionar Projeto`.
-- Digite um nome para o projeto, e clique em `Criar projeto`.
-- Clique em adicionar o Firebase ao app para Android.
-- Informe no campo *Nome do pacote Android*: `br.gtampto.app2ampto` e clique em `Registrar APP`.
-- Nas etapas: *Fazer o download do arquivo de configuração* e *Adicionar o SDK do Firebase*, clique em `Próxima`.
-- Em *Execute seu app para verificar a instalação*, o FCM irá tentar conectar no aplicativo, como ele ja foi configurado previamente, esta etapa pode ser ignora, clique em `Pular esta etapa`.
+1. Acesse a pagina de console do FCM e faça login com a conta google: https://console.firebase.google.com/
+2. Clique em `Adicionar Projeto`.
+3. Digite um nome para o projeto, e clique em `Criar projeto`.
+4. Clique em adicionar o Firebase ao app para Android.
+5. Informe no campo *Nome do pacote Android*: `br.gtampto.app2ampto` e clique em `Registrar APP`.
+6. Nas etapas: *Fazer o download do arquivo de configuração* e *Adicionar o SDK do Firebase*, clique em `Próxima`.
+7. Em *Execute seu app para verificar a instalação*, o FCM irá tentar conectar no aplicativo, como ele ja foi configurado previamente, esta etapa pode ser ignora, clique em `Pular esta etapa`.
 
 Após criar conta FCM e registrar o app seguindo as instruções, Clique em Configurações do Projeto e na aba Cloud Messaging, anote os valores dos atributos: 
 `chave herdada do servidor` e `código do remetente`.
@@ -171,11 +171,11 @@ Para gerar metadados para o SP, no diretório do projeto MfaProvider execute o s
 
 Após, siga os procedimentos abaixo:
 
-- Acesse o endereço `https://endereco-idp/pathname/saml/web/metadata`.
-- Entre com o usuário e senha configurado para o administrador do IdP.
-- Clique em `Gerar novo arquivo de metadados`
-- Deixe os dados setados automaticamente e clique em `gerar metadados`
-- Baixe o arquivo gerado ou copie o coteúdo, e sobrescreva o arquivo `src/main/resources/metadata/sp-metadata.xml`.
+1. Acesse o endereço `https://endereco-idp/pathname/saml/web/metadata`.
+2. Entre com o usuário e senha configurado para o administrador do IdP.
+3. Clique em `Gerar novo arquivo de metadados`
+4. Deixe os dados setados automaticamente e clique em `gerar metadados`
+5. Baixe o arquivo gerado ou copie o coteúdo, e sobrescreva o arquivo `src/main/resources/metadata/sp-metadata.xml`.
 
 ### Configurar SP Metadata no IdP
 
