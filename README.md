@@ -208,25 +208,28 @@ Siga os próximos passos para relizar a configuração no IdP.
   * Todos os arquivos indicados no tutorial, para copiar/usar como base na configuração do IdP, estão no diretório "alteracoes" do projeto baixado do git.
   * $IDP_HOME = Local onde está configurado o IdP, por padrão: "/opt/shibboleth-idp";
    
-## Procedimentos para configuração:
+## Download do projeto:
 
-1. Faça o download dos fontes do projeto IdP-Customizado-GtAmpto, disponível em https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto, por exemplo, para o diretório home do usuário.
+- Faça o download dos fontes do projeto IdP-Customizado-GtAmpto, por exemplo, para o diretório home do usuário.
 
 ```bash
 git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
 ```
+## Alteração do fluxo principal para Multifator:
 
-2. Alterações no arquivo `$IDP_HOME/conf/idp.properties`
+- Edite o arquivo `$IDP_HOME/conf/idp.properties` e altere conforme explicação:
 
-- Localize a linha com a entrada  `idp.authn.flows` e altere o controle de fluxo para utilizar MFA, igual ao exemplo abaixo:
+. Localize a linha com a entrada  `idp.authn.flows` e altere o controle de fluxo para utilizar MFA:
 
     `idp.authn.flows= MFA`;
 
-- Localize a linha com a entrada `idp.additionalProperties` e acrescente ao final da linha: `/conf/authn/mfaprovider.properties`. Deve ficar similar ao listado abaixo:
+. Localize a linha com a entrada `idp.additionalProperties` e acrescente ao final da linha: `/conf/authn/mfaprovider.properties`. Deve ficar similar ao listado abaixo:
 
     `idp.additionalProperties= /conf/ldap.properties, /conf/saml-nameid.properties, /conf/services.properties, /conf/authn/duo.properties, /conf/authn/mfaprovider.properties `
 
-3. A partir do diretório do projeto baixado no git, copie o arquivo `alteracoes/conf/authn/mfaprovider.properties` para `$IDP_HOME/conf/authn/` e altere as propriedades apresentadas abaixo: 
+## Configurações gerais, flows, views, properties, libs e arquivos necessários:
+
+1. A partir do diretório do projeto baixado no git, copie o arquivo `alteracoes/conf/authn/mfaprovider.properties` para `$IDP_HOME/conf/authn/` e altere as propriedades apresentadas abaixo: 
     ```xml
     ## Enredeço do MfaProvider 
     idp.mfaprovider.apiHost  = https://exemploidp.br/conta/
@@ -235,26 +238,28 @@ git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
     idp.mfaprovider.password  = senha
     ```
 
-4. Edite o arquivo `$IDP_HOME/conf/relying-party.xml` e configure conforme instruções comentadas no arquivo `alteracoes/conf/relying-party.xml` do projeto.
+2. Edite o arquivo `$IDP_HOME/conf/relying-party.xml` e configure conforme instruções comentadas no arquivo `alteracoes/conf/relying-party.xml` do projeto.
 
-5. Configure as permissões para atributos do MfaProvider no `$IDP_HOME/conf/attribute-filter.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/attribute-filter.xml` do projeto.
+3. Configure as permissões para atributos do MfaProvider no `$IDP_HOME/conf/attribute-filter.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/attribute-filter.xml` do projeto.
 
-6. Edite o arquivo `$IDP_HOME/conf/authn/general-authn.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/authn/general-authn.xml` do projeto.
+4. Edite o arquivo `$IDP_HOME/conf/authn/general-authn.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/authn/general-authn.xml` do projeto.
 
-7. Edite o arquivo `$IDP_HOME/messages/messages.properties` e configure conforme instruções comentadas no arquivo `alteracoes/messages/messages.properties` do projeto.
+5. Edite o arquivo `$IDP_HOME/messages/messages.properties` e configure conforme instruções comentadas no arquivo `alteracoes/messages/messages.properties` do projeto.
 
-8. Copie o arquivo `alteracoes/conf/authn/mfa-authn-config.xml` para `$IDP_HOME/conf/authn/` sobrescrevendo o existente;
+6. Copie o arquivo `alteracoes/conf/authn/mfa-authn-config.xml` para `$IDP_HOME/conf/authn/` sobrescrevendo o existente;
 
-9. Copie o conteúdo do diretório `alteracoes/flows/authn` para  `$IDP_HOME/flows/authn`;
+7. Copie o conteúdo do diretório `alteracoes/flows/authn` para  `$IDP_HOME/flows/authn`;
 
-10. Copie o conteúdo do diretório `alteracoes/views` para  `$IDP_HOME/views`;
+8. Copie o conteúdo do diretório `alteracoes/views` para  `$IDP_HOME/views`;
 
-11. Copie o conteúdo do diretório `alteracoes/webapp/images` para  `$IDP_HOME/webapp/images`;
+9. Copie o conteúdo do diretório `alteracoes/webapp/images` para  `$IDP_HOME/webapp/images`;
 
-12. Copie o conteúdo do diretório `alteracoes/webapp/WEB-INF/lib` para `$IDP_HOME/webapp/WEB-INF/lib`.
+10. Copie o conteúdo do diretório `alteracoes/webapp/WEB-INF/lib` para `$IDP_HOME/webapp/WEB-INF/lib`.
     * Observação: As dependências contidas neste ditetório foram geradas a partir do projeto: [https://git.rnp.br/GT-AMPTo/mfadialogo](https://git.rnp.br/GT-AMPTo/mfadialogo). 
     
-13. Ao final, execute o build do IdP em `$IDP_HOME/bin/build.sh`:
+## Build IdP
+
+- Execute o build do IdP em `$IDP_HOME/bin/build.sh`:
 
     ```bash
     ./build.sh
