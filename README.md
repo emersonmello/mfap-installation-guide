@@ -212,13 +212,17 @@ Siga os próximos passos para relizar a configuração no IdP.
 
 1. Faça o download dos fontes do projeto IdP-Customizado-GtAmpto, disponível em https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto, por exemplo, para o diretório home do usuário.
 
-2. Alterações no arquivo `$IDP_HOME/conf/idp.properties` 
+```bash
+git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
+```
 
-    - Localize a linha com a entrada  `idp.authn.flows` e altere o controle de fluxo para utilizar MFA, igual ao exemplo abaixo:
+2. Alterações no arquivo `$IDP_HOME/conf/idp.properties`
+
+- Localize a linha com a entrada  `idp.authn.flows` e altere o controle de fluxo para utilizar MFA, igual ao exemplo abaixo:
 
     `idp.authn.flows= MFA`;
 
-    - Localize a linha com a entrada `idp.additionalProperties` e acrescente ao final da linha: `/conf/authn/mfaprovider.properties`. Deve ficar similar ao listado abaixo:
+- Localize a linha com a entrada `idp.additionalProperties` e acrescente ao final da linha: `/conf/authn/mfaprovider.properties`. Deve ficar similar ao listado abaixo:
 
     `idp.additionalProperties= /conf/ldap.properties, /conf/saml-nameid.properties, /conf/services.properties, /conf/authn/duo.properties, /conf/authn/mfaprovider.properties `
 
@@ -235,13 +239,13 @@ Siga os próximos passos para relizar a configuração no IdP.
 
 5. Configure as permissões para atributos do MfaProvider no `$IDP_HOME/conf/attribute-filter.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/attribute-filter.xml` do projeto.
 
-6. Copie o arquivo `alteracoes/conf/authn/mfa-authn-config.xml` para `$IDP_HOME/conf/authn/` sobrescrevendo o existente;
+6. Edite o arquivo `$IDP_HOME/conf/authn/general-authn.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/authn/general-authn.xml` do projeto.
 
-7. Edite o arquivo `$IDP_HOME/conf/authn/general-authn.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/authn/general-authn.xml` do projeto.
+7. Edite o arquivo `$IDP_HOME/messages/messages.properties` e configure conforme instruções comentadas no arquivo `alteracoes/messages/messages.properties` do projeto.
 
-8. Copie o conteúdo do diretório `alteracoes/flows/authn` para  `$IDP_HOME/flows/authn`;
+8. Copie o arquivo `alteracoes/conf/authn/mfa-authn-config.xml` para `$IDP_HOME/conf/authn/` sobrescrevendo o existente;
 
-9. Edite o arquivo `$IDP_HOME/messages/messages.properties` e configure conforme instruções comentadas no arquivo `alteracoes/messages/messages.properties` do projeto.
+9. Copie o conteúdo do diretório `alteracoes/flows/authn` para  `$IDP_HOME/flows/authn`;
 
 10. Copie o conteúdo do diretório `alteracoes/views` para  `$IDP_HOME/views`;
 
