@@ -1,5 +1,11 @@
 # Roteiro de instalação completo da solução multifator (IdP e MfaProvider).
 
+## Pré-requisitos:
+
+ * Idp Shibboleth v3.3;
+ * Java 8;
+ * Servidor de aplicação Tomcat (versão 8 ou mais atual);
+
 Este roteiro está dividido em 3 partes:
 
 1. Roteiro de instalação da aplicação MfaProvider.
@@ -196,20 +202,14 @@ Execute o script de deploy da aplicação novamente para utilização das novas 
 Não é possível testar a aplicação antes de realizar as configurações no IdP.
 Siga os próximos passos para relizar a configuração no IdP.
 
-# Roteiro de configuração para utilização da solução de multi-fator em um IdP Shibboleth
-
-## Pré-requisitos:
-
- * Idp Shibboleth v3.3 em funcionamento;
- * Servidor de aplicação Tomcat (versão 8 ou mais atual);
- * Aplicação MfaProvider configurada.
-   
-## Procedimento para configuração de um IdP v3.3 existente:
+# Roteiro de configuração para utilização da solução de multifator no Shibboleth IdP
 
 * Observações: 
 
   * Todos os arquivos indicados no tutorial, para copiar/usar como base na configuração do IdP, estão no diretório "alteracoes" do projeto baixado do git.
   * $IDP_HOME = Local onde está configurado o IdP, por padrão: "/opt/shibboleth-idp";
+   
+## Procedimentos para configuração:
 
 1. fazer o download dos fontes do projeto IdPCustomizado, disponível em https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto, por exemplo, para o diretório home do usuário.
 
