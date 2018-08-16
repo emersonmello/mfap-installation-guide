@@ -151,12 +151,12 @@ host.name=https://endereco-idp/pathname
 idp.metadata=/opt/shibboleth-idp/metadata/idp-metadata.xml
 
 ##Defina um usuario e senha para proteção dos recursos rest
-restsecurity.user=xxxxxxx
-restsecurity.password=xxxxxxxx
+restsecurity.user=xxx
+restsecurity.password=xxx
 
 ##Defina um usuario e senha para administrador do IdP
 admin.user=xxx
-admin.password=admin
+admin.password=xxx
 ```
 
 * Os valores definidos neste momento para credenciais rest serão utilizados posteriormente na configuração de autenticação do IdP.
@@ -198,10 +198,7 @@ Execute o script de deploy da aplicação novamente para utilização das novas 
 ```bash
 ./deploy.sh
 ```
-
-## Configurações do Shibboleth IdP para MultiFator
-
-Não é possível testar a aplicação antes de realizar as configurações no IdP.
+* Obs: Não é possível testar a aplicação antes de realizar as configurações no IdP.
 Siga os próximos passos para relizar a configuração no IdP.
 
 # Roteiro de configuração para solução de multifator no Shibboleth IdP
@@ -213,54 +210,54 @@ Siga os próximos passos para relizar a configuração no IdP.
    
 ## Procedimentos para configuração:
 
-1. fazer o download dos fontes do projeto IdPCustomizado, disponível em https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto, por exemplo, para o diretório home do usuário.
+1. Faça o download dos fontes do projeto IdP-Customizado-GtAmpto, disponível em https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto, por exemplo, para o diretório home do usuário.
 
 2. Alterações no arquivo `$IDP_HOME/conf/idp.properties` 
 
-    2.1 Localizar a linha com a entrada  `idp.authn.flows` e alterar o controle de fluxo para utilizar o controle de fluxo pelo mfa-auth-config:
+    - Localize a linha com a entrada  `idp.authn.flows` e altere o controle de fluxo para utilizar MFA, igual ao exemplo abaixo:
 
     `idp.authn.flows= MFA`;
 
-    2.2 Localizar a linha com a entrada`idp.additionalProperties` e acrescentar ao final da linha /conf/authn/mfaprovider.properties. Deve ficar sim similar ao listado abaixo:
+    - Localize a linha com a entrada `idp.additionalProperties` e acrescente ao final da linha: `/conf/authn/mfaprovider.properties`. Deve ficar similar ao listado abaixo:
 
     `idp.additionalProperties= /conf/ldap.properties, /conf/saml-nameid.properties, /conf/services.properties, /conf/authn/duo.properties, /conf/authn/mfaprovider.properties `
 
-3. A partir do projeto baixado do git, copie o arquivo `alteracoes/conf/authn/mfaprovider.properties` para `$IDP_HOME/conf/authn/` e altere as propriedades apresentadas abaixo: 
+3. A partir do diretório do projeto baixado no git, copie o arquivo `alteracoes/conf/authn/mfaprovider.properties` para `$IDP_HOME/conf/authn/` e altere as propriedades apresentadas abaixo: 
     ```xml
-    ## Enredeço do MfaProvider Ex: idp.mfaprovider.apiHost  = https://exemploidp.br/conta/
-    idp.mfaprovider.apiHost  = https://idp2ampto.cafeexpresso.rnp.br/conta/
-    ## Usuário e senha para autenticação REST configurado no properties no projeto do MfaProvider (<diretorio_git_MfaProvider>src/main/resources/sp.properties)
+    ## Enredeço do MfaProvider 
+    idp.mfaprovider.apiHost  = https://exemploidp.br/conta/
+    ## Usuário e senha para autenticação REST configurado no sp.properties do projeto MfaProvider (<diretorio_git_MfaProvider>src/main/resources/sp.properties)
     idp.mfaprovider.username  = usuario
     idp.mfaprovider.password  = senha
     ```
 
 4. Edite o arquivo `$IDP_HOME/conf/relying-party.xml` e configure conforme instruções comentadas no arquivo `alteracoes/conf/relying-party.xml` do projeto.
 
-5. Configure as permissões para atributos do MfaProvider no `$IDP_HOME/conf/attribute-filter.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/attribute-filter.xml` do projeto  (diretório alteracoes, disponivel no projeto do IdP Customizado baixado do do git).
+5. Configure as permissões para atributos do MfaProvider no `$IDP_HOME/conf/attribute-filter.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/attribute-filter.xml` do projeto.
 
-6. Copie `alteracoes/conf/authn/mfa-authn-config.xml` para `$IDP_HOME/conf/authn/` sobrescrevendo o arquivo existente;
+6. Copie o arquivo `alteracoes/conf/authn/mfa-authn-config.xml` para `$IDP_HOME/conf/authn/` sobrescrevendo o existente;
 
-7. Edite o arquivo `$IDP_HOME/conf/authn/general-authn.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/authn/general-authn.xml` do proejto.
+7. Edite o arquivo `$IDP_HOME/conf/authn/general-authn.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/authn/general-authn.xml` do projeto.
 
 8. Copie o conteúdo do diretório `alteracoes/flows/authn` para  `$IDP_HOME/flows/authn`;
 
 9. Edite o arquivo `$IDP_HOME/messages/messages.properties` e configure conforme instruções comentadas no arquivo `alteracoes/messages/messages.properties` do projeto.
 
-10. Copiar o diretório `alteracoes/views` para  `$IDP_HOME/views`;
+10. Copie o conteúdo do diretório `alteracoes/views` para  `$IDP_HOME/views`;
 
-11. Copiar conteúdo do diretório `alteracoes/webapp/images` para  `$IDP_HOME/webapp/images`;
+11. Copie o conteúdo do diretório `alteracoes/webapp/images` para  `$IDP_HOME/webapp/images`;
 
-12. Copiar conteúdo do diretório `alteracoes/webapp/WEB-INF/lib` para  `$IDP_HOME/webapp/WEB-INF/lib`.
+12. Copie o conteúdo do diretório `alteracoes/webapp/WEB-INF/lib` para `$IDP_HOME/webapp/WEB-INF/lib`.
     * Observação: As dependências contidas neste ditetório foram geradas a partir do projeto: [https://git.rnp.br/GT-AMPTo/mfadialogo](https://git.rnp.br/GT-AMPTo/mfadialogo). 
-    Em caso de não funcionamento, copiar o conteúdo do diretório dependency-jar diretamente para o diretório $IDP_HOME/webapp/WEB-INF/lib (raiz) no IdP, comportamento este atrelado a configuração de cada IdP. 
-
-13. Ao final, executar rebuild no war do IdP em `$IDP_HOME/bin/build.sh`:
+    
+13. Ao final, execute o build do IdP em `$IDP_HOME/bin/build.sh`:
 
     ```bash
     ./build.sh
     ```
 
-14. Teste
+## Teste
+
 - A aplicação será disponibilizada no endereço configurado, ex: `https://endereco-idp/conta`.
 - Faça a autentiicação no IdP e verifique o auxílio da página para cadastrar e utilizar o segundo fator.
 
