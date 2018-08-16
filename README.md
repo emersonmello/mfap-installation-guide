@@ -1,3 +1,11 @@
+# Roteiro de instalação completo da solução multifator (IdP e MfaProvider).
+
+Este roteiro está dividido em 3 partes:
+
+1. Roteiro de instalação da aplicação MfaProvider.
+2. Roteiro de configuração para utilização da solução de multi-fator em um IdP Shibboleth.
+3. (Extras) Utilitários para Administrador.
+
 # Roteiro de instalação da aplicação MfaProvider
 
 ## Baixar o projeto MfaProvider do git
