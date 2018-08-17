@@ -17,7 +17,7 @@ Este roteiro está dividido em 3 partes:
 
 ## Baixar o projeto MfaProvider do git
 
-- Faça o download do projeto MfaProvider para o diretório de sua preferência.
+- Faça o download do projeto MfaProvider para o diretório de sua preferência. Pode ser utilizado o diretório home do usuário por exemplo.
 
 ```bash
 git clone https://git.rnp.br/GT-AMPTo/MfaProvider.git
