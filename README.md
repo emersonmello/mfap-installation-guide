@@ -69,13 +69,15 @@ sudo systemctl restart apache2
 
 ## Instalação e configuração do banco de dados MongoDB
 
-Baixe e instale o mongo pelo gerenciador de pacotes de sua distribuição:
+Baixe e instale o MongoDB pelo gerenciador de pacotes:
 
 ```bash
 sudo apt-get install mongodb
 ```
 
-- Ao termino da instalação, o mongodb será instânciado automaticamente. No diretório que foi realizado o download do projeto MfaProvider, edite o arquivo `scriptMongo.js` e defina os valores de `user` e `pwd` (usuário e senha) para segurança do banco e salve o arquivo:
+- Ao termino da instalação, o serviço do MongoDB será instânciado automaticamente, o qual pode ser conferido pelo comando `ps -aux | grep mongo` (caso não estiver iniciado, utilize o comando `sudo systemctl start mongodb`). 
+
+- No diretório que foi realizado o download do projeto MfaProvider, edite o arquivo `scriptMongo.js` e defina os valores de `user` e `pwd` (usuário e senha) para segurança do banco e salve o arquivo:
 
 ```js
 use mfaprovider
@@ -103,7 +105,7 @@ mongo.user=VALORDEFINIDO
 mongo.pass=VALORDEFINIDO
 ```
 
-- Edite o arquivo de configuração do mongodb ```bash sudo vi /etc/mongodb.conf``` e habilite a autenticação descomentando o atributo `auth = true`. Ficará similar ao exemplo abaixo:
+- Edite o arquivo de configuração do mongodb `sudo vi /etc/mongodb.conf` e habilite a autenticação descomentando o atributo `auth = true`. Ficará similar ao exemplo abaixo:
 
 ```xml
 # Turn on/off security.  Off is currently the default
@@ -111,7 +113,7 @@ mongo.pass=VALORDEFINIDO
 auth = true
 ```
 
-- Reinicie o Mongodb
+- Reinicie o MongoDB
 
 ```bash
 sudo systemctl restart mongodb
@@ -215,7 +217,7 @@ Siga os próximos passos para relizar a configuração no IdP.
 * Observações: 
 
   * Todos os arquivos indicados no tutorial, para copiar/usar como base na configuração do IdP, estão no diretório "alteracoes" do projeto baixado do git.
-  * $IDP_HOME = Local onde está configurado o IdP, por padrão: "/opt/shibboleth-idp";
+  * $IDP_HOME = Local onde está configurado o IdP, por padrão: `/opt/shibboleth-idp`;
    
 ## Download do projeto:
 
