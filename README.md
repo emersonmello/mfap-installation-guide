@@ -53,7 +53,7 @@ sudo vi /etc/tomcat8/Catalina/localhost/conta.xml
 <Connector port="9443" address="127.0.0.1" protocol="AJP/1.3" />
 ```
 
-- Edite o arquivo `etc/apache2/sistes-enable/01-idp.conf` e adicione o seguinte conteúdo:
+- Edite o arquivo `etc/apache2/sites-enable/01-idp.conf` e adicione o seguinte conteúdo:
 *Obs: Caso utilizar outro  pathname, alterar `/conta` para o nome desejado.*
 
 ```xml
@@ -96,7 +96,7 @@ db.createUser(
 - Ainda no diretório do projeto MfaProvider, execute o script para criar o usuário:
 
 ```bash 
-mongo < scritpMongo.js
+mongo < scriptMongo.js
 ```
 
 - No mesmo diretório, altere no arquivo `src/main/resources/mongo.properties` as propriedades `mongo.user` e `mongo.pass` com usuário e senha definidos anteriormente para o banco:
@@ -172,6 +172,7 @@ admin.password=xxx
 ```
 
 *Obs: Os valores definidos neste momento para credenciais rest serão utilizados posteriormente na configuração de autenticação do IdP.*
+*Obs2: Não utilizar o mesmo usuário e senha para admin e restsecurity*
 
 ### SP Metadata
 
@@ -191,7 +192,7 @@ admin.password=xxx
 
 ### Configurar SP Metadata no IdP
 
-- Os metadados do MfaProvider recém-gerados precisam ser carregados pelo IdP, copie o arquivo `sp-metadata.xml` para o diretório "metadata" no IdP (`/opt/shibboleth-idp/metadata`) e referencie, também no IdP, o path no arquivo `/conf/metadata-providers.xml`. 
+- Os metadados do MfaProvider recém-gerados precisam ser carregados pelo IdP, copie o arquivo `sp-metadata.xml` para o diretório "metadata" no IdP (`/opt/shibboleth-idp/metadata`) e referencie, também no IdP, o path no arquivo `/opt/shibboleth-idp/conf/metadata-providers.xml`. 
 Por exemplo:
 
 ```xml
