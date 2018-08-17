@@ -44,6 +44,9 @@ sudo vi /etc/tomcat8/Catalina/localhost/conta.xml
 </Context>
 ```
 
+*Obs: o caminho /opt/mfaprovider/mfaprovider.war está definido no script de deploy da aplicação, não necessita alteração*
+
+
 - Edite o arquivo `/etc/tomcat8/server.xml` para configuração de porta e adicione:
 
 ```xml
