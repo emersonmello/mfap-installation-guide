@@ -171,8 +171,7 @@ admin.user=xxx
 admin.password=xxx
 ```
 
-*Obs: Os valores definidos neste momento para credenciais rest serão utilizados posteriormente na configuração de autenticação do IdP.*
-*Obs2: Não utilizar o mesmo usuário e senha para admin e restsecurity*
+*Obs: Os valores definidos neste momento para credenciais rest serão utilizados posteriormente na configuração de autenticação do IdP. Não utilizar o mesmo usuário e senha para admin e restsecurity*
 
 ### SP Metadata
 
