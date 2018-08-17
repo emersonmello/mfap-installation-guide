@@ -51,6 +51,7 @@ sudo vi /etc/tomcat8/Catalina/localhost/conta.xml
 ```
 
 - Edite o arquivo `etc/apache2/sistes-enable/01-idp.conf` e adicione o seguinte conteúdo:
+*Obs: Caso utilizar outro  pathname, alterar `/conta` para o nome desejado.*
 
 ```xml
  ProxyPass /conta ajp://localhost:9443/conta retry=5
@@ -58,7 +59,7 @@ sudo vi /etc/tomcat8/Catalina/localhost/conta.xml
     Require all granted
   </Proxy>
 ```
-*Obs: Caso utilizar outro  pathname, alterar `/conta` para o nome desejado.*
+
 
 - Reinicie o serviço do Apache:
 
@@ -68,24 +69,13 @@ sudo systemctl restart apache2
 
 ## Instalação e configuração do banco de dados MongoDB
 
-Baixe e instale o mongo de acordo com a versão do sistema operacional, conforme orientação do manual oficial 
-[Manual de instalação do mongo](https://docs.mongodb.com/manual/tutorial/). Após instação, é necessário configurar a autenticação do banco.
-
-- Crie o diretório a ser utilizado para salvar os dados do MongoDB:
+Baixe e instale o mongo pelo gerenciador de pacotes de sua distribuição:
 
 ```bash
-sudo mkdir /data & mkdir /data/db
+sudo apt-get install mongodb
 ```
 
-*Obs: Caso deseje utilizar outro diretório, é necessário passar o parâmetro `--dbpath /diretoriodesejado` ao iniciar o serviço.*
-
-- Inicie o serviço do MongoDB.
-
-```bash
-sudo mongod --quiet &
-```
-
-- No diretório que foi realizado o download do projeto MfaProvider, edite o arquivo `scriptMongo.js` e defina os valores de `user` e `pwd` (usuário e senha) para segurança do banco e salve o arquivo:
+- Ao termino da instalação, o mongodb será instânciado automaticamente. No diretório que foi realizado o download do projeto MfaProvider, edite o arquivo `scriptMongo.js` e defina os valores de `user` e `pwd` (usuário e senha) para segurança do banco e salve o arquivo:
 
 ```js
 use mfaprovider
@@ -98,40 +88,46 @@ db.createUser(
 )
 ```
 
-- Após, execute o script para criar o usuário:
+- Ainda no diretório do projeto MfaProvider, execute o script para criar o usuário:
 
 ```bash 
 mongo < scritpMongo.js
 ```
 
-- Altere no arquivo `src/main/resources/mongo.properties` as propriedades `mongo.user` e `mongo.pass` com usuário e senha definidos para o banco anteriormente:
+- No mesmo diretório, altere no arquivo `src/main/resources/mongo.properties` as propriedades `mongo.user` e `mongo.pass` com usuário e senha definidos anteriormente para o banco:
 
 ```xml
 mongo.host=localhost:27017
-mongo.port=27017
 mongo.db=mfaprovider
 mongo.user=VALORDEFINIDO
 mongo.pass=VALORDEFINIDO
-
 ```
 
-- Inicie o Mongo com a opção --auth
+- Edite o arquivo de configuração do mongodb ```bash sudo vi /etc/mongodb.conf``` e habilite a autenticação descomentando o atributo `auth = true`. Ficará similar ao exemplo abaixo:
+
+```xml
+# Turn on/off security.  Off is currently the default
+#noauth = true
+auth = true
+```
+
+- Reinicie o Mongodb
 
 ```bash
-sudo mongod --quiet --auth &`
+sudo systemctl restart mongodb
 ```
 
 ## Configurações FCM para Diálogo de Confirmação 
 
 Para funcionamento da opção multi-fator de diálogo de confirmação, é necessário possuir uma conta Google com o projeto FCM configurado. Siga os passos a seguir:
 
-1. Acesse a pagina de console do FCM e faça login com a conta google: https://console.firebase.google.com/
+1. Acesse a página de console do FCM e faça login com a conta google: https://console.firebase.google.com/
 2. Clique em `Adicionar Projeto`.
 3. Digite um nome para o projeto, e clique em `Criar projeto`.
 4. Clique em adicionar o Firebase ao app para Android.
 5. Informe no campo *Nome do pacote Android*: `br.gtampto.app2ampto` e clique em `Registrar APP`.
 6. Nas etapas: *Fazer o download do arquivo de configuração* e *Adicionar o SDK do Firebase*, clique em `Próxima`.
-7. Em *Execute seu app para verificar a instalação*, o FCM irá tentar conectar no aplicativo, como ele ja foi configurado previamente, esta etapa pode ser ignora, clique em `Pular esta etapa`.
+7. Em *Execute seu app para verificar a instalação*, o FCM irá tentar conectar no aplicativo, como ele já foi configurado previamente, esta etapa pode ser ignora, clique em `Pular esta etapa`.
 
 - Após criar conta FCM e registrar o app seguindo as instruções, Clique em Configurações do Projeto e na aba Cloud Messaging, anote os valores dos atributos: 
 `chave herdada do servidor` e `código do remetente`.
@@ -185,8 +181,8 @@ admin.password=xxx
 1. Acesse o endereço `https://endereco-idp/pathname/saml/web/metadata`.
 2. Entre com o usuário e senha configurado para o administrador do IdP.
 3. Clique em `Gerar novo arquivo de metadados`
-4. Deixe os dados setados automaticamente e clique em `gerar metadados`
-5. Baixe o arquivo gerado ou copie o coteúdo, e sobrescreva o arquivo `src/main/resources/metadata/sp-metadata.xml`.
+4. Mantenha os dados já preenchidos por padrão e clique em `gerar metadados`
+5. Copie o coteúdo gerado, e coloque o conteúdo dentro deste arquivo: `src/main/resources/metadata/sp-metadata.xml`.
 
 ### Configurar SP Metadata no IdP
 
@@ -198,7 +194,7 @@ Por exemplo:
       metadataFile="/opt/shibboleth-idp/metadata/sp-metadata.xml"/>
 ```
 
-- Entre no diretório `/opt/shibboleth-idp/bin` e realize p build do IdP para utilizar as novas configurações:
+- Entre no diretório `/opt/shibboleth-idp/bin` e realize o build do IdP para utilizar as novas configurações:
 
 ```bash
 ./build.sh
@@ -206,12 +202,11 @@ Por exemplo:
 
 ## Deploy
 
-- Execute o script de deploy da aplicação novamente para utilização das novas configurações: 
+- Retorne ao diretório do projeto MfaProvider e execute o script de deploy da aplicação novamente para utilização das novas configurações: 
 
 ```bash
 ./deploy.sh
 ```
-*Obs: Não é possível testar a aplicação antes de realizar as configurações no IdP.*
 
 Siga os próximos passos para relizar a configuração no IdP.
 
