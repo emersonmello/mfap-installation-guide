@@ -269,11 +269,11 @@ idp.mfaprovider.password  = senha
     
 ## Build IdP
 
-- Execute o build do IdP em `$IDP_HOME/bin/build.sh`:
+- Execute o build do IdP em `$IDP_HOME/bin/build.sh` :
 
-    ```bash
-    ./build.sh
-    ```
+```bash
+./build.sh
+```
 
 ## Teste
 
