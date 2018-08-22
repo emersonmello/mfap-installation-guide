@@ -49,7 +49,7 @@ O MfaProvider será a aplicação dentro do IdP responsável por gerenciar o seg
      </Context>
      ```
 
-   *Obs: o caminho /opt/mfaprovider/mfaprovider.war está definido no script de deploy da aplicação, não necessita alteração*Arquivo de configuração da aplicação no Tomcat:
+   *Obs: o caminho /opt/mfaprovider/mfaprovider.war está definido no script de deploy da aplicação, não necessita alteração*
 
 2. Edite o arquivo `server.xml` no diretório do tomcat:
 
