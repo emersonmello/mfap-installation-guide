@@ -1,0 +1,4 @@
+eduPersonPrincipalName,ANY
+eduPersonEntitlement,ANY
+mail,ANY
+uid,ANY
