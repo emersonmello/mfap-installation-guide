@@ -266,7 +266,8 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
      ```bash
      sudo vi /opt/shibboleth-idp/conf/metadata-providers.xml
      ```
-3.   Localize a tag `<MetadataProvider id="ShibbolethMetadata"...../>` e adicione o seguinte conteúdo abaixo desta tag:
+     
+    Localize a tag `<MetadataProvider id="ShibbolethMetadata"...../>` e adicione o seguinte conteúdo abaixo desta tag:
 
      ```xml
      <MetadataProvider id="LocalMetadata"  xsi:type="FilesystemMetadataProvider" 
@@ -292,17 +293,19 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
      #continuação arquivo........
      ```
 
-4.   Entre no diretório `/opt/shibboleth-idp/bin` e realize o build do IdP para utilizar as novas configurações:
-
-     ```bash
-     ./build.sh
-     ```
-
-5.   Retorne ao diretório do projeto MfaProvider e execute o script de deploy da aplicação novamente para utilização das novas configurações: 
+3.  No diretório do projeto MfaProvider e execute o script de deploy da aplicação novamente para utilização das novas configurações: 
 
      ```bash
      ./deploy.sh
      ```
+
+4.   Entre no diretório do IdP e realize o build do IdP para utilizar as novas configurações:
+
+     ```bash
+     cd /opt/shibboleth-idp/
+     ./bin/build.sh
+     ```
+
 
 Siga os próximos passos para relizar a configuração no IdP.
 
@@ -314,25 +317,31 @@ Siga os próximos passos para relizar a configuração no IdP.
 
 ## Download do projeto:
 
-- Faça o download dos fontes do projeto IdP-Customizado-GtAmpto, por exemplo, para o diretório home do usuário.
+1. Faça o download dos fontes do projeto IdP-Customizado-GtAmpto, por exemplo, para o diretório home do usuário.
 
-```bash
-git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
-```
+     ```bash
+     git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
+     ```
 
 ## Alteração do fluxo principal para Multifator:
 
-- Edite o arquivo `/opt/shibboleth-idp/conf/idp.properties` e altere conforme explicação:
+1.   Edite o arquivo idp.properties `sudo vi /opt/shibboleth-idp/conf/idp.properties` e altere conforme explicação:
 
-1. Localize a linha com a entrada  `idp.authn.flows` e altere o controle de fluxo para utilizar MFA:
-    `idp.authn.flows= MFA`;
+     1.1.   Localize a linha com a entrada `idp.authn.flows` e altere o controle de fluxo para utilizar MFA:
+        
+          ```xml
+          idp.authn.flows= MFA
+          ```
 
-2. Localize a linha com a entrada `idp.additionalProperties` e acrescente ao final da linha: `/conf/authn/mfaprovider.properties`. Deve ficar similar ao listado abaixo:
-    `idp.additionalProperties= /conf/ldap.properties, /conf/saml-nameid.properties, /conf/services.properties, /conf/authn/duo.properties, /conf/authn/mfaprovider.properties `
-
+     1.2.   Localize a linha com a entrada `idp.additionalProperties` e acrescente ao final da linha: `/conf/authn/mfaprovider.properties`. Deve ficar similar ao listado abaixo:
+        
+         ```xml
+         idp.additionalProperties= /conf/ldap.properties, /conf/saml-nameid.properties, /conf/services.properties, /conf/authn/duo.properties, /conf/authn/mfaprovider.properties
+         ```
+        
 ## Configuração Rest do MfaProvider:
 
-1.   A partir do diretório do projeto baixado no git, edite o arquivo `alteracoes/conf/authn/mfaprovider.properties` altererando as propriedades apresentadas abaixo: 
+1.   A partir do diretório do projeto IdP-Customizado-GtAmpto baixado no git, edite o arquivo mfaprovider.properties `sudo vi alteracoes/conf/authn/mfaprovider.properties` altererando as propriedades apresentadas abaixo: 
   
      ```xml
      ## Enredeço do MfaProvider 
@@ -346,7 +355,7 @@ git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
 
 ## Configurações gerais, flows, views, properties, libs e arquivos necessários:
 
-*Obs: Os trechos de código a partir deste momento estarão em arquivos de exemplo com comentários para facilitar a visualização do local onde devem ser configurados no Idp*
+*Obs: Os trechos de código a partir deste momento estarão em arquivos de exemplo com comentários no diretório baixado do git, para facilitar a visualização do local exato onde devem ser configurados no Idp*
 
 1.   Edite o arquivo `/opt/shibboleth-idp/conf/relying-party.xml` e configure conforme instruções comentadas no arquivo `alteracoes/conf/relying-party.xml` do projeto.
 
@@ -362,18 +371,19 @@ git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
 
 7.   Copie o conteúdo do diretório `alteracoes/views` para  `/opt/shibboleth-idp/views`;
 
-8.  Copie o conteúdo do diretório `alteracoes/webapp/images` para  `/opt/shibboleth-idp/webapp/images`;
+8.   Copie o conteúdo do diretório `alteracoes/webapp/images` para  `/opt/shibboleth-idp/webapp/images`;
 
-9.  Copie o conteúdo do diretório `alteracoes/webapp/WEB-INF/lib` para `/opt/shibboleth-idp/webapp/WEB-INF/lib`.
-     * Observação: As dependências contidas neste ditetório foram geradas a partir do projeto: [MfaProviderIdp](https://git.rnp.br/GT-AMPTo/mfadialogo). 
+9.   Copie o conteúdo do diretório `alteracoes/webapp/WEB-INF/lib` para `/opt/shibboleth-idp/webapp/WEB-INF/lib`.
+         
+      * Observação: As dependências contidas neste ditetório foram geradas a partir do projeto: [MfaProviderIdp](https://git.rnp.br/GT-AMPTo/mfadialogo). 
     
 ## Build IdP
 
 - Execute o build do IdP em `/opt/shibboleth-idp/bin/build.sh` :
 
-    ```bash
-    ./build.sh
-    ```
+     ```bash
+     ./build.sh
+     ```
 
 ## Teste
 
@@ -387,9 +397,9 @@ git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
 
 - Na pasta do projeto do MfaProvider,  utilize o script abaixo e informe o login do usuário para remover as configurações de segundo fator
 
-```bash
-./removeSecondFactor.sh
-```
+     ```bash
+     ./removeSecondFactor.sh
+     ```
 
 #### Habilitar e desabilitar métodos de segundo fator:
 
