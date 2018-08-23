@@ -19,11 +19,11 @@ Este roteiro está dividido em 3 partes:
 
 O MfaProvider será a aplicação dentro do IdP responsável por gerenciar o segundo fator do usuário.
 
-1. Faça o download do projeto MfaProvider para o diretório de sua preferência. Pode ser utilizado o diretório home do usuário por exemplo.
+1.   Faça o download do projeto MfaProvider para o diretório de sua preferência. Pode ser utilizado o diretório home do usuário por exemplo.
 
-   ```bash
-   git clone https://git.rnp.br/GT-AMPTo/MfaProvider.git
-   ```
+     ```bash
+     git clone https://git.rnp.br/GT-AMPTo/MfaProvider.git
+     ```
 
 ## Configuração do Tomcat/Apache para funcionamento do MfaProvider.
 
@@ -33,23 +33,23 @@ O MfaProvider será a aplicação dentro do IdP responsável por gerenciar o seg
 
 É necessário criar um arquivo xml com o pathname desejado (caminho a ser acessado pelo usuário para acessar o MfaProvider). Por padrão, o MfaProvider é configurado em `https://endereco-idp/conta`. Caso desejar utilizar outro pathname, alterar `conta` para o nome desejado nos próximos passos.
 
-1. Crie o arquivo xml através do comando: 
+1.   Crie o arquivo xml através do comando: 
 
-   ```bash
-   sudo vi /etc/tomcat8/Catalina/localhost/conta.xml 
-   ```
+    ```bash
+    sudo vi /etc/tomcat8/Catalina/localhost/conta.xml 
+    ```
 
-   + Insira o seguinte conteúdo dentro do arquivo:
+    Insira o seguinte conteúdo dentro do arquivo:
 
-     ```xml
-     <Context docBase="/opt/mfaprovider/mfaprovider.war"
-         unpackWAR="true"
-         swallowOutput="true">
-         <Manager pathname="" />
-     </Context>
-     ```
+    ```xml
+    <Context docBase="/opt/mfaprovider/mfaprovider.war"
+        unpackWAR="true"
+        swallowOutput="true">
+        <Manager pathname="" />
+    </Context>
+    ```
 
-   *Obs: o caminho /opt/mfaprovider/mfaprovider.war está definido no script de deploy da aplicação, não necessita alteração*
+    *Obs: o caminho /opt/mfaprovider/mfaprovider.war está definido no script de deploy da aplicação, não necessita alteração*
 
 2. Edite o arquivo `server.xml` no diretório do tomcat:
 
@@ -57,11 +57,11 @@ O MfaProvider será a aplicação dentro do IdP responsável por gerenciar o seg
    sudo vi /etc/tomcat8/server.xml
    ```
 
-   + Localize no arquivo, a tag: `<Service name="Catalina">` a adicione abaixo desta tag o seguinte conteúdo:
+   Localize no arquivo, a tag: `<Service name="Catalina">` a adicione abaixo desta tag o seguinte conteúdo:
 
-     ```xml
-     <Connector port="9443" address="127.0.0.1" protocol="AJP/1.3" />
-     ```
+    ```xml
+    <Connector port="9443" address="127.0.0.1" protocol="AJP/1.3" />
+    ```
 
 3. Edite o arquivo `01-idp.conf`:
 
@@ -69,15 +69,15 @@ O MfaProvider será a aplicação dentro do IdP responsável por gerenciar o seg
    sudo vi /etc/apache2/sites-enabled/01-idp.conf
    ```
 
-   + Localize no arquivo, a tag: `<VirtualHost *:443>` e adicione dentro desta tag (abaixo do mesmo trecho de configuração de ProxyPass /idp) o seguinte conteúdo:
-     *Obs: Caso utilizar outro  pathname, alterar `/conta` para o nome desejado.*
+   Localize no arquivo, a tag: `<VirtualHost *:443>` e adicione dentro desta tag (abaixo do mesmo trecho de configuração de ProxyPass /idp) o seguinte conteúdo:
+   *Obs: Caso utilizar outro  pathname, alterar `/conta` para o nome desejado.*
 
-     ```xml
-      ProxyPass /conta ajp://localhost:9443/conta retry=5
-       <Proxy ajp://localhost:9443>
-         Require all granted
-       </Proxy>
-     ```
+   ```xml
+   ProxyPass /conta ajp://localhost:9443/conta retry=5
+    <Proxy ajp://localhost:9443>
+      Require all granted
+    </Proxy>
+   ```
 
 4. Reinicie o serviço do Apache:
 
