@@ -51,57 +51,57 @@ O MfaProvider será a aplicação dentro do IdP responsável por gerenciar o seg
 
     *Obs: o caminho /opt/mfaprovider/mfaprovider.war está definido no script de deploy da aplicação, não necessita alteração*
 
-2. Edite o arquivo `server.xml` no diretório do tomcat:
+2.   Edite o arquivo `server.xml` no diretório do tomcat:
 
-   ```bash
-   sudo vi /etc/tomcat8/server.xml
-   ```
+     ```bash
+     sudo vi /etc/tomcat8/server.xml
+     ```
 
-   Localize no arquivo, a tag: `<Service name="Catalina">` a adicione abaixo desta tag o seguinte conteúdo:
+    Localize no arquivo, a tag: `<Service name="Catalina">` a adicione abaixo desta tag o seguinte conteúdo:
 
     ```xml
     <Connector port="9443" address="127.0.0.1" protocol="AJP/1.3" />
     ```
 
-3. Edite o arquivo `01-idp.conf`:
+3.   Edite o arquivo `01-idp.conf`:
 
-   ```bash
-   sudo vi /etc/apache2/sites-enabled/01-idp.conf
-   ```
+     ```bash
+     sudo vi /etc/apache2/sites-enabled/01-idp.conf
+     ```
 
-   Localize no arquivo, a tag: `<VirtualHost *:443>` e adicione dentro desta tag (abaixo do mesmo trecho de configuração de ProxyPass /idp) o seguinte conteúdo:
-   *Obs: Caso utilizar outro  pathname, alterar `/conta` para o nome desejado.*
+    Localize no arquivo, a tag: `<VirtualHost *:443>` e adicione dentro desta tag (abaixo do mesmo trecho de configuração de ProxyPass /idp) o seguinte conteúdo:
+    *Obs: Caso utilizar outro  pathname, alterar `/conta` para o nome desejado.*
 
-   ```xml
-   ProxyPass /conta ajp://localhost:9443/conta retry=5
-    <Proxy ajp://localhost:9443>
-      Require all granted
-    </Proxy>
-   ```
+    ```xml
+    ProxyPass /conta ajp://localhost:9443/conta retry=5
+     <Proxy ajp://localhost:9443>
+       Require all granted
+     </Proxy>
+    ```
 
-4. Reinicie o serviço do Apache:
+4.   Reinicie o serviço do Apache:
 
-   ```bash
-   sudo systemctl restart apache2 
-   ```
+     ```bash
+     sudo systemctl restart apache2 
+     ```
 
 ## Instalação e configuração do banco de dados MongoDB
 
-1. Baixe e instale o MongoDB pelo gerenciador de pacotes:
+1.   Baixe e instale o MongoDB pelo gerenciador de pacotes:
 
-   ```bash
-   sudo apt-get install mongodb
-   ```
+     ```bash
+     sudo apt-get install mongodb
+     ```
 
-   *Obs: Ao termino da instalação, o serviço do MongoDB será instânciado automaticamente, o qual pode ser conferido pelo comando `ps -aux | grep mongo` (caso não estiver iniciado, utilize o comando `sudo systemctl start mongodb`).* 
+    *Obs: Ao termino da instalação, o serviço do MongoDB será instânciado automaticamente, o qual pode ser conferido pelo comando `ps -aux | grep mongo` (caso não estiver iniciado, utilize o comando `sudo systemctl start mongodb`).* 
 
-2. No diretório que foi realizado o download do projeto MfaProvider, edite o arquivo `scriptMongo.js`:
+2.   No diretório que foi realizado o download do projeto MfaProvider, edite o arquivo `scriptMongo.js`:
 
-   ```bash
-   sudo vi scriptMongo.js
-   ```
+     ```bash
+     sudo vi scriptMongo.js
+     ```
 
-   + Defina os valores de `user` e `pwd` (usuário e senha) para segurança do banco e salve o arquivo:
+    Defina os valores de `user` e `pwd` (usuário e senha) para segurança do banco e salve o arquivo:
 
      ```js
      use mfaprovider
@@ -114,34 +114,34 @@ O MfaProvider será a aplicação dentro do IdP responsável por gerenciar o seg
      )
      ```
 
-3. Ainda no diretório do projeto MfaProvider, execute o script para criar o usuário:
+3.   Ainda no diretório do projeto MfaProvider, execute o script para criar o usuário:
 
-   ```bash 
-   mongo < scriptMongo.js
-   ```
+     ```bash 
+     mongo < scriptMongo.js
+     ```
 
-4. No mesmo diretório, edite o arquivo `mongo.properties`:
+4.   No mesmo diretório, edite o arquivo `mongo.properties`:
 
-   ```bash
-   sudo vi src/main/resources/mongo.properties
-   ```
+     ```bash
+     sudo vi src/main/resources/mongo.properties
+     ```
 
-   + Altere as propriedades `mongo.user` e `mongo.pass` com usuário e senha definidos anteriormente para o banco:
-
-     ```xml
+    Altere as propriedades `mongo.user` e `mongo.pass` com usuário e senha definidos anteriormente para o banco:
+ 
+    ```xml
      mongo.host=localhost:27017
      mongo.db=mfaprovider
      mongo.user=VALORDEFINIDO
      mongo.pass=VALORDEFINIDO
+    ```
+
+5.   Edite o arquivo de configuração do mongodb:
+
+     ```bash
+     sudo vi /etc/mongodb.conf
      ```
 
-5. Edite o arquivo de configuração do mongodb:
-
-   ```bash
-   sudo vi /etc/mongodb.conf
-   ```
-
-   + Habilite a autenticação descomentando o atributo `auth = true`. Ficará similar ao exemplo abaixo:
+    Habilite a autenticação descomentando o atributo `auth = true`. Ficará similar ao exemplo abaixo:
 
      ```bash
      # Turn on/off security.  Off is currently the default
@@ -149,108 +149,109 @@ O MfaProvider será a aplicação dentro do IdP responsável por gerenciar o seg
      auth = true
      ```
 
-- Reinicie o MongoDB
+6.   Reinicie o MongoDB
 
-  ```bash
-  sudo systemctl restart mongodb
-  ```
+    ```bash
+    sudo systemctl restart mongodb
+    ```
 
 ## Configurações FCM para Diálogo de Confirmação 
 
 Para funcionamento da opção multi-fator de diálogo de confirmação, é necessário possuir uma conta Google com o projeto FCM configurado. Siga os passos a seguir:
 
-1. Acesse a página de console do FCM e faça login com a conta google: https://console.firebase.google.com/
+1.   Acesse a página de console do FCM e faça login com a conta google: https://console.firebase.google.com/
 
-2. Clique em `Adicionar Projeto`.
+2.   Clique em `Adicionar Projeto`.
 
-3. Digite um nome para o projeto (ingnore os demais campos), marque a opção "Aceito os termos.." e clique em `Criar projeto`.
+3.   Digite um nome para o projeto (ingnore os demais campos), marque a opção "Aceito os termos.." e clique em `Criar projeto`.
 
-4. Clique no ícone do Android para adicionar o Firebase ao app para Android, conforme imagem abaixo:
+4.   Clique no ícone do Android para adicionar o Firebase ao app para Android, conforme imagem abaixo:
 
-   ![](./images/addapp.png)
+     ![](./images/addapp.png)
 
-5. Informe no campo *Nome do pacote Android*: `br.gtampto.app2ampto` e clique em `Registrar APP`.
+5.  Informe no campo *Nome do pacote Android*: `br.gtampto.app2ampto` e clique em `Registrar APP`.
 
-6. Nas etapas: *Fazer o download do arquivo de configuração* e *Adicionar o SDK do Firebase*, clique em `Próxima`.
+6.   Nas etapas: *Fazer o download do arquivo de configuração* e *Adicionar o SDK do Firebase*, clique em `Próxima`.
 
-7. Em *Execute seu app para verificar a instalação*, o FCM irá tentar conectar no aplicativo, como ele já foi configurado previamente, esta etapa pode ser ignora, clique em `Pular esta etapa`.
+7.   Em *Execute seu app para verificar a instalação*, o FCM irá tentar conectar no aplicativo, como ele já foi configurado previamente, esta etapa pode ser ignora, clique em `Pular esta etapa`.
 
-8. Após criar conta FCM e registrar o app seguindo as instruções, clique em configurações conforme imagem abaixo:
+8.   Após criar conta FCM e registrar o app seguindo as instruções, clique em configurações conforme imagem abaixo:
 
-   ![](./images/confcm.png)
+     ![](./images/confcm.png)
 
-9.  Clique em `Configurações do Projeto` e na aba Cloud Messaging, anote os valores dos atributos `chave herdada do servidor` e `código do remetente` .  Segue imagem exemplificando o local dos atributos:
+9.   Clique em `Configurações do Projeto` e na aba Cloud Messaging, anote os valores dos atributos `chave herdada do servidor` e `código do remetente` .  Segue imagem exemplificando o local dos atributos:
 
-   ![](./images/confcm2.png)
+     ![](./images/confcm2.png)
 
-10. No diretório do projeto MfaProvider, edite o arquivo `mfaprovider.properties` 
+10.   No diretório do projeto MfaProvider, edite o arquivo `mfaprovider.properties` 
 
-    ```bash
-    sudo vi src/main/resources/mfaprovider.properties
-    ```
+     ```bash
+     sudo vi src/main/resources/mfaprovider.properties
+     ```
 
-    + Utilizando os atributos anotados do FCM no item 9. Altere as propriedades conforme comentários no arquivo :
+    Utilizando os atributos anotados do FCM no item 9. Altere as propriedades conforme comentários no arquivo :
 
-      ```xml
-      ##substitua por chave herdada do servidor FCM
-      br.rnp.xmpp.serverKey= XXXX
+     ```xml
+     ##substitua por chave herdada do servidor FCM
+     br.rnp.xmpp.serverKey= XXXX
+     
+     ##substitua por código do remetente FCM
+     br.rnp.xmpp.senderId= XXXXX
       
-      ##substitua por código do remetente FCM
-      br.rnp.xmpp.senderId= XXXXX
-      
-      #Substituir somente se utilizar um pathname diferente do padrão conta
-      mfapbasepath=conta
-      ```
+     #Substituir somente se utilizar um pathname diferente do padrão conta
+     mfapbasepath=conta
+     ```
 
 
 ## Configuração do MfaP como Service Provider:
 
-1. No dirtório do projeto MfaProvider, edite o arquivo  `sp.properties`:
+1.   No dirtório do projeto MfaProvider, edite o arquivo  `sp.properties`:
 
-   ```bash
-   sudo vi src/main/resources/sp.properties
-   ```
+     ```bash
+     sudo vi src/main/resources/sp.properties
+     ```
 
-   + Configure o arquivo conforme explicação nos comentários abaixo:
+    Configure o arquivo conforme explicação nos comentários abaixo:
 
-   ```xml
-   ##Caminho completo do idp com o pathname
-   host.name=https://endereco-idp/pathname
-   
-   ##Caminho completo para o metadata do idp
-   idp.metadata=/opt/shibboleth-idp/metadata/idp-metadata.xml
-   
-   ##Defina um usuario e senha para proteção dos recursos rest
-   restsecurity.user=xxx
-   restsecurity.password=xxx
-   
-   ##Defina um usuario e senha para administrador do IdP
-   admin.user=xxx
-   admin.password=xxx
-   ```
+     ```xml
+     ##Caminho completo do idp com o pathname
+     host.name=https://endereco-idp/pathname
+     
+     ##Caminho completo para o metadata do idp
+     idp.metadata=/opt/shibboleth-idp/metadata/idp-metadata.xml
+     
+     ##Defina um usuario e senha para proteção dos recursos rest
+     restsecurity.user=xxx
+     restsecurity.password=xxx
+     
+     ##Defina um usuario e senha para administrador do IdP
+     admin.user=xxx
+     admin.password=xxx
+     ```
 
-   *Obs: Os valores definidos neste momento para credenciais rest serão utilizados posteriormente na configuração de autenticação do IdP. Não utilizar o mesmo usuário e senha para admin e restsecurity*
+    *Obs: Os valores definidos neste momento para credenciais rest serão utilizados posteriormente na configuração de autenticação do IdP. Não utilizar o mesmo usuário e senha para admin e restsecurity*
 
 ### SP Metadata
 
-1. No diretório do projeto MfaProvider execute o script para realizar o deploy da aplicação para configuraçaõ dos metadados.
+1.   No diretório do projeto MfaProvider execute o script para realizar o deploy da aplicação para configuraçaõ dos metadados.
 
-```bash
-./deploy.sh
-```
+     ```bash
+     ./deploy.sh
+     ```
 
-2. Após, siga os procedimentos abaixo para gerar os metadados do MfaProvider:
-   1. Acesse o endereço `https://endereco-idp/pathname/saml/web/metadata` via browser.
+2.   Após, siga os procedimentos abaixo para gerar os metadados do MfaProvider:
+   
+    1. Acesse o endereço `https://endereco-idp/pathname/saml/web/metadata` via browser.
 
-   2. Entre com o usuário e senha configurado para o administrador do IdP.
+    2. Entre com o usuário e senha configurado para o administrador do IdP.
 
-   3. Clique em `Gerar novo arquivo de metadados`
+    3. Clique em `Gerar novo arquivo de metadados`
 
-   4. Mantenha os dados já preenchidos por padrão e clique em `gerar metadados`
+    4. Mantenha os dados já preenchidos por padrão e clique em `gerar metadados`
 
-   5. Baixe o arquivo e salve com o nome `sp-metadata.xml`.
+    5. Baixe o arquivo e salve com o nome `sp-metadata.xml`.
 
-      + Copie o arquivo salvo `sp-metadata.xml` para o caminho dentro do diretório MfaProvider:
+    Copie o arquivo salvo `sp-metadata.xml` para o caminho dentro do diretório MfaProvider:
 
       ```bash
       src/main/resources/metadata/
