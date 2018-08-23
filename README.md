@@ -329,16 +329,13 @@ Siga os próximos passos para relizar a configuração no IdP.
 
      1.1.   Localize a linha com a entrada `idp.authn.flows` e altere o controle de fluxo para utilizar MFA:
         
-          ```xml
-          idp.authn.flows= MFA
-          ```
+        idp.authn.flows= MFA
+            
 
      1.2.   Localize a linha com a entrada `idp.additionalProperties` e acrescente ao final da linha: `/conf/authn/mfaprovider.properties`. Deve ficar similar ao listado abaixo:
         
-         ```xml
-         idp.additionalProperties= /conf/ldap.properties, /conf/saml-nameid.properties, /conf/services.properties, /conf/authn/duo.properties, /conf/authn/mfaprovider.properties
-         ```
-        
+        idp.additionalProperties= /conf/ldap.properties, /conf/saml-nameid.properties, /conf/services.properties, /conf/authn/duo.properties, /conf/authn/mfaprovider.properties
+            
 ## Configuração Rest do MfaProvider:
 
 1.   A partir do diretório do projeto IdP-Customizado-GtAmpto baixado no git, edite o arquivo mfaprovider.properties `sudo vi alteracoes/conf/authn/mfaprovider.properties` altererando as propriedades apresentadas abaixo: 
@@ -375,7 +372,7 @@ Siga os próximos passos para relizar a configuração no IdP.
 
 9.   Copie o conteúdo do diretório `alteracoes/webapp/WEB-INF/lib` para `/opt/shibboleth-idp/webapp/WEB-INF/lib`.
          
-      * Observação: As dependências contidas neste ditetório foram geradas a partir do projeto: [MfaProviderIdp](https://git.rnp.br/GT-AMPTo/mfadialogo). 
+     *Observação: As dependências contidas neste ditetório foram geradas a partir do projeto: [MfaProviderIdp](https://git.rnp.br/GT-AMPTo/mfadialogo)* 
     
 ## Build IdP
 
