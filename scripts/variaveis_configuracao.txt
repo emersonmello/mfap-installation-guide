@@ -1,0 +1,3 @@
+mongo_admin_user =admin
+mongo_db=mfaprovider
+mongo_admin_password=admin
