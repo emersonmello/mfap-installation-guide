@@ -129,10 +129,14 @@ O MfaProvider será a aplicação dentro do IdP responsável por gerenciar o seg
     Altere as propriedades `mongo.user` e `mongo.pass` com usuário e senha definidos anteriormente para o banco:
  
     ```xml
-     mongo.host=localhost:27017
-     mongo.db=mfaprovider
-     mongo.user=VALORDEFINIDO
-     mongo.pass=VALORDEFINIDO
+    #usuario e senha
+    mongo.user=DEFINIR
+    mongo.pass=DEFINIR
+
+    #local de configuração mongo, não necessita alterar
+    mongo.host=localhost:27017
+    mongo.port=27017
+    mongo.db=mfaprovider
     ```
 
 5.   Edite o arquivo de configuração do mongodb:
@@ -198,7 +202,7 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
      ##substitua por código do remetente FCM
      br.rnp.xmpp.senderId= XXXXX
       
-     #Substituir somente se utilizar um pathname diferente do padrão conta
+     #Substitua somente se utilizar um pathname diferente do padrão conta
      mfapbasepath=conta
      ```
 
@@ -303,6 +307,7 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
 
      ```bash
      cd /opt/shibboleth-idp/
+     
      ./bin/build.sh
      ```
 
@@ -343,7 +348,7 @@ Siga os próximos passos para relizar a configuração no IdP.
      ```xml
      ## Enredeço do MfaProvider 
      idp.mfaprovider.apiHost  = https://exemploidp.br/conta/
-     ## Usuário e senha para autenticação REST configurado no sp.properties do projeto MfaProvider (<diretorio_git_MfaProvider>src/main/resources/sp.properties)
+     ## Usuário e senha para autenticação REST configurado no sp.properties do projeto MfaProvider
      idp.mfaprovider.username  = usuario
      idp.mfaprovider.password  = senha
      ```
@@ -352,34 +357,54 @@ Siga os próximos passos para relizar a configuração no IdP.
 
 ## Configurações gerais, flows, views, properties, libs e arquivos necessários:
 
-*Obs: Os trechos de código a partir deste momento estarão em arquivos de exemplo com comentários no diretório baixado do git, para facilitar a visualização do local exato onde devem ser configurados no Idp*
+*Obs: Os trechos de código a partir deste momento estarão em arquivos de exemplo com comentários no diretório IdP-Personalizado-GtAmtpo baixado do git, para facilitar a visualização do local exato onde devem ser configurados no Idp*
 
-1.   Edite o arquivo `/opt/shibboleth-idp/conf/relying-party.xml` e configure conforme instruções comentadas no arquivo `alteracoes/conf/relying-party.xml` do projeto.
+1.   Edite o arquivo `sudo vi /opt/shibboleth-idp/conf/relying-party.xml` e configure conforme instruções comentadas no arquivo `alteracoes/conf/relying-party.xml` do projeto.
 
-2.   Configure as permissões para atributos do MfaProvider no `/opt/shibboleth-idp/conf/attribute-filter.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/attribute-filter.xml` do projeto.
+2.   Edite o arquivo `sudo vi /opt/shibboleth-idp/conf/attribute-filter.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/attribute-filter.xml` do projeto.
 
-3.   Edite o arquivo `/opt/shibboleth-idp/conf/authn/general-authn.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/authn/general-authn.xml` do projeto.
+3.   Edite o arquivo `sudo vi /opt/shibboleth-idp/conf/authn/general-authn.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/authn/general-authn.xml` do projeto.
 
-4.   Edite o arquivo `/opt/shibboleth-idp/messages/messages.properties` e configure conforme instruções comentadas no arquivo `alteracoes/messages/messages.properties` do projeto.
+4.   Edite o arquivo `sudo vi /opt/shibboleth-idp/messages/messages.properties` e configure conforme instruções comentadas no arquivo `alteracoes/messages/messages.properties` do projeto.
 
-5.   Copie o arquivo `alteracoes/conf/authn/mfa-authn-config.xml` para `/opt/shibboleth-idp/conf/authn/` sobrescrevendo o existente;
+5.   A partir do diretório IdP-Personalizado_GtAmpto, Copie o arquivo `alteracoes/conf/authn/mfa-authn-config.xml` para `/opt/shibboleth-idp/conf/authn/` sobrescrevendo o existente;
+    
+    ```bash
+    sudo cp alteracoes/conf/authn/mfa-authn-config.xml /opt/shibboleth-idp/conf/authn/
+    ```
 
 6.   Copie o conteúdo do diretório `alteracoes/flows/authn` para  `/opt/shibboleth-idp/flows/authn`;
-
+    
+    ```bash
+    sudo cp -R alteracoes/flows/authn/* /opt/shibboleth-idp/flows/authn/
+    ```
+    
 7.   Copie o conteúdo do diretório `alteracoes/views` para  `/opt/shibboleth-idp/views`;
-
+    
+    ```bash
+    sudo cp alteracoes/views/* /opt/shibboleth-idp/views/
+    ```
+    
 8.   Copie o conteúdo do diretório `alteracoes/webapp/images` para  `/opt/shibboleth-idp/webapp/images`;
+    
+    ```bash
+    sudo cp alteracoes/webapp/images/* /opt/shibboleth-idp/webapp/images/
+    ```
 
 9.   Copie o conteúdo do diretório `alteracoes/webapp/WEB-INF/lib` para `/opt/shibboleth-idp/webapp/WEB-INF/lib`.
-         
-     *Observação: As dependências contidas neste ditetório foram geradas a partir do projeto: [MfaProviderIdp](https://git.rnp.br/GT-AMPTo/mfadialogo)* 
+    ```bash
+    sudo cp alteracoes/webapp/WEB-INF/lib/* /opt/shibboleth-idp/webapp/WEB-INF/lib/
+    ```
+    *Observação: As dependências contidas neste ditetório foram geradas a partir do projeto: [MfaProviderIdp](https://git.rnp.br/GT-AMPTo/mfadialogo)* 
     
 ## Build IdP
 
-- Execute o build do IdP em `/opt/shibboleth-idp/bin/build.sh` :
+- Execute o build do IdP utilizando `build.sh` :
 
-     ```bash
-     ./build.sh
+    ```bash
+    cd /opt/shibboleth-idp/
+     
+    ./bin/build.sh
      ```
 
 ## Teste
