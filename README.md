@@ -359,14 +359,30 @@ Siga os próximos passos para relizar a configuração no IdP.
 
 *Obs: Os trechos de código a partir deste momento estarão em arquivos de exemplo com comentários no diretório IdP-Personalizado-GtAmtpo baixado do git, para facilitar a visualização do local exato onde devem ser configurados no Idp*
 
-1.   Edite o arquivo `sudo vi /opt/shibboleth-idp/conf/relying-party.xml` e configure conforme instruções comentadas no arquivo `alteracoes/conf/relying-party.xml` do projeto.
-
-2.   Edite o arquivo `sudo vi /opt/shibboleth-idp/conf/attribute-filter.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/attribute-filter.xml` do projeto.
-
-3.   Edite o arquivo `sudo vi /opt/shibboleth-idp/conf/authn/general-authn.xml` alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/authn/general-authn.xml` do projeto.
-
-4.   Edite o arquivo `sudo vi /opt/shibboleth-idp/messages/messages.properties` e configure conforme instruções comentadas no arquivo `alteracoes/messages/messages.properties` do projeto.
-
+1.   Edite o arquivo `relying-party.xml` do IdP e configure conforme instruções comentadas no arquivo `alteracoes/conf/relying-party.xml` do projeto.
+    
+    ```bash
+    sudo vi /opt/shibboleth-idp/conf/relying-party.xml
+    ```
+    
+2.   Edite o arquivo `attribute-filter.xml` do IdP alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/attribute-filter.xml` do projeto.
+    
+    ```bash
+    sudo vi /opt/shibboleth-idp/conf/attribute-filter.xml
+    ```
+    
+3.   Edite o arquivo `general-authn.xml` do IdP alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/authn/general-authn.xml` do projeto.
+    
+    ```bash
+    sudo vi /opt/shibboleth-idp/conf/authn/general-authn.xml
+    ```
+    
+4.   Edite o arquivo `messages.properties` do IdP e configure conforme instruções comentadas no arquivo `alteracoes/messages/messages.properties` do projeto.
+    
+    ```bash
+    sudo vi /opt/shibboleth-idp/messages/messages.properties
+    ```
+    
 5.   A partir do diretório IdP-Personalizado_GtAmpto, Copie o arquivo `alteracoes/conf/authn/mfa-authn-config.xml` para `/opt/shibboleth-idp/conf/authn/` sobrescrevendo o existente;
     
     ```bash
