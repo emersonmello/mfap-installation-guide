@@ -57,5 +57,8 @@ def main():
             config_variables['mongo_admin_user'],
             config_variables['mongo_admin_password'])
 
+    if not mongodb_installed:
+        print("Não foi possíve instalar o mongodb... Encerrando...")
+        exit()
 if __name__ == '__main__':
    main()
