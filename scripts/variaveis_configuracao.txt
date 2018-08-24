@@ -1,3 +1,9 @@
 mongo_admin_user =admin
 mongo_db=mfaprovider
 mongo_admin_password=admin
+host.name=https://endereco-idp/pathname
+idp.metadata=/opt/shibboleth-idp/metadata/idp-metadata.xml
+restsecurity.user=xxx
+restsecurity.password=xxx
+admin.user=xxx
+admin.password=xxx

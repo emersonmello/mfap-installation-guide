@@ -7,6 +7,11 @@ Autora: shirlei@gmail.com - 2018
 import subprocess
 import sys
 
+import utils
+
+required_variables = ['mongo_admin_user', 'mongo_admin_password']
+required_variables += ['mongo_db']
+
 def install_mongodb(db, admin_user, admin_pwd):
     with open('scriptMongo.js', 'w') as sm:
         script_text = """
@@ -54,12 +59,28 @@ def install_mongodb(db, admin_user, admin_pwd):
 
 def main():
     if sys.version_info[0] != 2:
-        print("Este script requer python2")
+        print("Este script requer python2 e pode não funcionar com outra versão!")
+    
+    # lê variáveis de configuração
+    config_variables = utils.read_config_variables()
+
+    if config_variables and len(config_variables) == 0:
+        msg = """
+        As variaveis de configuraçao necessárias nao foram adquiridas
+        Por favor, verifique o arquivo variaveis_configuracao.txt
+        """
+        print(msg)
+    if utils.check_missing_variables(config_variables, required_variables):
+        print("Corrija as variáveis faltantes e reinicie a execução")
         exit()
 
-    mongo_installed = install_mongodb()
+    mongo_installed = install_mongodb(config_variables['mongo_db'],
+            config_variables['mongo_admin_user'],
+            config_variables['mongo_admin_password'])
     if mongo_installed:
         print("Mongo instalado e configurado com sucesso!")
+    else:
+        print("Não foi possível instalar e/ou configurar o mongodb... Encerrando...")
 
 
 if __name__ == "__main__":

@@ -1,54 +1,49 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+import os
+import shutil
+import subprocess
+
+import utils
+
 from install_mongo import install_mongodb
-required_variables = ['mongo_admin_user', 'mongo_admin_password']
-required_variables += ['mongo_db']
 
-def read_config_variables():
-    config_variables = {}
-    with open('variaveis_configuracao.txt', 'r') as vc:
-        try:
-            for line in vc:
-                config_line = line.strip().split('=')
-                if len(config_line) == 2:
-                    config_variables[config_line[0].strip()] = config_line[1].strip()
-        except ValueError:
-            msg = """
-            O arquivo de configuração deve ter o formato:
-            var1=valor1
-            var2=valor2
-            Sendo uma variável por linha, sem linhas em branco.
-            Por favor, ajuste o arquivo e repita a operação.
-            """
-    return config_variables
+required_variables = ['host.name', 'idp.metadata', 'restsecurity.user']
+required_variables += ['restsecurity.password', 'admin.user', 'admin.password']
 
-def check_missing_variables(config_variables):
-    missing_variable = False
-    for required_variable in required_variables:
-        if required_variable not in config_variables.keys():
-            msg = """
-            A variavel %s está faltando.
-            Edite o arquivo variaveis_configuracao.txt e insira-a na forma
-            %s=valor
-            """ % (required_variable, required_variable)
-            print(msg)
-            missing_variable = True
-    return missing_variable
 
 def main():
 
     # lê variáveis de configuração
-    config_variables = read_config_variables()
-    if len(config_variables) == 0:
+    config_variables = utils.read_config_variables()
+    if config_variables and len(config_variables) == 0:
         msg = """
         As variaveis de configuraçao necessárias nao foram adquiridas
         Por favor, verifique o arquivo variaveis_configuracao.txt
         """
         print(msg)
-    if check_missing_variables(config_variables):
+    if utils.check_missing_variables(config_variables, required_variables):
         print("Corrija as variáveis faltantes e reinicie a execução")
         exit()
     
+    print("\n=== Clonando o repositório do projeto MfaProvider ===\n")
+    print("Você será solicitado a informar seu usuário e senha do git\n")
     # clone repositório MFAProvider
+    if os.path.exists('MfaProvider'):
+        print("Diretorio MfaProvider existe, fazendo backup")
+        dt = datetime.now()
+        shutil.move('MfaProvider','MfaProvider.orig.%s' % dt.strftime("%d%m%Y%H%M%S"))
+
+    retcode_gitclone = subprocess.call("git clone https://git.rnp.br/GT-AMPTo/MfaProvider.git", 
+        shell=True)
+    if retcode_gitclone != 0:
+        msg = """
+        Não foi possível clonar o diretório do projeto MfaProvider. 
+        Por favor, corrija o problema indicado e tente novamente.
+        """
+        print(msg)
+        exit()
+
     # configuração do Tomcat 8
 
     # instalação e configuração do mongo
@@ -58,7 +53,7 @@ def main():
             config_variables['mongo_admin_password'])
 
     if not mongodb_installed:
-        print("Não foi possíve instalar o mongodb... Encerrando...")
+        print("Não foi possível instalar e/ou configurar o mongodb... Encerrando...")
         exit()
 if __name__ == '__main__':
    main()
