@@ -8,7 +8,6 @@ Versão: 1.0
 
 '''
 import xml.etree.ElementTree as ET
-from lxml import etree
 
 import utils
 required_variables = ['dir_base_idp_shibboleth', 'uri']
