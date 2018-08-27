@@ -77,16 +77,17 @@ def config_relying_party(idp_base_dir):
     relying_file = idp_base_dir + RELYING_PARTY_FILE
     print ('relying file: ', relying_file)
     utils.backup_original_file(relying_file)
-    ET.register_namespace('', 'http://www.springframework.org/schema/beans')
-    ns = {'beans': 'http://www.springframework.org/schema/beans',
+    namespaces = {'': 'http://www.springframework.org/schema/beans',
             'context': 'http://www.springframework.org/schema/context',
             'util': 'http://www.springframework.org/schema/util',
             'p': 'http://www.springframework.org/schema/',
             'c': 'http://www.springframework.org/schema/c',
             'xsi': 'http://www.w3.org/2001/XMLSchema-instance'}
+    for prefix, uri in namespaces.items():
+        ET.register_namespace(prefix,uri)
     tree = ET.parse(relying_file)
     root = tree.getroot()
-    for child in root.findall('beans:bean', ns):
+    for child in root.findall('beans'):
         print (child.attrib)
         if child.attrib['id'] == 'MfaPrincipal' or child.attrib['id'] == 'PasswordPrincipal':
             root.remove(child)
@@ -145,4 +146,4 @@ def indent(elem, level=0):
 
 
 if __name__ == '__main__':
-   main()
+    main()
