@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+from shutil import copyfile
 
 def read_config_variables():
     config_variables = {}
     with open('variaveis_configuracao.txt', 'r') as vc:
         try:
             for line in vc:
+                if line.startswith('#'): # para permitir comentários no txt
+                    next
                 config_line = line.strip().split('=')
                 if len(config_line) == 2:
                     config_variables[config_line[0].strip()] = config_line[1].strip()
@@ -30,3 +33,13 @@ def check_missing_variables(config_variables, required_variables):
             print(msg)
             missing_variable = True
     return missing_variable
+
+def backup_original_file(filename):
+    print("Fazendo backup de "  + filename)
+    try:
+        copyfile(filename, filename + ".orig")
+    except FileNotFoundError as fnf:
+        print("O arquivo %s não foi encontrado", filename)
+
+if __name__ == "__main__":
+    read_config_variables()

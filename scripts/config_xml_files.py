@@ -8,7 +8,6 @@ Versão: 1.0
 
 '''
 import xml.etree.ElementTree as ET
-from shutil import copyfile
 from lxml import etree
 
 import utils
@@ -23,12 +22,7 @@ SP_METADATA_FILE = '/conf/spmfaprovider-metadata.xml'
 
 def config_attribute_filters(idp_base_dir):
     filter_file = idp_base_dir + ATTRIBUTE_FILTER_FILE
-    print("Fazendo backup de "  + filter_file)
-    try:
-        copyfile(filter_file, filter_file + ".orig")
-    except FileNotFoundError as fnf:
-        print("O arquivo %s não foi encontrado", filter_file)
-    
+    utils.backup_original_file(filter_file)
     ET.register_namespace('','urn:mace:shibboleth:2.0:afp')
     # namespace for attribute filter policy.
     # See https://wiki.shibboleth.net/confluence/display/IDP30/AttributeFilterPolicyConfiguration
@@ -61,11 +55,8 @@ def create_elem_rule(attribute, root):
 def config_metadata_provider(idp_base_dir):
     metadata_file = idp_base_dir + METADATA_PROVIDER_FILE
     sp_file = idp_base_dir + SP_METADATA_FILE
-    print("Fazendo backup de "  + metadata_file)
-    try:
-        copyfile(metadata_file, metadata_file + ".orig")
-    except FileNotFoundError as fnf:
-        print("O arquivo %s não foi encontrado", metadata_file)
+    utils.backup_original_file(metatada_file)
+    
     # namespace for Metadata Provider.
     # https://wiki.shibboleth.net/confluence/display/IDP30/MetadataConfiguration
     ET.register_namespace('','urn:mace:shibboleth:2.0:metadata')
