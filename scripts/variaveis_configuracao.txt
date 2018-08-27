@@ -10,3 +10,5 @@ admin.password=adminmfa
 br.rnp.xmpp.serverKey=xxxx
 br.rnp.xmpp.senderId=xxxx
 mfapbasepath=conta
+dir_base_idp_shibboleth=./
+uri=idp2ampto.cafeexpresso.rnp.br
