@@ -1,4 +1,9 @@
-1) Algumas atividades são pré-requisitos de outras.
+# Pré-requisitos:
+## idp shibboleth instalado
+
+## Tomcat 8 instalado
+
+## Algumas atividades são pré-requisitos de outras.
 
 O MfaProvider depende do mongodb e este, por sua vez, tem particularidades
 de instalação e configuração que se executadas várias vezes podem ter diversos resultados.
