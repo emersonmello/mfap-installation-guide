@@ -12,3 +12,8 @@ br.rnp.xmpp.senderId=xxxx
 mfapbasepath=conta
 dir_base_idp_shibboleth=./
 uri=idp2ampto.cafeexpresso.rnp.br
+# Endereço do MfaProvider
+idp.mfaprovider.apiHost=https://exemploidp.br/conta/
+## Usuário e senha para autenticação REST configurado no sp.properties do projeto MfaProvider
+idp.mfaprovider.username=admin_mfa
+idp.mfaprovider.password=admin_mfa

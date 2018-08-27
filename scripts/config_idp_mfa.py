@@ -16,40 +16,29 @@ def edit_idp_properties():
     if res != 0:
         print ("Não foi possível editar o arquivo idp.properties com as configurações do mfaprovider.properties")
         return False
-
-def install_mongodb():
-    result = subprocess.run(["sudo","apt-get","install", "mongodb", "-y"])
-    if result.returncode == 0:
-        try:
-            retcode = subprocess.call("systemctl status mongodb", shell=True)
-            if retcode != 0 :
-                print ("O mongodb não está rodando")
-            else:
-                print ("O mongodb está rodando, prosseguindo com a instalação")
-                retcode = subprocess.call("mongo < scriptMongo.js", shell=True)
-                if retcode == 0: # usuario foi criado
-                    res = subprocess.run(["sudo", "sed", "-i", "s/#auth = true/auth = true/g", "/etc/mongodb.conf"])
-                    if res.returncode == 0: 
-                        runmongo = subprocess.call("systemctl restart mongodb", shell=True)
-                        if runmongo != 0:
-                            return False
-                else:
-                    print("Houve algum erro na criação do usuario do mongo")
-                    return False
-
-        except OSError as e:
-            print ("Houve um erro ao verificar se o mongo está rodando: ", e)
-            return False
     return True
 
+def config_mfa_properties(apiHost, user, password, idp_dir):
+    try:
+        with open(idp_dir + 'conf/authn/mfaprovider.properties', 'w+') as mfap:
+            mfap.write("## Endereço do MfaProvider\n")
+            mfap.write("idp.mfaprovider.apiHost=" + apiHost + "\n")
+            mfap.write("## Usuário e senha para autenticação REST \n")
+            mfap.write("## configurado no sp.properties do projeto MfaProvider\n")
+            mfap.write("idp.mfaprovider.username=" + user + "\n")
+            mfap.write("idp.mfaprovider.password=" + password + "\n")
+    except IOError as err:
+        print("Erro ao escrever arquivo mfaprovider.properties")
+        print ("IOError: ", err)
+
+    return True
+
+
+
 def main():
-    if sys.version_info[0] != 3:
-        print("Este script requer python3")
-        exit()
+    if sys.version_info[0] != 2:
+        print("Este script requer python2 e pode nao funcionar adequadamento no 3")
     edit_idp_properties()
-    #mongo_installed = install_mongodb()
-    #if mongo_installed:
-    #    print("Mongo instalado e configurado com sucesso!")
 
 if __name__ == "__main__":
     main()

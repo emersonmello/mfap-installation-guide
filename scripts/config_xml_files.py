@@ -13,12 +13,12 @@ from lxml import etree
 import utils
 required_variables = ['dir_base_idp_shibboleth', 'uri']
 
-idp_root_dir='./'
 URI = 'idp2ampto.cafeexpresso.rnp.br'
 ATTRIBUTE_FILTER_FILE = '/conf/attribute-filter.xml'
 MFA_FILTER_POLICY_ID = 'releaseToMfaProvider'
 METADATA_PROVIDER_FILE = '/conf/metadata-providers.xml'
 SP_METADATA_FILE = '/conf/spmfaprovider-metadata.xml'
+RELYING_PARTY_FILE = '/conf/relying-party.xml'
 
 def config_attribute_filters(idp_base_dir):
     filter_file = idp_base_dir + ATTRIBUTE_FILTER_FILE
@@ -74,6 +74,36 @@ def config_metadata_provider(idp_base_dir):
     indent(root)
     tree.write(metadata_file)
 
+def config_relying_party(idp_base_dir):
+    relying_file = idp_base_dir + RELYING_PARTY_FILE
+    print ('relying file: ', relying_file)
+    utils.backup_original_file(relying_file)
+    ET.register_namespace('', 'http://www.springframework.org/schema/beans')
+    ns = {'beans': 'http://www.springframework.org/schema/beans',
+            'context': 'http://www.springframework.org/schema/context',
+            'util': 'http://www.springframework.org/schema/util',
+            'p': 'http://www.springframework.org/schema/',
+            'c': 'http://www.springframework.org/schema/c',
+            'xsi': 'http://www.w3.org/2001/XMLSchema-instance'}
+    tree = ET.parse(relying_file)
+    root = tree.getroot()
+    for child in root.findall('beans:bean', ns):
+        print (child.attrib)
+        if child.attrib['id'] == 'MfaPrincipal' or child.attrib['id'] == 'PasswordPrincipal':
+            root.remove(child)
+
+    bean_details = {'id': 'MfaPrincipal', 'parent': 'shibboleth.SAML2AuthnContextClassRef',
+            'c:classRef': 'http://id.incommon.org/assurance/mfa'}
+    ET.SubElement(root, 'bean', bean_details)
+  
+    bean_password_details = {'id': 'PasswordPrincipal', 'parent': 'shibboleth.SAML2AuthnContextClassRef', 
+            'c:classRef':'urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport'} 
+    ET.SubElement(root,'bean', bean_password_details)
+    indent(root)
+    tree.write(relying_file)
+
+    return True
+
 def main():
     # lê variáveis de configuração
     config_variables = utils.read_config_variables()
@@ -86,8 +116,9 @@ def main():
     if utils.check_missing_variables(config_variables, required_variables):
         print("Corrija as variáveis faltantes e reinicie a execução")
         exit()
-    config_attribute_filters(config_variables['dir_base_idp_shibboleth'])
-    config_metadata_provider(config_variables['dir_base_idp_shibboleth'])
+    #config_attribute_filters(config_variables['dir_base_idp_shibboleth'])
+    #config_metadata_provider(config_variables['dir_base_idp_shibboleth'])
+    config_relying_party(config_variables['dir_base_idp_shibboleth'])
 
 def indent(elem, level=0):
     '''
