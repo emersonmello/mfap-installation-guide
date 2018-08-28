@@ -235,7 +235,7 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
 
     *Obs: Os valores definidos neste momento para credenciais rest serão utilizados posteriormente na configuração de autenticação do IdP. Não utilizar o mesmo usuário e senha para admin e restsecurity*
 
-### SP Metadata
+### Gerar SP Metadata
 
 1.   No diretório do projeto MfaProvider execute o script para realizar o deploy da aplicação para configuraçaõ dos metadados.
 
@@ -243,27 +243,19 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
      ./deploy.sh
      ```
 
-2.   Após, siga os procedimentos abaixo para gerar os metadados do MfaProvider:
-   
-    1. Acesse o endereço `https://endereco-idp/pathname/saml/web/metadata` via browser.
+2.   Após término do processo de deploy, ainda no diretório do MfaProvider, execute o script `generateMetadataFactor.sh` para gerar o metadata com base nas informações configuradas previamente:
 
-    2. Entre com o usuário e senha configurado para o administrador do IdP.
-
-    3. Clique em `Gerar novo arquivo de metadados`
-
-    4. Mantenha os dados já preenchidos por padrão e clique em `gerar metadados`
-
-    5. Baixe o arquivo e salve com o nome `sp-metadata.xml`.
-
-    Copie o arquivo salvo `sp-metadata.xml` e cole no diretório do projeto MfaProvider no caminho abaixo:
-
-      ```bash
-      src/main/resources/metadata/
-      ```
+     ```bash
+     ./generateMetadataFactor.sh
+     ```
 
 ### Configurar SP Metadata no IdP
 
 1.   Os metadados do MfaProvider recém-gerados precisam ser carregados pelo IdP, no diretório do MfaProvider copie o arquivo `src/main/resources/metadata/sp-metadata.xml` para o diretório "metadata" no IdP (`/opt/shibboleth-idp/metadata`). 
+
+     ```bash
+     cp src/main/resources/metadata/sp-metadata.xml /opt/shibboleth-idp/metadata/
+     ```
 
 2.   Referencie, também no IdP, o path do arquivo. Para isso, altere o arquivo `metadata-providers.xml`. 
      
