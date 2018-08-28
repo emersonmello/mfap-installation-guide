@@ -349,7 +349,7 @@ Siga os próximos passos para relizar a configuração no IdP.
 
 ## Configurações gerais, flows, views, properties, libs e arquivos necessários:
 
-*Obs: Os trechos de código a partir deste momento estarão em arquivos de exemplo com comentários no diretório IdP-Personalizado-GtAmtpo baixado do git, para facilitar a visualização do local exato onde devem ser configurados no Idp*
+*Obs: Os trechos de código a partir deste momento estarão em arquivos de exemplo com comentários no diretório IdP-Customizado-GtAmtpo baixado do git, para facilitar a visualização do local exato onde devem ser configurados no Idp*
 
 1.   Edite o arquivo `relying-party.xml` do IdP e configure conforme instruções comentadas no arquivo `alteracoes/conf/relying-party.xml` do projeto.
     
@@ -375,7 +375,7 @@ Siga os próximos passos para relizar a configuração no IdP.
     sudo vi /opt/shibboleth-idp/messages/messages.properties
     ```
     
-5.   A partir do diretório IdP-Personalizado_GtAmpto, Copie o arquivo `alteracoes/conf/authn/mfa-authn-config.xml` para `/opt/shibboleth-idp/conf/authn/` sobrescrevendo o existente;
+5.   A partir do diretório IdP-Customizado-GtAmpto, Copie o arquivo `alteracoes/conf/authn/mfa-authn-config.xml` para `/opt/shibboleth-idp/conf/authn/` sobrescrevendo o existente;
     
     ```bash
     sudo cp alteracoes/conf/authn/mfa-authn-config.xml /opt/shibboleth-idp/conf/authn/
