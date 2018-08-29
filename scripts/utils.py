@@ -1,5 +1,17 @@
 # -*- coding: utf-8 -*-
 from shutil import copyfile
+import xml.etree.ElementTree as ET
+
+class CommentedTreeBuilder(ET.TreeBuilder):
+    def __init__(self, *args, **kwargs):
+        super(CommentedTreeBuilder, self).__init__(*args, **kwargs)
+
+    def comment(self, data):
+        self.start(ET.Comment, {})
+        self.data(data)
+        self.end(ET.Comment)
+
+parser = ET.XMLParser(target=CommentedTreeBuilder())
 
 def read_config_variables():
     config_variables = {}
@@ -40,6 +52,31 @@ def backup_original_file(filename):
         copyfile(filename, filename + ".orig")
     except FileNotFoundError as fnf:
         print("O arquivo %s não foi encontrado", filename)
+
+
+def indent(elem, level=0):
+    '''
+    Identa a árvore xml resultante, antes de escrever novamente
+    o arquivo.
+    Obtido de:
+        - https://stackoverflow.com/questions/749796/pretty-printing-xml-in-python e
+        - http://effbot.org/zone/element-lib.htm#prettyprint
+    '''
+    i = "\n" + level*"  "
+    j = "\n" + (level-1)*"  "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + "  "
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+        for subelem in elem:
+            indent(subelem, level+1)
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = j
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = j
+    return elem
 
 if __name__ == "__main__":
     read_config_variables()

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+import xml.etree.ElementTree as ET
 import os
 import shutil
 import subprocess
@@ -16,6 +17,8 @@ required_variables += ['restsecurity.password', 'admin.user', 'admin.password']
 required_variables += ['idp.mfaprovider.apiHost','idp.mfaprovider.username',
         'idp.mfaprovider.password']
 required_variables += ['dir_base_idp_shibboleth']
+required_variables += ['mfapbasepath','docBase','dir_tomcat_app_config']
+required_variables += ['tomcat_server_config']
 
 def config_mfa_idp(config_variables):
     # Alteraçao do fluxo principal para Multifator
@@ -44,6 +47,37 @@ def config_mfa_idp(config_variables):
         """
         print(msg)
 
+def config_tomcat(dir_tomcat, mfapbasepath, docBase, server_file):
+    '''
+    O caminho docBase está definido também no script 
+    de deploy da aplicação.
+    '''
+    filename = dir_tomcat + mfapbasepath + '.xml'
+    try:
+        with open(filename, 'w+') as fh:
+            fh.write('<Context docBase="%s"\n' % docBase)
+            fh.write('unpackWAR="true"\n')
+            fh.write('swallowOutput="true">\n')
+            fh.write('<Manager pathname="" />\n')
+            fh.write('</Context>')
+    except IOError as err:
+        print("Erro ao escrever arquivo mfaprovider.properties")
+        print ("IOError: ", err)
+        return False
+    utils.backup_original_file(server_file)
+    tree = ET.parse(server_file, utils.parser)
+    root = tree.getroot()
+    service_catalina = root.find('Service/[@name="Catalina"]')
+    for child in service_catalina:
+        if child.tag == 'Connector' and 'port' in child.attrib:
+            if child.attrib['port'] == '9443':
+                service_catalina.remove(child)
+    ET.SubElement(service_catalina, 'Connector', {'port': '9443', 'address': '127.0.0.1',
+        'protocol': 'AJP/1.3'})
+    utils.indent(root)
+    tree.write(server_file)
+    return True
+
 
 def main():
 
@@ -66,7 +100,6 @@ def main():
         print("Diretorio MfaProvider existe, fazendo backup")
         dt = datetime.now()
         shutil.move('MfaProvider','MfaProvider.orig.%s' % dt.strftime("%d%m%Y%H%M%S"))
-
     retcode_gitclone = subprocess.call("git clone https://git.rnp.br/GT-AMPTo/MfaProvider.git", 
         shell=True)
     if retcode_gitclone != 0:
@@ -76,12 +109,18 @@ def main():
         """
         print(msg)
         exit()
+
     # configuração do Tomcat 8
 
-
+    config_tomcat(config_variables['dir_tomcat_app_config'],
+            config_variables['mfapbasepath'], config_variables['docBase'],
+            config_variables['tomcat_server_config'])
     # configuração para solução de multifator no Shibboleth IdP
     config_mfa_idp(config_variables)
 
 
+
 if __name__ == '__main__':
+    #TODO : avisar que o script faz backup, mas sugerir backup
+    # prévio de alguns arquivos, ainda a listar
    main()

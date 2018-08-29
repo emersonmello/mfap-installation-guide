@@ -19,6 +19,7 @@ METADATA_PROVIDER_FILE = '/conf/metadata-providers.xml'
 SP_METADATA_FILE = '/conf/spmfaprovider-metadata.xml'
 RELYING_PARTY_FILE = '/conf/relying-party.xml'
 
+
 def config_attribute_filters(idp_base_dir):
     filter_file = idp_base_dir + ATTRIBUTE_FILTER_FILE
     utils.backup_original_file(filter_file)
@@ -26,7 +27,7 @@ def config_attribute_filters(idp_base_dir):
     # namespace for attribute filter policy.
     # See https://wiki.shibboleth.net/confluence/display/IDP30/AttributeFilterPolicyConfiguration
     ns = {"afp": "urn:mace:shibboleth:2.0:afp"} 
-    tree = ET.parse(filter_file)
+    tree = ET.parse(filter_file, utils.parser)
     root = tree.getroot()
     for child in root.findall('afp:AttributeFilterPolicy', ns):
         if child.attrib['id'] == MFA_FILTER_POLICY_ID:
@@ -42,7 +43,7 @@ def config_attribute_filters(idp_base_dir):
         for line in fa:
             attribute=line.split(',')
             create_elem_rule(attribute, filter_policy)
-    indent(root)
+    utils.indent(root)
     tree.write(filter_file)
 
 def create_elem_rule(attribute, root):
@@ -60,7 +61,7 @@ def config_metadata_provider(idp_base_dir):
     # https://wiki.shibboleth.net/confluence/display/IDP30/MetadataConfiguration
     ET.register_namespace('','urn:mace:shibboleth:2.0:metadata')
     ns = {"mdp": "urn:mace:shibboleth:2.0:metadata", "xsitype": "http://www.w3.org/2001/XMLSchema-instance"} 
-    tree = ET.parse(metadata_file)
+    tree = ET.parse(metadata_file, utils.parser)
     root = tree.getroot()
     for child in root.findall('./mdp:MetadataProvider', ns):
         if child.attrib['id'] == 'MfaProviderMetadata':
@@ -70,36 +71,41 @@ def config_metadata_provider(idp_base_dir):
     metadata_details = {'id': 'MfaProviderMetadata', 'xsi:type': 'FilesystemMetadataProvider',
             'metadataFile': sp_file}
     ET.SubElement(root,'MetadataProvider', metadata_details)
-    indent(root)
+    utils.indent(root)
     tree.write(metadata_file)
 
 def config_relying_party(idp_base_dir):
     relying_file = idp_base_dir + RELYING_PARTY_FILE
-    print ('relying file: ', relying_file)
     utils.backup_original_file(relying_file)
     namespaces = {'': 'http://www.springframework.org/schema/beans',
             'context': 'http://www.springframework.org/schema/context',
             'util': 'http://www.springframework.org/schema/util',
-            'p': 'http://www.springframework.org/schema/',
+            'p': 'http://www.springframework.org/schema/p',
             'c': 'http://www.springframework.org/schema/c',
             'xsi': 'http://www.w3.org/2001/XMLSchema-instance'}
     for prefix, uri in namespaces.items():
         ET.register_namespace(prefix,uri)
-    tree = ET.parse(relying_file)
+    tree = ET.parse(relying_file, utils.parser)
     root = tree.getroot()
-    for child in root.findall('beans'):
-        print (child.attrib)
+    for child in root.findall('{http://www.springframework.org/schema/beans}bean'):
         if child.attrib['id'] == 'MfaPrincipal' or child.attrib['id'] == 'PasswordPrincipal':
             root.remove(child)
+    
+    for child in root.findall('./{http://www.springframework.org/schema/beans}bean/[@parent="SAML2.SSO"]'):
+        print(child.attrib)
+        print(child.tag)
+        if 'parent' in child.attrib:
+            if child.attrib['parent'] == "SAML2.SSO":
+                print("SAML2.SSO")
+                print (child.attrib)
 
-    bean_details = {'id': 'MfaPrincipal', 'parent': 'shibboleth.SAML2AuthnContextClassRef',
-            'c:classRef': 'http://id.incommon.org/assurance/mfa'}
-    ET.SubElement(root, 'bean', bean_details)
+    ET.SubElement(root, 'bean',  {'id': 'MfaPrincipal', 'parent': 'shibboleth.SAML2AuthnContextClassRef',
+            'c:classRef': 'http://id.incommon.org/assurance/mfa'})
   
     bean_password_details = {'id': 'PasswordPrincipal', 'parent': 'shibboleth.SAML2AuthnContextClassRef', 
             'c:classRef':'urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport'} 
     ET.SubElement(root,'bean', bean_password_details)
-    indent(root)
+    utils.indent(root)
     tree.write(relying_file)
 
     return True
@@ -119,30 +125,6 @@ def main():
     #config_attribute_filters(config_variables['dir_base_idp_shibboleth'])
     #config_metadata_provider(config_variables['dir_base_idp_shibboleth'])
     config_relying_party(config_variables['dir_base_idp_shibboleth'])
-
-def indent(elem, level=0):
-    '''
-    Identa a árvore xml resultante, antes de escrever novamente
-    o arquivo.
-    Obtido de:
-        - https://stackoverflow.com/questions/749796/pretty-printing-xml-in-python e
-        - http://effbot.org/zone/element-lib.htm#prettyprint
-    '''
-    i = "\n" + level*"  "
-    j = "\n" + (level-1)*"  "
-    if len(elem):
-        if not elem.text or not elem.text.strip():
-            elem.text = i + "  "
-        if not elem.tail or not elem.tail.strip():
-            elem.tail = i
-        for subelem in elem:
-            indent(subelem, level+1)
-        if not elem.tail or not elem.tail.strip():
-            elem.tail = j
-    else:
-        if level and (not elem.tail or not elem.tail.strip()):
-            elem.tail = j
-    return elem
 
 
 if __name__ == '__main__':
