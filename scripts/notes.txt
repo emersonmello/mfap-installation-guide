@@ -1,4 +1,4 @@
-# Pré-requisitos:
+# Pré-requisitos: idp shibboleth, tomcat 8 e apache instalados. Execução do script de instalação e configuração do mongodb
 ## idp shibboleth instalado
 
 ## Tomcat 8 instalado

@@ -26,3 +26,6 @@ dir_tomcat_app_config=./
 docBase=/opt/mfaprovider/mfaprovider.war
 #tomcat_server_config=/etc/tomcat8/server.xml
 tomcat_server_config=./server.xml
+
+#Arquivo de configuração do site do idp no apache
+apache_conf_file=/etc/apache2/sites-enabled/01-idp.conf

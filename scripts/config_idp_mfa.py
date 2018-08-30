@@ -33,8 +33,6 @@ def config_mfa_properties(apiHost, user, password, idp_dir):
 
     return True
 
-
-
 def main():
     if sys.version_info[0] != 2:
         print("Este script requer python2 e pode nao funcionar adequadamento no 3")
