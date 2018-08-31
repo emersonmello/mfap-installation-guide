@@ -13,7 +13,7 @@ required_variables += ['host.name']
 
 def generate_metadata(user, password, host):
     userbase64 = base64.b64encode(user+':'+password)
-    destdir = 'MfaProvider/src/main/resources/metadata/sp-metadata.xml'
+    destdir = 'src/main/resources/metadata/sp-metadata.xml'
     resultrest = subprocess.call("$(curl","-X","GET","-H","'Authorization: Basic",userbase64,"'",host,"/saml/web/metadata/getNewMetaData)",shell=True)
     
     if resultrest != 0:
@@ -27,7 +27,7 @@ def generate_metadata(user, password, host):
                 return False
 
         except OSError as e:
-            print ("OSError ao executar a instalação e configuração do mongodb: ", e)
+            print ("OSError ao executar a instalação e configuração do metadado do MfaProvider: ", e)
             return False
     else:
         return False
@@ -50,13 +50,13 @@ def main():
         print("Corrija as variáveis faltantes e reinicie a execução")
         exit()
 
-    mongo_installed = install_mongodb(config_variables['mongo_db'],
-            config_variables['mongo_admin_user'],
-            config_variables['mongo_admin_password'])
-    if mongo_installed:
-        print("Mongo instalado e configurado com sucesso!")
+    metadata_generated = generate_metadata(config_variables['restsecurity.user'],
+            config_variables['restsecurity.password'],
+            config_variables['host.name'])
+    if metadata_generated:
+        print("o metadado foi configurado com sucesso!")
     else:
-        print("Não foi possível instalar e/ou configurar o mongodb... Encerrando...")
+        print("Não foi possível configurar o metadata... Encerrando...")
 
 
 if __name__ == "__main__":
