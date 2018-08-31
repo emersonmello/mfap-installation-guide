@@ -10,19 +10,14 @@ import utils
 from config_idp_mfa import edit_idp_properties, config_mfa_properties
 from config_xml_files import config_relying_party, config_metadata_provider
 
-required_variables = ['host.name', 'idp.metadata', 'restsecurity.user']
-required_variables += ['restsecurity.password', 'admin.user', 'admin.password']
-# config rest mfaprovider:
-required_variables += ['idp.mfaprovider.apiHost','idp.mfaprovider.username',
-        'idp.mfaprovider.password']
-required_variables += ['dir_base_idp_shibboleth']
-required_variables += ['mfapbasepath','docBase','dir_tomcat_app_config']
-required_variables += ['tomcat_server_config', 'apache_conf_file']
+try:
+    import configparser
+    config = configparser.ConfigParser()
+except ImportError:
+    import ConfigParser
+    config = ConfigParser.ConfigParser()
 
-# mongo
-required_variables += ['mongo.user', 'mongo.pass', 'mongo.host',
-        'mongo.db', 'mongo.port']
-
+config.read('config.ini')
 
 def config_mfa_idp(cfg):
     # Alteração do fluxo principal para multifator
@@ -34,10 +29,10 @@ def config_mfa_idp(cfg):
         print(msg)
 
     # Configuração Rest do MfaProvider
-    if not config_mfa_properties(cfg['idp.mfaprovider.apiHost'],
-        cfg['idp.mfaprovider.username'],
-        cfg['idp.mfaprovider.password'],
-        cfg['dir_base_idp_shibboleth']):
+    if not config_mfa_properties(config.get(idp,idp.mfaprovider.apiHost),
+        config.get(idp,idp.mfaprovider.username),
+        config.get(idp,idp.mfaprovider.password),
+        config.get(idp,dir_base_idp_shibboleth)):
         msg = """
         Não foi possível editar o arquivo mfaprovider.properties.
         Por favor,edite manualmente conforme tutorial.
@@ -47,7 +42,7 @@ def config_mfa_idp(cfg):
     # Configurações gerais, flows, views, properties,
     # libs e arquivos necessários:
     # 1. relying-party.xml
-    if not config_relying_party(cfg['dir_base_idp_shibboleth']):
+    if not config_relying_party(config.get(idp,dir_base_idp_shibboleth)):
         msg = """
         Não foi possível editar o arquivo relying-party.xml.
         Por favor,edite manualmente conforme tutorial.
@@ -55,7 +50,7 @@ def config_mfa_idp(cfg):
         print(msg)
 
     # 2. attribute-filter.xml
-    if not config_attribute_filters(cfg['dir_base_idp_shibboleth']):
+    if not config_attribute_filters(config.get(idp,dir_base_idp_shibboleth)):
         msg = """
         Não foi possível editar o arquivo attribute-filter.xml.
         Por favor,edite manualmente conforme tutorial.
@@ -85,25 +80,25 @@ def config_mfa_idp(cfg):
     # cd /opt/shibboleth-idp/
     # ./bin/build.sh
 
-def config_tomcat(dir_tomcat, mfapbasepath, docBase, server_file):
+def config_tomcat():
     '''
     O caminho docBase está definido também no script 
     de deploy da aplicação.
     '''
-    filename = dir_tomcat + mfapbasepath + '.xml'
+    filename = config.get('tomcat','dir_tomcat_app_config') + config.get('mfap','mfapbasepath') + '.xml'
     try:
         with open(filename, 'w+') as fh:
-            fh.write('<Context docBase="%s"\n' % docBase)
+            fh.write('<Context docBase="%s"\n' % config.get('tomcat','docBase'))
             fh.write('unpackWAR="true"\n')
             fh.write('swallowOutput="true">\n')
             fh.write('<Manager pathname="" />\n')
             fh.write('</Context>')
     except IOError as err:
-        print("Erro ao escrever arquivo " + docBase)
+        print("Erro ao escrever arquivo " + config.get('tomcat','docBase'))
         print ("IOError: ", err)
         return False
-    utils.backup_original_file(server_file)
-    tree = ET.parse(server_file, utils.parser)
+    utils.backup_original_file(config.get('tomcat','tomcat_server_config'))
+    tree = ET.parse(config.get('tomcat','tomcat_server_config'), utils.parser)
     root = tree.getroot()
     service_catalina = root.find('Service/[@name="Catalina"]')
     for child in service_catalina:
@@ -113,11 +108,10 @@ def config_tomcat(dir_tomcat, mfapbasepath, docBase, server_file):
     ET.SubElement(service_catalina, 'Connector', {'port': '9443', 'address': '127.0.0.1',
         'protocol': 'AJP/1.3'})
     utils.indent(root)
-    tree.write(server_file)
+    tree.write(config.get('tomcat','tomcat_server_config'))
     return True
 
-def config_sp_properties(idp_address, metadata, rest_user, rest_pwd,
-        admin_user, admin_pwd):
+def config_sp_properties():
     file_contents = """
  ##Caminho completo do idp com o pathname
  host.name=%s
@@ -132,7 +126,9 @@ def config_sp_properties(idp_address, metadata, rest_user, rest_pwd,
  ##Defina um usuario e senha para administrador do IdP
  admin.user=%s
  admin.password=%s
-    """ % (idp_address, metadata, rest_user, rest_pwd, admin_user, admin_pwd)
+    """ % (config.get('idp','host.name'), config.get('idp','idp.metadata'),
+            config.get('idp','restsecurity.user'), config.get('idp','restsecurity.password'),
+            config.get('idp','admin.user'), config.get('idp','admin.password'))
     try:
         with open('MfaProvider/src/main/resources/sp.properties', 'w+') as fp:
             fp.write(file_contents)
@@ -141,14 +137,13 @@ def config_sp_properties(idp_address, metadata, rest_user, rest_pwd,
         return False
     return True
 
-def config_apache(apache_conf_file):
-    if os.path.exists(apache_conf_file):
-        utils.backup_original_file(apache_conf_file)
+def config_apache():
+    if os.path.exists(config.get('apache','apache_conf_file')):
+        utils.backup_original_file(config.get('apache','apache_conf_file'))
         try:
-            #TODO
-
+            print("TODO")
         except IOError as err:
-            print("Erro ao escrever arquivo " + apache_conf_file)
+            print("Erro ao escrever arquivo " + config.get('apache','apache_conf_file'))
             print ("IOError: ", err)
             return False
 
@@ -158,22 +153,22 @@ def config_apache(apache_conf_file):
             print("Apache reiniciado com sucesso!")
             return True
         else:
-        print("Nao foi possivel reiniciar o apache")
+            print("Nao foi possivel reiniciar o apache")
     else:
-        print ("Arquivo " + apache_conf_file + " de configuração do apache não encontrado!")
+        print ("Arquivo " + config.get('apache','apache_conf_file') + " de configuração do apache não encontrado!")
 
     return False
 
-def write_mongo_properties(user, pwd, host, port, db):
+def write_mongo_properties():
     try:
         # codigo fonte clonado em MfaProvider, a partir do diretorio
         # deste script
         with open('MfaProvider/src/main/resources/mongo.properties', 'w+') as fmp:
-            fmp.write('mongo.user=' + user)
-            fmp.write('mongo.pass=' + pwd)
-            fmp.write('mongo.host=' + host)
-            fmp.write('mongo.port=' + port)
-            fmp.write('mongo.db=' + db)
+            fmp.write('mongo.user=' + config.get('mongo','user'))
+            fmp.write('mongo.pass=' + config.get('mongo','password'))
+            fmp.write('mongo.host=' + config.get('mongo','host'))
+            fmp.write('mongo.port=' + config.get('mongo','port'))
+            fmp.write('mongo.db=' + config.get('mongo','db'))
     except OSError as err:
         print("Não foi possível escrever o arquivo mongo.properties")
         return False
@@ -182,16 +177,6 @@ def write_mongo_properties(user, pwd, host, port, db):
 
 def main():
     # lê variáveis de configuração
-    cfg = utils.read_cfg()
-    if cfg and len(cfg) == 0:
-        msg = """
-        As variaveis de configuraçao necessárias nao foram adquiridas
-        Por favor, verifique o arquivo variaveis_configuracao.txt
-        """
-        print(msg)
-    if utils.check_missing_variables(cfg, required_variables):
-        print("Corrija as variáveis faltantes e reinicie a execução")
-        exit()
 
     ##
     #   1. Roteiro de instalação da aplicação MfaProvider
@@ -200,6 +185,7 @@ def main():
     print("\n=== Clonando o repositório do projeto MfaProvider ===\n")
     print("Você será solicitado a informar seu usuário e senha do git\n")
     # clone repositório MFAProvider
+    '''
     if os.path.exists('MfaProvider'):
         print("Diretorio MfaProvider existe, fazendo backup")
         dt = datetime.now()
@@ -214,30 +200,29 @@ def main():
         print(msg)
         exit()
     else:
-        write_mongo_properties(cfg['mongo.user'], cfg['mongo.pass'],
-                cfg['mongo.host'], cfg['mongo.port'], cfg['mongo.db'])
+        write_mongo_properties()
+    '''
 
     # configuração do Tomcat 8 para servir o SP MfaProvider
-    config_tomcat(cfg['dir_tomcat_app_config'],
-            cfg['mfapbasepath'], cfg['docBase'],
-            cfg['tomcat_server_config'])
+    config_tomcat()
 
     # Configuração apache
-    config_apache(cfg['apache_conf_file'])
+    config_apache()
 
     ## Configuração do MfaP como Service Provider:
-    if (config_sp_properties(config_variables['host.name'], cfg['idp.metadata'],
-            cfg['restsecurity.user'], cfg['restsecurity.password'],
-            cfg['admin.user'], cfg['admin.password'])):
-        retcode_deploy = subprocess.call('./deploy.sh')
-
+    if config_sp_properties():
+        try:
+            retcode_deploy = subprocess.call('./deploy.sh')
+        except FileNotFoundError as fne:
+            print("O arquivo de deploy não foi encontrado")
     # Gerar SP Metadata
 
     # Configurar SP Metadata no IdP
     ## 1. Copiar metadata do sp
 
     ## 2. Editar metadata-providers.xml
-    if not config_metadata_provider(cfg['dir_base_idp_shibboleth']):
+    print ('dir_ base')
+    if not config_metadata_provider(config.get('idp','dir_base_idp_shibboleth')):
         msg = """
         Não foi possível editar o arquivo metadata-providers.xml.
         Por favor,edite manualmente conforme tutorial.

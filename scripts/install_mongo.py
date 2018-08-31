@@ -9,10 +9,16 @@ import sys
 
 import utils
 
-required_variables = ['mongo_admin_user', 'mongo_admin_password']
-required_variables += ['mongo_db']
+try:
+    import configparser
+    config = configparser.ConfigParser()
+except ImportError:
+    import ConfigParser
+    config = ConfigParser.ConfigParser()
 
-def install_mongodb(db, admin_user, admin_pwd):
+config.read('config.ini')
+
+def install_mongodb():
     with open('scriptMongo.js', 'w') as sm:
         script_text = """
         use %s
@@ -23,7 +29,7 @@ def install_mongodb(db, admin_user, admin_pwd):
                 roles: ["readWrite","dbAdmin"]
             }
         )
-        """ % (db, admin_user, admin_pwd)
+        """ % (config['mongo']['db'], config['mongo']['user'], config['mongo']['password'])
         sm.write(script_text)
 
     retcode_install_mongo = subprocess.call(["sudo","apt-get","install", "mongodb", "-y"])
@@ -61,22 +67,7 @@ def main():
     if sys.version_info[0] != 2:
         print("Este script requer python2 e pode não funcionar com outra versão!")
     
-    # lê variáveis de configuração
-    config_variables = utils.read_config_variables()
-
-    if config_variables and len(config_variables) == 0:
-        msg = """
-        As variaveis de configuraçao necessárias nao foram adquiridas
-        Por favor, verifique o arquivo variaveis_configuracao.txt
-        """
-        print(msg)
-    if utils.check_missing_variables(config_variables, required_variables):
-        print("Corrija as variáveis faltantes e reinicie a execução")
-        exit()
-
-    mongo_installed = install_mongodb(config_variables['mongo_db'],
-            config_variables['mongo_admin_user'],
-            config_variables['mongo_admin_password'])
+    mongo_installed = install_mongodb()
     if mongo_installed:
         print("Mongo instalado e configurado com sucesso!")
     else:

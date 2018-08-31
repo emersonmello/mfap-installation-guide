@@ -10,9 +10,16 @@ Versão: 1.0
 import xml.etree.ElementTree as ET
 
 import utils
-required_variables = ['dir_base_idp_shibboleth', 'uri']
 
-URI = 'idp2ampto.cafeexpresso.rnp.br'
+try:
+    import configparser
+    config = configparser.ConfigParser()
+except ImportError:
+    import ConfigParser
+    config = ConfigParser.ConfigParser()
+
+config.read('config.ini')
+
 ATTRIBUTE_FILTER_FILE = '/conf/attribute-filter.xml'
 MFA_FILTER_POLICY_ID = 'releaseToMfaProvider'
 METADATA_PROVIDER_FILE = '/conf/metadata-providers.xml'
@@ -55,7 +62,9 @@ def create_elem_rule(attribute, root):
 def config_metadata_provider(idp_base_dir):
     metadata_file = idp_base_dir + METADATA_PROVIDER_FILE
     sp_file = idp_base_dir + SP_METADATA_FILE
-    utils.backup_original_file(metatada_file)
+    print ("sp file: "+ sp_file)
+    print("Metadata_file : " + metadata_file)
+    utils.backup_original_file(metadata_file)
     
     # namespace for Metadata Provider.
     # https://wiki.shibboleth.net/confluence/display/IDP30/MetadataConfiguration
@@ -111,20 +120,9 @@ def config_relying_party(idp_base_dir):
     return True
 
 def main():
-    # lê variáveis de configuração
-    config_variables = utils.read_config_variables()
-    if config_variables and len(config_variables) == 0:
-        msg = """
-        As variaveis de configuraçao necessárias nao foram adquiridas
-        Por favor, verifique o arquivo variaveis_configuracao.txt
-        """
-        print(msg)
-    if utils.check_missing_variables(config_variables, required_variables):
-        print("Corrija as variáveis faltantes e reinicie a execução")
-        exit()
-    #config_attribute_filters(config_variables['dir_base_idp_shibboleth'])
-    #config_metadata_provider(config_variables['dir_base_idp_shibboleth'])
-    config_relying_party(config_variables['dir_base_idp_shibboleth'])
+    #config_attribute_filters(config.get('idp','dir_base_idp_shibboleth'))
+    config_metadata_provider(config.get('idp','dir_base_idp_shibboleth'))
+    #config_relying_party(config.get('idp',dir_base_idp_shibboleth'))
 
 
 if __name__ == '__main__':
