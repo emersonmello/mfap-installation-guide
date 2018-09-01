@@ -4,11 +4,18 @@ import xml.etree.ElementTree as ET
 import os
 import shutil
 import subprocess
+try:
+    # For Python 3.0 and later
+    from urllib.request import urlopen
+except ImportError:
+    # Fall back to Python 2's urllib2
+    from urllib2 import urlopen
 
 import utils
 
 from config_idp_mfa import edit_idp_properties, config_mfa_properties
 from config_xml_files import config_relying_party, config_metadata_provider
+from generate_metadata import generate_metadata
 
 try:
     import configparser
@@ -126,7 +133,7 @@ def config_sp_properties():
  ##Defina um usuario e senha para administrador do IdP
  admin.user=%s
  admin.password=%s
-    """ % (config.get('idp','host.name'), config.get('idp','idp.metadata'),
+    """ % (config.get('mfap','host.name'), config.get('idp','idp.metadata'),
             config.get('idp','restsecurity.user'), config.get('idp','restsecurity.password'),
             config.get('idp','admin.user'), config.get('idp','admin.password'))
     try:
@@ -213,9 +220,13 @@ def main():
     if config_sp_properties():
         try:
             retcode_deploy = subprocess.call('./deploy.sh')
-        except FileNotFoundError as fne:
+        except IOError as fne:
             print("O arquivo de deploy não foi encontrado")
     # Gerar SP Metadata
+    generate_metadata(config.get('idp','restsecurity.user'),
+            config.get('idp','restsecurity.password'),
+            config.get('mfap','host.name') + config.get('mfap', 'mfapbasepath'),
+            'MfaProvider/src/main/resources/metadata/sp-metadata.xml')
 
     # Configurar SP Metadata no IdP
     ## 1. Copiar metadata do sp
