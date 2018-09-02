@@ -128,7 +128,7 @@ O MfaProvider será a aplicação dentro do IdP responsável por gerenciar o seg
 
     Altere as propriedades `mongo.user` e `mongo.pass` com usuário e senha definidos anteriormente para o banco:
  
-    ```xml
+    ```properties
     #usuario e senha
     mongo.user=DEFINIR
     mongo.pass=DEFINIR
@@ -194,17 +194,17 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
 
     Utilizando os atributos anotados do FCM no item 9. Altere as propriedades conforme comentários no arquivo :
 
-     ```xml
+     ```properties
      ##substitua por chave herdada do servidor FCM
      br.rnp.xmpp.serverKey= XXXX
      
      ##substitua por código do remetente FCM
      br.rnp.xmpp.senderId= XXXXX
       
-     #Substitua somente se utilizar um pathname diferente do padrão conta
+     #substitua somente se utilizar um pathname diferente do padrão conta
      mfapbasepath=conta
      
-     #Substitua o idphost com o caminho completo do idp para obter o logo ex: https://insituicao.edu.br/idp/images/logo-instituicao.png
+     #substitua o idphost com o caminho completo do idp para obter o logo ex: https://insituicao.edu.br/idp/images/logo-instituicao.png
      idplogo=https://idphost/idp/images/logo-instituicao.png
      ```
 
@@ -219,7 +219,7 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
 
     Configure o arquivo conforme explicação nos comentários abaixo:
 
-     ```xml
+     ```properties
      ##Caminho completo do idp com o pathname ex: https://insituicao.edu.br/conta
      host.name=https://idphost/pathname
      
@@ -338,7 +338,7 @@ Siga os próximos passos para relizar a configuração no IdP.
 
 1.   A partir do diretório do projeto IdP-Customizado-GtAmpto baixado no git, edite o arquivo mfaprovider.properties `sudo vi alteracoes/conf/authn/mfaprovider.properties` altererando as propriedades apresentadas abaixo: 
   
-     ```xml
+     ```properties
      ## Enredeço do MfaProvider 
      idp.mfaprovider.apiHost  = https://exemploidp.br/conta/
      ## Usuário e senha para autenticação REST configurado no sp.properties do projeto MfaProvider
