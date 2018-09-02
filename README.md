@@ -135,7 +135,6 @@ O MfaProvider será a aplicação dentro do IdP responsável por gerenciar o seg
 
     #local de configuração mongo, não necessita alterar
     mongo.host=localhost:27017
-    mongo.port=27017
     mongo.db=mfaprovider
     ```
 
