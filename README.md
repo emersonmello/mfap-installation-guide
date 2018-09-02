@@ -204,6 +204,9 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
       
      #Substitua somente se utilizar um pathname diferente do padrão conta
      mfapbasepath=conta
+     
+     #Substitua o idphost com o caminho completo do idp para obter o logo ex: https://insituicao.edu.br/idp/images/logo-instituicao.png
+     idplogo=https://idphost/idp/images/logo-instituicao.png
      ```
 
 
@@ -218,8 +221,8 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
     Configure o arquivo conforme explicação nos comentários abaixo:
 
      ```xml
-     ##Caminho completo do idp com o pathname
-     host.name=https://endereco-idp/pathname
+     ##Caminho completo do idp com o pathname ex: https://insituicao.edu.br/conta
+     host.name=https://idphost/pathname
      
      ##Caminho completo para o metadata do idp
      idp.metadata=/opt/shibboleth-idp/metadata/idp-metadata.xml
