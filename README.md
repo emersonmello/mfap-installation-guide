@@ -295,14 +295,13 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
      ./deploy.sh
      ```
 
-4.   Entre no diretório do IdP e realize o build do IdP para utilizar as novas configurações:
+4.  Realize o build do IdP para utilizar as novas configurações:
 
-     ```bash
-     cd /opt/shibboleth-idp/
-     
-     ./bin/build.sh
-     ```
-
+    ```bash
+    /opt/shibboleth-idp/bin/./build.sh
+    ```
+    *Obs: Após o script de build irá perguntar o diretório do Idp, basta pressionar Enter para continuar.*
+    
 
 Siga os próximos passos para relizar a configuração no IdP.
 
@@ -417,11 +416,10 @@ Siga os próximos passos para relizar a configuração no IdP.
 - Execute o build do IdP utilizando `build.sh` :
 
     ```bash
-    cd /opt/shibboleth-idp/
-     
-    ./bin/build.sh
-     ```
-
+    /opt/shibboleth-idp/bin/./build.sh
+    ```
+    *Obs: Após o script de build irá perguntar o diretório do Idp, basta pressionar Enter para continuar.*
+    
 ## Teste
 
 - A aplicação será disponibilizada no endereço configurado, ex: `https://endereco-idp/conta`.
