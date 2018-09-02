@@ -30,7 +30,7 @@ def generate_metadata(user, password, host, destdir):
     handler = urllib2.HTTPBasicAuthHandler(password_mgr)
     opener = urllib2.build_opener(handler)
     urllib2.install_opener(opener)
-    pagehandler = urllib2.urlopen(host+"/saml/metadata")
+    pagehandler = urllib2.urlopen(host+"/saml/web/metadata/getNewMetaData")
     if pagehandler.code == 200:   
         try:
             with open(destdir, 'wb+') as fh:
