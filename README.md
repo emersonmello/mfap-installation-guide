@@ -253,13 +253,7 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
 
 ### Configurar SP Metadata no IdP
 
-1.   Os metadados do MfaProvider recém-gerados precisam ser carregados pelo IdP, no diretório do MfaProvider copie o arquivo `src/main/resources/metadata/sp-metadata.xml` para o diretório "metadata" no IdP (`/opt/shibboleth-idp/metadata`). 
-
-     ```bash
-     cp src/main/resources/metadata/sp-metadata.xml /opt/shibboleth-idp/metadata/
-     ```
-
-2.   Referencie, também no IdP, o path do arquivo. Para isso, altere o arquivo `metadata-providers.xml`. 
+1.   Referencie, também no IdP, o path do arquivo. Para isso, altere o arquivo `metadata-providers.xml`. 
      
      ```bash
      sudo vi /opt/shibboleth-idp/conf/metadata-providers.xml
@@ -297,14 +291,6 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
      ./deploy.sh
      ```
 
-4.  Realize o build do IdP para utilizar as novas configurações:
-
-    ```bash
-    /opt/shibboleth-idp/bin/./build.sh
-    ```
-    *Obs: Após o script de build irá perguntar o diretório do Idp, basta pressionar Enter para continuar.*
-    
-
 Siga os próximos passos para relizar a configuração no IdP.
 
 # Roteiro de configuração para solução de multifator no Shibboleth IdP
@@ -336,8 +322,12 @@ Siga os próximos passos para relizar a configuração no IdP.
             
 ## Configuração Rest do MfaProvider:
 
-1.   A partir do diretório do projeto IdP-Customizado-GtAmpto baixado no git, edite o arquivo mfaprovider.properties `sudo vi alteracoes/conf/authn/mfaprovider.properties` altererando as propriedades apresentadas abaixo: 
-  
+1.   A partir do diretório do projeto IdP-Customizado-GtAmpto baixado no git, edite o arquivo mfaprovider.properties `mfaprovider.properties` altererando as propriedades apresentadas abaixo: 
+    
+    ```bash
+    sudo vi alteracoes/conf/authn/mfaprovider.properties
+    ```
+      
      ```properties
      ## Enredeço do MfaProvider 
      idp.mfaprovider.apiHost  = https://exemploidp.br/conta/
@@ -346,9 +336,15 @@ Siga os próximos passos para relizar a configuração no IdP.
      idp.mfaprovider.password  = senha
      ```
      
-2.   Copie o arquivo recém-alterado em `alteracoes/conf/authn/mfaprovider.properties` para `/opt/shibboleth-idp/conf/authn/`
 
 ## Configurações gerais, flows, views, properties, libs e arquivos necessários:
+
+1.   A partir do diretório IdP-Customizado-GtAmpto, execute o script `implantacao_mfa_idpv3.sh` para realizar a copia dos arquivos para o IdP. Esse script irá realizar
+backup e cópia dos arquivos necessários.
+
+     ```bash
+     sudo ./implantacao_mfa_idpv3.sh
+     ```
 
 *Obs: Os trechos de código a partir deste momento estarão em arquivos de exemplo com comentários no diretório IdP-Customizado-GtAmtpo baixado do git, para facilitar a visualização do local exato onde devem ser configurados no Idp*
 
@@ -376,51 +372,13 @@ Siga os próximos passos para relizar a configuração no IdP.
     sudo vi /opt/shibboleth-idp/messages/messages.properties
     ```
     
-5.   A partir do diretório IdP-Customizado-GtAmpto, Copie o arquivo `alteracoes/conf/authn/mfa-authn-config.xml` para `/opt/shibboleth-idp/conf/authn/` sobrescrevendo o existente;
-    
-    ```bash
-    sudo cp alteracoes/conf/authn/mfa-authn-config.xml /opt/shibboleth-idp/conf/authn/
-    ```
+## Build IdP, Permissões e Reinicialização de serviços
 
-6.   Copie o conteúdo do diretório `alteracoes/flows/authn` para  `/opt/shibboleth-idp/flows/authn`;
-    
-    ```bash
-    sudo cp -R alteracoes/flows/authn/* /opt/shibboleth-idp/flows/authn/
-    ```
-    
-7.   Copie o conteúdo do diretório `alteracoes/views` para  `/opt/shibboleth-idp/views`;
-    
-    ```bash
-    sudo cp alteracoes/views/* /opt/shibboleth-idp/views/
-    ```
-    
-8.   Copie o conteúdo do diretório `alteracoes/webapp/images` para  `/opt/shibboleth-idp/webapp/images`;
-    
-    ```bash
-    sudo cp alteracoes/webapp/images/* /opt/shibboleth-idp/webapp/images/
-    ```
-
-9.   Copie o conteúdo do diretório `alteracoes/webapp/WEB-INF/lib` para `/opt/shibboleth-idp/webapp/WEB-INF/lib`.
-    
-    ```bash
-    sudo cp alteracoes/webapp/WEB-INF/lib/* /opt/shibboleth-idp/webapp/WEB-INF/lib/
-    ```
-    *Observação: As dependências contidas neste ditetório foram geradas a partir do projeto: [MfaProviderIdp](https://git.rnp.br/GT-AMPTo/mfadialogo)* 
-    
-10.   Execute o comando abaixo para atribuir permissão a todos os arquivos do IdP ao tomcat8
-    
-    ```bash
-    chown -hR tomcat8:tomcat8 /opt/shibboleth-idp/
-    ```
-    
-## Build IdP
-
-- Execute o build do IdP utilizando `build.sh` :
+- Execute o script para finalizar a configuração:
 
     ```bash
-    /opt/shibboleth-idp/bin/./build.sh
+    sudo ./finaliza_configuracao.sh 
     ```
-    *Obs: Após o script de build irá perguntar o diretório do Idp, basta pressionar Enter para continuar.*
     
 ## Teste
 
