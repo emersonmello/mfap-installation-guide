@@ -400,10 +400,17 @@ Siga os próximos passos para relizar a configuração no IdP.
     ```
 
 9.   Copie o conteúdo do diretório `alteracoes/webapp/WEB-INF/lib` para `/opt/shibboleth-idp/webapp/WEB-INF/lib`.
+    
     ```bash
     sudo cp alteracoes/webapp/WEB-INF/lib/* /opt/shibboleth-idp/webapp/WEB-INF/lib/
     ```
     *Observação: As dependências contidas neste ditetório foram geradas a partir do projeto: [MfaProviderIdp](https://git.rnp.br/GT-AMPTo/mfadialogo)* 
+    
+10.   Execute o comando abaixo para atribuir permissão a todos os arquivos do IdP ao tomcat8
+    
+    ```bash
+    chown -hR tomcat8:tomcat8 /opt/shibboleth-idp/
+    ```
     
 ## Build IdP
 
@@ -418,7 +425,7 @@ Siga os próximos passos para relizar a configuração no IdP.
 ## Teste
 
 - A aplicação será disponibilizada no endereço configurado, ex: `https://endereco-idp/conta`.
-- Faça a autentiicação no IdP e verifique o auxílio da página para cadastrar e utilizar o segundo fator.
+- Faça a autenticação e verifique o auxílio da página para cadastrar e utilizar o segundo fator.
 
 
 # (Extras) Utilitários para Administrador:
