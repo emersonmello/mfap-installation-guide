@@ -4,13 +4,13 @@ import xml.etree.ElementTree as ET
 import os
 import shutil
 import subprocess
-# Fall back to Python 2's urllib2
 from urllib2 import urlopen
 
 import utils
 
 from config_idp_mfa import edit_idp_properties, config_mfa_properties
 from config_xml_files import config_relying_party, config_metadata_provider
+from config_xml_files import config_attribute_filters
 from generate_metadata import generate_metadata
 
 import ConfigParser
@@ -19,7 +19,7 @@ config = ConfigParser.ConfigParser()
 # Lê as variáveis
 config.read('config.ini')
 
-def config_mfa_idp(cfg):
+def config_mfa_idp():
     # Alteração do fluxo principal para multifator
     if not edit_idp_properties():
         msg = """
@@ -54,7 +54,7 @@ def config_mfa_idp(cfg):
     #    print(msg)
 
     # 2. attribute-filter.xml
-    if not config_attribute_filters(config.get(idp,dir_base_idp_shibboleth)):
+    if not config_attribute_filters(config.get('idp','dir_base_idp_shibboleth')):
         msg = """
         Não foi possível editar o arquivo attribute-filter.xml.
         Por favor,edite manualmente conforme tutorial.
@@ -144,22 +144,29 @@ def config_sp_properties():
     return True
 
 def config_apache():
-    if os.path.exists(config.get('apache','apache_conf_file')):
-        utils.backup_original_file(config.get('apache','apache_conf_file'))
+    apache_conf_file = config.get('apache','apache_conf_file')
+    if os.path.exists(apache_conf_file):
+        utils.backup_original_file(apache_conf_file)
         try:
-            print("#TODO")
+            with open('insert_apache.txt', 'w+') as fp:
+                fp.write('\n    ProxyPass /%s ajp://localhost:9443/conta retry=5 \n' 
+                        % config.get('mfap','mfapbasepath'))
+                fp.write('  <Proxy ajp://localhost:9443>\n')
+                fp.write('      Require all granted\n')
+                fp.write('  </Proxy>\n')
         except IOError as err:
-            print("Erro ao escrever arquivo " + config.get('apache','apache_conf_file'))
+            print("Erro ao escrever arquivo " + apache_conf_file)
             print ("IOError: ", err)
             return False
-
-        print ("Reiniciando apache..." )
-        retcode_restart_apache = subprocess.call('systemctl restart apache2', shell=True)
-        if retcode_restart_apache == 0:
-            print("Apache reiniciado com sucesso!")
-            return True
-        else:
-            print("Nao foi possivel reiniciar o apache")
+        retcode = subprocess.call("sed -i '/<\/Proxy>/r insert_apache.txt' %s" % apache_conf_file, shell=True)
+        if retcode == 0:
+            print ("Reiniciando apache..." )
+            retcode_restart_apache = subprocess.call('systemctl restart apache2', shell=True)
+            if retcode_restart_apache == 0:
+                print("Apache reiniciado com sucesso!")
+                return True
+            else:
+                print("Nao foi possivel reiniciar o apache")
     else:
         print ("Arquivo " + config.get('apache','apache_conf_file') + " de configuração do apache não encontrado!")
 
@@ -208,7 +215,7 @@ def main():
     config_tomcat()
 
     # Configuração apache
-    # config_apache()
+    config_apache()
 
     ## Configuração do MfaP como Service Provider:
     if config_sp_properties():
@@ -257,7 +264,7 @@ def main():
     # Download do projeto:
     # git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
 
-    config_mfa_idp(cfg)
+    config_mfa_idp()
     # chamar script de cópias
     # retcode_copy =  subprocess.call('', shell=True)
 
@@ -265,4 +272,5 @@ def main():
 if __name__ == '__main__':
     #TODO : avisar que o script faz backup, mas sugerir backup
     # prévio de alguns arquivos, ainda a listar
+   #config_mfa_idp()
    main()

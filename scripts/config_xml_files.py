@@ -49,6 +49,8 @@ def config_attribute_filters(idp_base_dir):
     utils.indent(root)
     tree.write(filter_file)
 
+    return True
+
 def create_elem_rule(attribute, root):
     elem = ET.SubElement(root, 'AttributeRule', {'attributeID':attribute[0].strip()})
     elem.tail = "\n  "
@@ -78,6 +80,8 @@ def config_metadata_provider(idp_base_dir):
     ET.SubElement(root,'MetadataProvider', metadata_details)
     utils.indent(root)
     tree.write(metadata_file)
+
+    return True
 
 def config_relying_party(idp_base_dir):
     relying_file = idp_base_dir + RELYING_PARTY_FILE

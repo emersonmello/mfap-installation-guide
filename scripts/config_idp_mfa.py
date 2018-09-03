@@ -47,7 +47,7 @@ def config_mfa_properties(apiHost, user, password, idp_dir,
 def main():
     if sys.version_info[0] != 2:
         print("Este script requer python2 e pode nao funcionar adequadamento no 3")
-    #edit_idp_properties()
+    edit_idp_properties()
 
     config_mfa_properties(config.get('mfap','idp.mfaprovider.apiHost'),
         config.get('mfap','idp.mfaprovider.username'),
@@ -57,5 +57,6 @@ def main():
         config.get('fcm','br.rnp.xmpp.senderId'),
         config.get('mfap','mfapbasepath'),
         config.get('idp','idp_logo'))
+
 if __name__ == "__main__":
     main()
