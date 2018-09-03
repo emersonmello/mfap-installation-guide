@@ -4,12 +4,8 @@ import xml.etree.ElementTree as ET
 import os
 import shutil
 import subprocess
-try:
-    # For Python 3.0 and later
-    from urllib.request import urlopen
-except ImportError:
-    # Fall back to Python 2's urllib2
-    from urllib2 import urlopen
+# Fall back to Python 2's urllib2
+from urllib2 import urlopen
 
 import utils
 
@@ -17,13 +13,10 @@ from config_idp_mfa import edit_idp_properties, config_mfa_properties
 from config_xml_files import config_relying_party, config_metadata_provider
 from generate_metadata import generate_metadata
 
-try:
-    import configparser
-    config = configparser.ConfigParser()
-except ImportError:
-    import ConfigParser
-    config = ConfigParser.ConfigParser()
+import ConfigParser
+config = ConfigParser.ConfigParser()
 
+# Lê as variáveis
 config.read('config.ini')
 
 def config_mfa_idp(cfg):
@@ -36,10 +29,10 @@ def config_mfa_idp(cfg):
         print(msg)
 
     # Configuração Rest do MfaProvider
-    if not config_mfa_properties(config.get(idp,idp.mfaprovider.apiHost),
-        config.get(idp,idp.mfaprovider.username),
-        config.get(idp,idp.mfaprovider.password),
-        config.get(idp,dir_base_idp_shibboleth)):
+    if not config_mfa_properties(config.get('idp','idp.mfaprovider.apiHost'),
+        config.get('idp','idp.mfaprovider.username'),
+        config.get('idp','idp.mfaprovider.password'),
+        config.get('idp','dir_base_idp_shibboleth')):
         msg = """
         Não foi possível editar o arquivo mfaprovider.properties.
         Por favor,edite manualmente conforme tutorial.
@@ -49,12 +42,12 @@ def config_mfa_idp(cfg):
     # Configurações gerais, flows, views, properties,
     # libs e arquivos necessários:
     # 1. relying-party.xml
-    if not config_relying_party(config.get(idp,dir_base_idp_shibboleth)):
-        msg = """
-        Não foi possível editar o arquivo relying-party.xml.
-        Por favor,edite manualmente conforme tutorial.
-        """
-        print(msg)
+    #if not config_relying_party(config.get(idp,dir_base_idp_shibboleth)):
+    #    msg = """
+    #   Não foi possível editar o arquivo relying-party.xml.
+    #    Por favor,edite manualmente conforme tutorial.
+    #    """
+    #    print(msg)
 
     # 2. attribute-filter.xml
     if not config_attribute_filters(config.get(idp,dir_base_idp_shibboleth)):
@@ -100,10 +93,11 @@ def config_tomcat():
             fh.write('swallowOutput="true">\n')
             fh.write('<Manager pathname="" />\n')
             fh.write('</Context>')
-    except IOError as err:
+    except OSError as err:
         print("Erro ao escrever arquivo " + config.get('tomcat','docBase'))
         print ("IOError: ", err)
         return False
+
     utils.backup_original_file(config.get('tomcat','tomcat_server_config'))
     tree = ET.parse(config.get('tomcat','tomcat_server_config'), utils.parser)
     root = tree.getroot()
@@ -133,8 +127,9 @@ def config_sp_properties():
  ##Defina um usuario e senha para administrador do IdP
  admin.user=%s
  admin.password=%s
-    """ % (config.get('mfap','host.name'), config.get('idp','idp.metadata'),
-            config.get('idp','restsecurity.user'), config.get('idp','restsecurity.password'),
+    """ % (config.get('mfap','host.name') + config.get('mfap','mfapbasepath'), 
+            config.get('idp','idp.metadata'), config.get('idp','restsecurity.user'), 
+            config.get('idp','restsecurity.password'),
             config.get('idp','admin.user'), config.get('idp','admin.password'))
     try:
         with open('MfaProvider/src/main/resources/sp.properties', 'w+') as fp:
@@ -148,7 +143,7 @@ def config_apache():
     if os.path.exists(config.get('apache','apache_conf_file')):
         utils.backup_original_file(config.get('apache','apache_conf_file'))
         try:
-            print("TODO")
+            print("#TODO")
         except IOError as err:
             print("Erro ao escrever arquivo " + config.get('apache','apache_conf_file'))
             print ("IOError: ", err)
@@ -174,17 +169,14 @@ def write_mongo_properties():
             fmp.write('mongo.user=' + config.get('mongo','user'))
             fmp.write('mongo.pass=' + config.get('mongo','password'))
             fmp.write('mongo.host=' + config.get('mongo','host'))
-            fmp.write('mongo.port=' + config.get('mongo','port'))
             fmp.write('mongo.db=' + config.get('mongo','db'))
     except OSError as err:
-        print("Não foi possível escrever o arquivo mongo.properties")
+        print("Não foi possível escrever o arquivo mongo.properties. Erro: " + err)
         return False
     return True
 
 
 def main():
-    # lê variáveis de configuração
-
     ##
     #   1. Roteiro de instalação da aplicação MfaProvider
     ##
@@ -192,7 +184,6 @@ def main():
     print("\n=== Clonando o repositório do projeto MfaProvider ===\n")
     print("Você será solicitado a informar seu usuário e senha do git\n")
     # clone repositório MFAProvider
-    '''
     if os.path.exists('MfaProvider'):
         print("Diretorio MfaProvider existe, fazendo backup")
         dt = datetime.now()
@@ -208,31 +199,38 @@ def main():
         exit()
     else:
         write_mongo_properties()
-    '''
 
     # configuração do Tomcat 8 para servir o SP MfaProvider
     config_tomcat()
 
     # Configuração apache
-    config_apache()
+    # config_apache()
 
     ## Configuração do MfaP como Service Provider:
     if config_sp_properties():
         try:
-            retcode_deploy = subprocess.call('./deploy.sh')
+            retcode_deploy = subprocess.call('MfaProvider/deploy.sh', shell=True)
         except IOError as fne:
             print("O arquivo de deploy não foi encontrado")
+            exit()
     # Gerar SP Metadata
-    generate_metadata(config.get('idp','restsecurity.user'),
-            config.get('idp','restsecurity.password'),
-            config.get('mfap','host.name') + config.get('mfap', 'mfapbasepath'),
-            'MfaProvider/src/main/resources/metadata/sp-metadata.xml')
+    metadatafile = 'MfaProvider/src/main/resources/metadata/mfaprovider-metadata.xml'
+    if retcode_deploy == 0:
+        generate_metadata(config.get('idp','restsecurity.user'),
+                config.get('idp','restsecurity.password'),
+                config.get('mfap','host.name') + config.get('mfap', 'mfapbasepath'),
+                metadatafile)
+    else:
+        print("Não foi possível gerar metadados do MfaProvider")
+        exit()
 
     # Configurar SP Metadata no IdP
     ## 1. Copiar metadata do sp
+    metadatadest = config.get('idp', 'dir_base_idp_shibboleth') + 'metadata/' + 'mfaprovider-metadata.xml' 
+    shutil.copyfile(metadatafile, metadatadest)
+
 
     ## 2. Editar metadata-providers.xml
-    print ('dir_ base')
     if not config_metadata_provider(config.get('idp','dir_base_idp_shibboleth')):
         msg = """
         Não foi possível editar o arquivo metadata-providers.xml.
@@ -241,8 +239,12 @@ def main():
         print(msg)
 
     ## 3. Deploy do sp
+    try:
+        retcode_deploy = subprocess.call('MfaProvider/deploy.sh', shell=True)
+    except IOError as fne:
+        print("O arquivo de deploy não foi encontrado")
+        exit()
 
-    ## 4. Build do IdP
 
     ##
     #   2. Roteiro de configuração para solução de multifator no Shibboleth IdP
@@ -252,6 +254,9 @@ def main():
     # git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
 
     config_mfa_idp(cfg)
+    # chamar script de cópias
+    # retcode_copy =  subprocess.call('', shell=True)
+
 
 if __name__ == '__main__':
     #TODO : avisar que o script faz backup, mas sugerir backup

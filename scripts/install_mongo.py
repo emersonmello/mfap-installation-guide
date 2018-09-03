@@ -9,12 +9,8 @@ import sys
 
 import utils
 
-try:
-    import configparser
-    config = configparser.ConfigParser()
-except ImportError:
-    import ConfigParser
-    config = ConfigParser.ConfigParser()
+import ConfigParser
+config = ConfigParser.ConfigParser()
 
 config.read('config.ini')
 
