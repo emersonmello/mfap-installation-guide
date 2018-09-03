@@ -2,163 +2,20 @@
 
 ## Pré-requisitos
 
- * IdP Shibboleth v3.3.
+ * IdP Shibboleth v3.3, tomcat 8 e apache 2 instalados.
 
 ## Organização do roteiro
 
 Este roteiro está dividido em 3 partes:
 
+1. Configuração do FCM (Console)
+1. Configurações de variáveis para utilização nos scritps
+1. Instalação do Mongo
 1. Roteiro de instalação da aplicação MfaProvider.
 2. Roteiro de configuração para solução de multifator no Shibboleth IdP.
 3. (Extras) Utilitários para Administrador.
 
-
-# Roteiro de instalação da aplicação MfaProvider
-
-## Baixar o projeto MfaProvider do git
-
-O MfaProvider será a aplicação dentro do IdP responsável por gerenciar o segundo fator do usuário.
-
-1.   Faça o download do projeto MfaProvider para o diretório de sua preferência. Pode ser utilizado o diretório home do usuário por exemplo.
-
-     ```bash
-     git clone https://git.rnp.br/GT-AMPTo/MfaProvider.git
-     ```
-
-## Configuração do Tomcat/Apache para funcionamento do MfaProvider.
-
-*Obs: o roteiro foi desenvolvido considerando o servidor de aplicação tomcat na versão 8.*
-
-### Arquivo de configuração da aplicação no Tomcat:
-
-É necessário criar um arquivo xml com o pathname desejado (caminho a ser acessado pelo usuário para acessar o MfaProvider). Por padrão, o MfaProvider é configurado em `https://endereco-idp/conta`. Caso desejar utilizar outro pathname, alterar `conta` para o nome desejado nos próximos passos.
-
-1.   Crie o arquivo xml através do comando: 
-
-    ```bash
-    sudo vi /etc/tomcat8/Catalina/localhost/conta.xml 
-    ```
-
-    Insira o seguinte conteúdo dentro do arquivo:
-
-    ```xml
-    <Context docBase="/opt/mfaprovider/mfaprovider.war"
-        unpackWAR="true"
-        swallowOutput="true">
-        <Manager pathname="" />
-    </Context>
-    ```
-
-    *Obs: o caminho /opt/mfaprovider/mfaprovider.war está definido no script de deploy da aplicação, não necessita alteração*
-
-2.   Edite o arquivo `server.xml` no diretório do tomcat:
-
-     ```bash
-     sudo vi /etc/tomcat8/server.xml
-     ```
-
-    Localize no arquivo, a tag: `<Service name="Catalina">` a adicione abaixo desta tag o seguinte conteúdo:
-
-    ```xml
-    <Connector port="9443" address="127.0.0.1" protocol="AJP/1.3" />
-    ```
-
-3.   Edite o arquivo `01-idp.conf`:
-
-     ```bash
-     sudo vi /etc/apache2/sites-enabled/01-idp.conf
-     ```
-
-    Localize no arquivo, a tag: `<VirtualHost *:443>` e adicione dentro desta tag (abaixo do mesmo trecho de configuração de ProxyPass /idp) o seguinte conteúdo:
-    *Obs: Caso utilizar outro  pathname, alterar `/conta` para o nome desejado.*
-
-    ```xml
-    ProxyPass /conta ajp://localhost:9443/conta retry=5
-     <Proxy ajp://localhost:9443>
-       Require all granted
-     </Proxy>
-    ```
-
-4.   Reinicie o serviço do Apache:
-
-     ```bash
-     sudo systemctl restart apache2 
-     ```
-
-## Instalação e configuração do banco de dados MongoDB
-
-1.   Baixe e instale o MongoDB pelo gerenciador de pacotes:
-
-     ```bash
-     sudo apt-get install mongodb
-     ```
-
-    *Obs: Ao termino da instalação, o serviço do MongoDB será instânciado automaticamente, o qual pode ser conferido pelo comando `ps -aux | grep mongo` (caso não estiver iniciado, utilize o comando `sudo systemctl start mongodb`).* 
-
-2.   No diretório que foi realizado o download do projeto MfaProvider, edite o arquivo `scriptMongo.js`:
-
-     ```bash
-     sudo vi scriptMongo.js
-     ```
-
-    Defina os valores de `user` e `pwd` (usuário e senha) para segurança do banco e salve o arquivo:
-
-     ```js
-     use mfaprovider
-     db.createUser(
-        {
-          user:"VALORDEFINIDO",
-          pwd:"VALORDEFINIDO",
-          roles: ["readWrite","dbAdmin"]
-        }
-     )
-     ```
-
-3.   Ainda no diretório do projeto MfaProvider, execute o script para criar o usuário:
-
-     ```bash 
-     mongo < scriptMongo.js
-     ```
-
-4.   No mesmo diretório, edite o arquivo `mongo.properties`:
-
-     ```bash
-     sudo vi src/main/resources/mongo.properties
-     ```
-
-    Altere as propriedades `mongo.user` e `mongo.pass` com usuário e senha definidos anteriormente para o banco:
- 
-    ```properties
-    #usuario e senha
-    mongo.user=DEFINIR
-    mongo.pass=DEFINIR
-
-    #local de configuração mongo, não necessita alterar
-    mongo.host=localhost:27017
-    mongo.db=mfaprovider
-    ```
-
-5.   Edite o arquivo de configuração do mongodb:
-
-     ```bash
-     sudo vi /etc/mongodb.conf
-     ```
-
-    Habilite a autenticação descomentando o atributo `auth = true`. Ficará similar ao exemplo abaixo:
-
-     ```bash
-     # Turn on/off security.  Off is currently the default
-     #noauth = true
-     auth = true
-     ```
-
-6.   Reinicie o MongoDB
-
-    ```bash
-    sudo systemctl restart mongodb
-    ```
-
-## Configurações FCM para Diálogo de Confirmação 
+# Configurações FCM para Diálogo de Confirmação 
 
 Para funcionamento da opção multi-fator de diálogo de confirmação, é necessário possuir uma conta Google com o projeto FCM configurado. Siga os passos a seguir:
 
@@ -186,28 +43,51 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
 
      ![](./images/confcm2.png)
 
-10.   No diretório do projeto MfaProvider, edite o arquivo `mfaprovider.properties` 
+# Configuração de variáveis
+
+1.   Editar o arquivo config.ini e ajustar os valores conforme comentários.
+
+
+# Roteiro de instalação da aplicação MfaProvider
+
+1.   Executar o script
+
+# Roteiro de instalação da aplicação MfaProvider
+
+## Baixar o projeto MfaProvider do git
+
+O MfaProvider será a aplicação dentro do IdP responsável por gerenciar o segundo fator do usuário.
+
+1.   Faça o download do projeto MfaProvider para o diretório de sua preferência. Pode ser utilizado o diretório home do usuário por exemplo.
 
      ```bash
-     sudo vi src/main/resources/mfaprovider.properties
+     git clone https://git.rnp.br/GT-AMPTo/MfaProvider.git
      ```
 
-    Utilizando os atributos anotados do FCM no item 9. Altere as propriedades conforme comentários no arquivo :
+## Configuração do Tomcat/Apache para funcionamento do MfaProvider.
 
-     ```properties
-     ##substitua por chave herdada do servidor FCM
-     br.rnp.xmpp.serverKey= XXXX
-     
-     ##substitua por código do remetente FCM
-     br.rnp.xmpp.senderId= XXXXX
-      
-     #substitua somente se utilizar um pathname diferente do padrão conta
-     mfapbasepath=conta
-     
-     #substitua o idphost com o caminho completo do idp para obter o logo ex: https://insituicao.edu.br/idp/images/logo-instituicao.png
-     idplogo=https://idphost/idp/images/logo-instituicao.png
+*Obs: o roteiro foi desenvolvido considerando o servidor de aplicação tomcat na versão 8.*
+
+### Arquivo de configuração da aplicação no Tomcat:
+
+1.   Edite o arquivo `01-idp.conf`:
+
+     ```bash
+     sudo vi /etc/apache2/sites-enabled/01-idp.conf
      ```
 
+    Localize no arquivo, a tag: `<VirtualHost *:443>` e adicione dentro desta tag (abaixo do mesmo trecho de configuração de ProxyPass /idp) o seguinte conteúdo:
+    *Obs: Caso utilizar outro  pathname, alterar `/conta` para o nome desejado.*
+
+    ```xml
+    ProxyPass /conta ajp://localhost:9443/conta retry=5
+     <Proxy ajp://localhost:9443>
+       Require all granted
+     </Proxy>
+    ```
+2.   Execute o scrip install.py
+
+TODO: passo 10 do fcm, escrever mfaprovider.properties
 
 ## Configuração do MfaP como Service Provider:
 
@@ -236,20 +116,6 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
      ```
 
     *Obs: Os valores definidos neste momento para credenciais rest serão utilizados posteriormente na configuração de autenticação do IdP. Não utilizar o mesmo usuário e senha para admin e restsecurity*
-
-### Gerar SP Metadata
-
-1.   No diretório do projeto MfaProvider execute o script para realizar o deploy da aplicação para configuraçaõ dos metadados.
-
-     ```bash
-     ./deploy.sh
-     ```
-
-2.   Após término do processo de deploy, ainda no diretório do MfaProvider, execute o script `generateMetadataFactor.sh` para gerar o metadata com base nas informações configuradas previamente:
-
-     ```bash
-     ./generateMetadataFactor.sh
-     ```
 
 ### Configurar SP Metadata no IdP
 
