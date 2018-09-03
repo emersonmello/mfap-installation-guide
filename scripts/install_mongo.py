@@ -25,7 +25,7 @@ def install_mongodb():
                 roles: ["readWrite","dbAdmin"]
             }
         )
-        """ % (config['mongo']['db'], config['mongo']['user'], config['mongo']['password'])
+        """ % (config.get('mongo','db'), config.get('mongo','user'), config.get('mongo','password')
         sm.write(script_text)
 
     retcode_install_mongo = subprocess.call(["sudo","apt-get","install", "mongodb", "-y"])
