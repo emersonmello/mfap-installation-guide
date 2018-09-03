@@ -1,0 +1,83 @@
+##
+## Velocity Template for DisplayUsernamePasswordPage view-state
+##
+## Velocity context will contain the following properties
+## flowExecutionUrl - the form action location
+## flowRequestContext - the Spring Web Flow RequestContext
+## flowExecutionKey - the SWF execution key (this is built into the flowExecutionUrl)
+## profileRequestContext - root of context tree
+## authenticationContext - context with authentication request information
+## authenticationErrorContext - context with login error state
+## authenticationWarningContext - context with login warning state
+## ldapResponseContext - context with LDAP state (if using native LDAP)
+## rpUIContext - the context with SP UI information from the metadata
+## extendedAuthenticationFlows - collection of "extended" AuthenticationFlowDescriptor objects
+## passwordPrincipals - contents of the shibboleth.authn.Password.PrincipalOverride bean
+## encoder - HTMLEncoder class
+## request - HttpServletRequest
+## response - HttpServletResponse
+## environment - Spring Environment object for property resolution
+## custom - arbitrary object injected by deployer
+##
+#set ($fator = $authenticationContext.getSubcontext('br.rnp.mfaprovider.mfadialogo.bean.MfaDTO'))
+#set ($rpContext = $profileRequestContext.getSubcontext('net.shibboleth.idp.profile.context.RelyingPartyContext'))
+#set ($username = $authenticationContext.getSubcontext('net.shibboleth.idp.authn.context.UsernamePasswordContext', true).getUsername())
+##
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+         <meta charset="utf-8">
+        <title>#springMessageText("idp.title", "Web Login Service")</title>
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+
+    </head>
+  
+    <body>
+
+        <div class="container">
+                <div class="row">
+                        <div class="col-sm-52 col-md-12 col-xl-42 text-center">
+                            <br />
+                            <img src="$request.getContextPath()/images/logo-instituicao.png" class="img-responsive center-block" alt="Responsive image"    height="130" width="130">
+                            <h1 class="text-primary bold">Identity Provider 2</h1>
+                        </div>
+                </div>
+                 <div class="row pt-2 pb-2" >
+                            <div class="card mx-auto">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Métodos de autenticação</h5>
+                                    <p class="card-text">Tente realizar a autenticação multifator utilizando outro método disponível para seu usuário</p>
+                                </div>
+                            </div>
+                </div>
+                <div class="row pt-2 pb-2" >
+                        <div class="card mx-auto" style= "width: 18rem;">
+                            <div class="card-body">
+                                <form method="post" action="${flowExecutionUrl}">
+                                    <input type="hidden" name="_eventId" value="selectionFactor">
+                                    <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}" />
+                                    <div class="list-group">
+                                        #foreach( $tipoFator in $fator.getFaPriority() )
+                                            #if ($tipoFator.toValue() == $fator.getFatorPreferencial())
+                                                <button type="submit" name="tipoAutenticacao" class="list-group-item list-group-item-action active" value = "$tipoFator">
+                                                    $tipoFator.getAfName()
+                                                </button>
+                                            #else    
+                                                <button type="submit" name="tipoAutenticacao" class="list-group-item list-group-item-action" value = "$tipoFator">
+                                                    $tipoFator.getAfName()
+                                                </button>
+                                            #end
+                                        #end
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                </div>
+        </div>
+    </body>
+
+
+   
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.4.xsd"
+ 	parent="authn.abstract, authn/conditions">
+
+ 	<on-start>
+		<evaluate expression="opensamlProfileRequestContext" result="flowScope.profileRequestContext"/>
+		<evaluate expression="opensamlProfileRequestContext.getSubcontext(T(net.shibboleth.idp.authn.context.AuthenticationContext))" result="flowScope.authenticationContext"/>
+		<evaluate expression="authenticationContext.getSubcontext(T(net.shibboleth.idp.authn.context.UsernamePasswordContext))" result="flowScope.userContext"/>
+	</on-start>
+
+	<action-state id="performLoginAction">
+		<evaluate expression="loginServiceFido.validateUser(authenticationContext, profileRequestContext)" />
+ 		<evaluate expression="'proceed'" />
+        
+		<transition on="201" to="proceed" /> 
+		<transition on="202" to="displayError" />
+
+	</action-state>
+	
+	<view-state id="displayError" view="failureDialogo" />
+	<bean-import resource="fido-ecp-beans.xml" />
+</flow>

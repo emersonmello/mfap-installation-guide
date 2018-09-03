@@ -1,0 +1,39 @@
+<AttributeFilterPolicyGroup id="ShibbolethFilterPolicy"
+        xmlns="urn:mace:shibboleth:2.0:afp"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:mace:shibboleth:2.0:afp http://shibboleth.net/schema/idp/shibboleth-afp.xsd">
+
+<!--
+MfaProvider - Copiar a partir daqui
+Obs: Alterar o "value = ALTERAR" para o hostname do IdP sem http. ex: value="idpexemplo.edu.br".
+-->
+
+<AttributeFilterPolicy id="releaseToMfaProvider">
+
+			<PolicyRequirementRule xsi:type="Requester" value="ALTERAR" />
+
+                <AttributeRule attributeID="eduPersonPrincipalName">
+                        <PermitValueRule xsi:type="ANY" />
+                </AttributeRule>
+
+                <AttributeRule attributeID="eduPersonEntitlement">
+                        <PermitValueRule xsi:type="ANY" />
+                </AttributeRule>
+
+                <AttributeRule attributeID="mail">
+                        <PermitValueRule xsi:type="ANY" />
+                </AttributeRule>
+
+                <AttributeRule attributeID="uid">
+                        <PermitValueRule xsi:type="ANY" />
+                </AttributeRule>
+
+</AttributeFilterPolicy>
+
+<!--
+MfaProvider - Fim cópia
+-->
+
+
+
+</AttributeFilterPolicyGroup>

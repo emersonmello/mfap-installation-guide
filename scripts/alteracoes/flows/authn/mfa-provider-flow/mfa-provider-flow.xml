@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.4.xsd"
+ 	parent="authn.abstract, authn/conditions">
+
+ 	<var name="loginBean" class="br.rnp.mfaprovider.mfadialogo.bean.LoginBean" />
+        <var name="factorChoiseBean" class="br.rnp.mfaprovider.mfadialogo.bean.FactorChoiseBean" />
+	<var name="loginService" class="br.rnp.mfaprovider.mfadialogo.service.LoginService" />
+
+	<on-start>
+		<evaluate expression="opensamlProfileRequestContext" result="flowScope.profileRequestContext"/>
+		<evaluate expression="opensamlProfileRequestContext.getSubcontext(T(net.shibboleth.idp.authn.context.AuthenticationContext))" result="flowScope.authenticationContext"/>
+		<evaluate expression="authenticationContext.getSubcontext(T(net.shibboleth.idp.authn.context.UsernamePasswordContext))" result="flowScope.userContext"/>
+	</on-start>
+
+	<view-state id="displayLoginView" view="loginMfaProvider" model="loginBean">
+		<on-render>
+			<evaluate expression="environment" result="viewScope.environment"/>
+			<evaluate expression="opensamlProfileRequestContext" result="viewScope.profileRequestContext"/>
+			<evaluate expression="opensamlProfileRequestContext.getSubcontext(T(net.shibboleth.idp.authn.context.AuthenticationContext))" result="viewScope.authenticationContext"/>
+			<evaluate expression="authenticationContext.getSubcontext(T(net.shibboleth.idp.ui.context.RelyingPartyUIContext))" result="viewScope.rpUIContext"/>
+			<evaluate expression="authenticationContext.getSubcontext(T(net.shibboleth.idp.authn.context.AuthenticationErrorContext))" result="viewScope.authenticationErrorContext"/>
+			<evaluate expression="authenticationContext.getSubcontext(T(net.shibboleth.idp.authn.context.AuthenticationWarningContext))" result="viewScope.authenticationWarningContext"/>
+			<evaluate expression="T(net.shibboleth.utilities.java.support.codec.HTMLEncoder)" result="viewScope.encoder"/>
+			<evaluate expression="flowRequestContext.getExternalContext().getNativeRequest()" result="viewScope.request"/>
+			<evaluate expression="flowRequestContext.getExternalContext().getNativeResponse()" result="viewScope.response"/>
+		</on-render>
+		<transition on="performLogin" to="performLoginAction" />
+		<transition on="performFactorOption" to="displayFactorOptionView"/>
+		
+	</view-state>
+
+	<action-state id="performLoginAction">
+		<evaluate expression="loginService.validateUser(authenticationContext, profileRequestContext, loginBean)" />
+ 		<evaluate expression="'proceed'" />
+        
+		<transition on="201" to="proceed" /> 
+		<transition on="202" to="noAuthentication" />
+		<transition on="203" to="displayError" />
+
+	</action-state>
+
+	<view-state id="displayFactorOptionView" view="factorOption" model="factorChoiseBean" >
+		<on-render>
+			<evaluate expression="environment" result="viewScope.environment"/>
+			<evaluate expression="opensamlProfileRequestContext" result="viewScope.profileRequestContext"/>
+			<evaluate expression="opensamlProfileRequestContext.getSubcontext(T(net.shibboleth.idp.authn.context.AuthenticationContext))" result="viewScope.authenticationContext"/>
+			<evaluate expression="authenticationContext.getSubcontext(T(net.shibboleth.idp.ui.context.RelyingPartyUIContext))" result="viewScope.rpUIContext"/>
+			<evaluate expression="authenticationContext.getSubcontext(T(net.shibboleth.idp.authn.context.AuthenticationErrorContext))" result="viewScope.authenticationErrorContext"/>
+			<evaluate expression="authenticationContext.getSubcontext(T(net.shibboleth.idp.authn.context.AuthenticationWarningContext))" result="viewScope.authenticationWarningContext"/>
+			<evaluate expression="T(net.shibboleth.utilities.java.support.codec.HTMLEncoder)" result="viewScope.encoder"/>
+			<evaluate expression="flowRequestContext.getExternalContext().getNativeRequest()" result="viewScope.request"/>
+			<evaluate expression="flowRequestContext.getExternalContext().getNativeResponse()" result="viewScope.response"/>
+		</on-render>
+		<transition on="selectionFactor" to="displayLoginView">
+			<evaluate expression="authenticationContext.getSubcontext('br.rnp.mfaprovider.mfadialogo.bean.MfaDTO').setFatorPreferencial(factorChoiseBean.getTipoAutenticacao())" />
+		</transition>
+	</view-state>
+
+	<view-state id="noAuthentication" view="noAuthentication" model="factorChoiseBean" >
+		<on-render>
+			<evaluate expression="environment" result="viewScope.environment"/>
+			<evaluate expression="opensamlProfileRequestContext" result="viewScope.profileRequestContext"/>
+			<evaluate expression="opensamlProfileRequestContext.getSubcontext(T(net.shibboleth.idp.authn.context.AuthenticationContext))" result="viewScope.authenticationContext"/>
+			<evaluate expression="authenticationContext.getSubcontext(T(net.shibboleth.idp.ui.context.RelyingPartyUIContext))" result="viewScope.rpUIContext"/>
+			<evaluate expression="authenticationContext.getSubcontext(T(net.shibboleth.idp.authn.context.AuthenticationErrorContext))" result="viewScope.authenticationErrorContext"/>
+			<evaluate expression="authenticationContext.getSubcontext(T(net.shibboleth.idp.authn.context.AuthenticationWarningContext))" result="viewScope.authenticationWarningContext"/>
+			<evaluate expression="T(net.shibboleth.utilities.java.support.codec.HTMLEncoder)" result="viewScope.encoder"/>
+			<evaluate expression="flowRequestContext.getExternalContext().getNativeRequest()" result="viewScope.request"/>
+			<evaluate expression="flowRequestContext.getExternalContext().getNativeResponse()" result="viewScope.response"/>
+		</on-render>
+		<transition on="selectionFactor" to="displayLoginView">
+			<evaluate expression="authenticationContext.getSubcontext('br.rnp.mfaprovider.mfadialogo.bean.MfaDTO').setFatorPreferencial(factorChoiseBean.getTipoAutenticacao())" />
+		</transition>
+	</view-state>
+
+	<view-state id="displayError" view="failureAuthenticate" />
+</flow>

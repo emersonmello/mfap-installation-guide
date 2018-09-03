@@ -1,0 +1,59 @@
+##
+## Velocity Template for DisplayUsernamePasswordPage view-state
+##
+## Velocity context will contain the following properties
+## flowExecutionUrl - the form action location
+## flowRequestContext - the Spring Web Flow RequestContext
+## flowExecutionKey - the SWF execution key (this is built into the flowExecutionUrl)
+## profileRequestContext - root of context tree
+## authenticationContext - context with authentication request information
+## authenticationErrorContext - context with login error state
+## authenticationWarningContext - context with login warning state
+## ldapResponseContext - context with LDAP state (if using native LDAP)
+## rpUIContext - the context with SP UI information from the metadata
+## extendedAuthenticationFlows - collection of "extended" AuthenticationFlowDescriptor objects
+## passwordPrincipals - contents of the shibboleth.authn.Password.PrincipalOverride bean
+## encoder - HTMLEncoder class
+## request - HttpServletRequest
+## response - HttpServletResponse
+## environment - Spring Environment object for property resolution
+## custom - arbitrary object injected by deployer
+##
+#set ($rpContext = $profileRequestContext.getSubcontext('net.shibboleth.idp.profile.context.RelyingPartyContext'))
+#set ($username = $authenticationContext.getSubcontext('net.shibboleth.idp.authn.context.UsernamePasswordContext', true).getUsername())
+##
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+         <meta charset="utf-8">
+        <title>#springMessageText("idp.title", "Web Login Service")</title>
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+
+    </head>
+
+    <body>
+	
+        <div class="container">
+                <div class="row">
+                        <div class="col-sm-52 col-md-12 col-xl-42 text-center">
+                            <br />
+                            <img src="$request.getContextPath()/images/logo-instituicao.png" class="img-responsive center-block" alt="Responsive image"    height="130" width="130">
+                            <h1 class="text-primary bold">Identity Provider 2</h1>
+                        </div>
+                </div>
+                <div class="content">
+                    <div class="column one">
+			<br />
+			<br />
+			<br /> 
+                       <h3>Autenticação inválida </h3> 
+		       
+			<h3>Motivo: O serviço desejado exige autenticação forte (multi-fator).</h3>
+		       <a href="#springMessage("mfaprovider.host")">Clique aqui para cadastrar</a>
+                     </div>
+                </div>
+        </div>
+	</body>
+</html>

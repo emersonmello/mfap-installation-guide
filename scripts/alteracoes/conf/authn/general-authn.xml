@@ -1,0 +1,106 @@
+<!--
+    Copiar os trechos de códigos que estiverem com comentário com a tag: MfaProvider
+    * Contém vários trechos espalhados no arquivo para serem copiados no local exato conforme abaixo.
+-->
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+                           
+       default-init-method="initialize"
+       default-destroy-method="destroy">
+
+    
+
+    <util:list id="shibboleth.AvailableAuthenticationFlows">
+        
+        
+    <!--
+    MfaProvider - Inicio cópia
+	-->
+	<bean id="authn/mfa-provider-flow" parent="shibboleth.AuthenticationFlow"
+            p:passiveAuthenticationSupported="true"
+            p:forcedAuthenticationSupported="true"
+            p:nonBrowserSupported="true">
+              <property name="supportedPrincipals">
+                <list>
+                   <bean parent="shibboleth.SAML2AuthnContextClassRef"
+                     c:classRef="http://id.incommon.org/assurance/mfa" />
+                   <bean parent="shibboleth.SAML1AuthenticationMethod"
+                        c:method="http://id.incommon.org/assurance/mfa" />
+                </list>
+             </property>
+         </bean>
+
+         <bean id="authn/mfa-failure-request-flow" parent="shibboleth.AuthenticationFlow"
+         p:passiveAuthenticationSupported="true"  p:forcedAuthenticationSupported="true"  />
+
+         <bean id="authn/fido-ecp-flow" parent="shibboleth.AuthenticationFlow"
+                 p:passiveAuthenticationSupported="true"
+                 p:forcedAuthenticationSupported="true"
+                 p:nonBrowserSupported="true" />
+    <!--
+    MfaProvider - Fim cópia
+    -->
+
+    
+        <bean id="authn/MFA" parent="shibboleth.AuthenticationFlow"
+                p:passiveAuthenticationSupported="true"
+                p:forcedAuthenticationSupported="true">
+            <property name="supportedPrincipals">
+                <list>
+                    <bean parent="shibboleth.SAML2AuthnContextClassRef"
+                        c:classRef="urn:oasis:names:tc:SAML:2.0:ac:classes:InternetProtocol" />
+                    <bean parent="shibboleth.SAML2AuthnContextClassRef"
+                        c:classRef="urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport" />
+                    <bean parent="shibboleth.SAML2AuthnContextClassRef"
+                        c:classRef="urn:oasis:names:tc:SAML:2.0:ac:classes:Password" />
+                    <bean parent="shibboleth.SAML1AuthenticationMethod"
+                        c:method="urn:oasis:names:tc:SAML:1.0:am:password" />
+		   <!--
+	           MfaProvider - Inicio cópia
+       	   --> 
+		            <bean parent="shibboleth.SAML2AuthnContextClassRef"
+                     	c:classRef="http://id.incommon.org/assurance/mfa" />
+		   <!--
+           MfaProvider - Fim cópia
+       	   -->
+                </list>
+            </property>
+        </bean>
+
+    </util:list>
+
+<!--
+MfaProvider - Inicio cópia (Sobrescrever existente)
+-->
+<util:map id="shibboleth.AuthenticationPrincipalWeightMap">
+        <entry>
+             <key>
+                 <bean parent="shibboleth.SAML2AuthnContextClassRef"
+                     c:classRef="http://id.incommon.org/assurance/mfa" />
+             </key>
+             <value>1</value>
+        </entry>
+        <entry>
+            <key>
+                <bean parent="shibboleth.SAML2AuthnContextClassRef"
+                    c:classRef="urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport" />
+            </key>
+            <value>2</value>
+        </entry>
+    </util:map>
+<!--
+MfaProvider - Fim Cópia
+-->
+
+
+</beans>

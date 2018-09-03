@@ -6,14 +6,13 @@
 
 ## Organização do roteiro
 
-Este roteiro está dividido em 3 partes:
+Este roteiro está dividido em 5 partes:
 
-1. Configuração do FCM (Console)
-1. Configurações de variáveis para utilização nos scritps
-1. Instalação do Mongo
-1. Roteiro de instalação da aplicação MfaProvider.
-2. Roteiro de configuração para solução de multifator no Shibboleth IdP.
-3. (Extras) Utilitários para Administrador.
+1. Configuração do FCM
+2. Configurações de variáveis para utilização nos scritps
+3. Instalação do Mongo
+4. Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP.
+5. (Extras) Utilitários para Administrador.
 
 # Configurações FCM para Diálogo de Confirmação 
 
@@ -45,174 +44,46 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
 
 # Configuração de variáveis
 
-1.   Editar o arquivo config.ini e ajustar os valores conforme comentários.
+## Roterio de instalação
 
+*Obs: executar todos os comandos como root*
 
-# Roteiro de instalação da aplicação MfaProvider
-
-1.   Executar o script
-
-# Roteiro de instalação da aplicação MfaProvider
-
-## Baixar o projeto MfaProvider do git
-
-O MfaProvider será a aplicação dentro do IdP responsável por gerenciar o segundo fator do usuário.
-
-1.   Faça o download do projeto MfaProvider para o diretório de sua preferência. Pode ser utilizado o diretório home do usuário por exemplo.
+1.   Faça o download do projeto `roterio-instalacao` para o diretório de sua preferência. Pode ser utilizado o diretório home do usuário por exemplo.
 
      ```bash
-     git clone https://git.rnp.br/GT-AMPTo/MfaProvider.git
+     git clone https://git.rnp.br/GT-AMPTo/roteiro-instalacao.git
      ```
 
-## Configuração do Tomcat/Apache para funcionamento do MfaProvider.
+1.   Dentro do diretório baixado do git,  acesse o diretório `scripts`. Este será nosso diretório base para execução dos próximos passos.
 
-*Obs: o roteiro foi desenvolvido considerando o servidor de aplicação tomcat na versão 8.*
+      ```bash
+     cd scripts
+     ```
 
-### Arquivo de configuração da aplicação no Tomcat:
+2.   No diretório scripts, edite o arquivo `config.ini` e ajuste os valores conforme comentários do próprio arquivo.
 
-1.   Edite o arquivo `01-idp.conf`:
+      ```bash
+     vi config.ini
+     ```
 
+# Instalação do MongoDB
+
+1.   No diretório scripts, execute o script `install_mongo.py`
+
+      ```bash
+      python2 install_mongo.py
+      ```
+
+# Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP.
+
+*Obs: O script irá realizar o backup e cópia dos arquivos originais do IdP para o diretório Backup.*
+
+1.  No diretório scripts, execute o script install.py
      ```bash
-     sudo vi /etc/apache2/sites-enabled/01-idp.conf
-     ```
-
-    Localize no arquivo, a tag: `<VirtualHost *:443>` e adicione dentro desta tag (abaixo do mesmo trecho de configuração de ProxyPass /idp) o seguinte conteúdo:
-    *Obs: Caso utilizar outro  pathname, alterar `/conta` para o nome desejado.*
-
-    ```xml
-    ProxyPass /conta ajp://localhost:9443/conta retry=5
-     <Proxy ajp://localhost:9443>
-       Require all granted
-     </Proxy>
+    python2 install.py
     ```
-2.   Execute o scrip install.py
 
-TODO: passo 10 do fcm, escrever mfaprovider.properties
-
-## Configuração do MfaP como Service Provider:
-
-1.   No dirtório do projeto MfaProvider, edite o arquivo  `sp.properties`:
-
-     ```bash
-     sudo vi src/main/resources/sp.properties
-     ```
-
-    Configure o arquivo conforme explicação nos comentários abaixo:
-
-     ```properties
-     ##Caminho completo do idp com o pathname ex: https://insituicao.edu.br/conta
-     host.name=https://idphost/pathname
-     
-     ##Caminho completo para o metadata do idp
-     idp.metadata=/opt/shibboleth-idp/metadata/idp-metadata.xml
-     
-     ##Defina um usuario e senha para proteção dos recursos rest
-     restsecurity.user=xxx
-     restsecurity.password=xxx
-     
-     ##Defina um usuario e senha para administrador do IdP
-     admin.user=xxx
-     admin.password=xxx
-     ```
-
-    *Obs: Os valores definidos neste momento para credenciais rest serão utilizados posteriormente na configuração de autenticação do IdP. Não utilizar o mesmo usuário e senha para admin e restsecurity*
-
-### Configurar SP Metadata no IdP
-
-1.   Referencie, também no IdP, o path do arquivo. Para isso, altere o arquivo `metadata-providers.xml`. 
-     
-     ```bash
-     sudo vi /opt/shibboleth-idp/conf/metadata-providers.xml
-     ```
-     
-    Localize a tag `<MetadataProvider id="ShibbolethMetadata"...../>` e adicione o seguinte conteúdo abaixo desta tag:
-
-     ```xml
-     <MetadataProvider id="LocalMetadata"  xsi:type="FilesystemMetadataProvider" 
-       metadataFile="/opt/shibboleth-idp/metadata/sp-metadata.xml"/>
-     ```
-     Ficará desta forma, por exemplo:
-
-     ```xml
-     <MetadataProvider id="ShibbolethMetadata" xsi:type="ChainingMetadataProvider"
-        xmlns="urn:mace:shibboleth:2.0:metadata"
-        xmlns:resource="urn:mace:shibboleth:2.0:resource"
-        xmlns:security="urn:mace:shibboleth:2.0:security"
-        xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="urn:mace:shibboleth:2.0:metadata http://shibboleth.net/schema/idp/shibboleth-metadata.xsd
-                            urn:mace:shibboleth:2.0:resource http://shibboleth.net/schema/idp/shibboleth-resource.xsd 
-                            urn:mace:shibboleth:2.0:security http://shibboleth.net/schema/idp/shibboleth-security.xsd
-                            urn:oasis:names:tc:SAML:2.0:metadata http://docs.oasis-open.org/security/saml/v2.0/saml-schema-metadata-2.0.xsd">
-
-     <MetadataProvider id="LocalMetadata"  xsi:type="FilesystemMetadataProvider" 
-         metadataFile="/opt/shibboleth-idp/metadata/sp-metadata.xml"/>
-      
-     #continuação arquivo........
-     ```
-
-3.  No diretório do projeto MfaProvider e execute o script de deploy da aplicação novamente para utilização das novas configurações: 
-
-     ```bash
-     ./deploy.sh
-     ```
-
-Siga os próximos passos para relizar a configuração no IdP.
-
-# Roteiro de configuração para solução de multifator no Shibboleth IdP
-
-* Observações: 
-
-  * Todos os arquivos indicados no tutorial, para copiar/utilizar como base na configuração do IdP, estão no diretório "alteracoes" do projeto baixado do git.
-
-## Download do projeto:
-
-1. Faça o download dos fontes do projeto IdP-Customizado-GtAmpto, por exemplo, para o diretório home do usuário.
-
-     ```bash
-     git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
-     ```
-
-## Alteração do fluxo principal para Multifator:
-
-1.   Edite o arquivo idp.properties `sudo vi /opt/shibboleth-idp/conf/idp.properties` e altere conforme explicação:
-
-     1.1.   Localize a linha com a entrada `idp.authn.flows` e altere o controle de fluxo para utilizar MFA:
-        
-        idp.authn.flows= MFA
-            
-
-     1.2.   Localize a linha com a entrada `idp.additionalProperties` e acrescente ao final da linha: `/conf/authn/mfaprovider.properties`. Deve ficar similar ao listado abaixo:
-        
-        idp.additionalProperties= /conf/ldap.properties, /conf/saml-nameid.properties, /conf/services.properties, /conf/authn/duo.properties, /conf/authn/mfaprovider.properties
-            
-## Configuração Rest do MfaProvider:
-
-1.   A partir do diretório do projeto IdP-Customizado-GtAmpto baixado no git, edite o arquivo mfaprovider.properties `mfaprovider.properties` altererando as propriedades apresentadas abaixo: 
-    
-    ```bash
-    sudo vi alteracoes/conf/authn/mfaprovider.properties
-    ```
-      
-     ```properties
-     ## Enredeço do MfaProvider 
-     idp.mfaprovider.apiHost  = https://exemploidp.br/conta/
-     ## Usuário e senha para autenticação REST configurado no sp.properties do projeto MfaProvider
-     idp.mfaprovider.username  = usuario
-     idp.mfaprovider.password  = senha
-     ```
-     
-
-## Configurações gerais, flows, views, properties, libs e arquivos necessários:
-
-1.   A partir do diretório IdP-Customizado-GtAmpto, execute o script `implantacao_mfa_idpv3.sh` para realizar a copia dos arquivos para o IdP. Esse script irá realizar
-backup e cópia dos arquivos necessários.
-
-     ```bash
-     sudo ./implantacao_mfa_idpv3.sh
-     ```
-
-*Obs: Os trechos de código a partir deste momento estarão em arquivos de exemplo com comentários no diretório IdP-Customizado-GtAmtpo baixado do git, para facilitar a visualização do local exato onde devem ser configurados no Idp*
+*Obs: Os trechos de código a partir deste momento estarão em arquivos de exemplo com comentários no diretório scripts/alteracoes, para facilitar a visualização do local exato onde devem ser configurados no Idp*
 
 1.   Edite o arquivo `relying-party.xml` do IdP e configure conforme instruções comentadas no arquivo `alteracoes/conf/relying-party.xml` do projeto.
     
@@ -220,25 +91,12 @@ backup e cópia dos arquivos necessários.
     sudo vi /opt/shibboleth-idp/conf/relying-party.xml
     ```
     
-2.   Edite o arquivo `attribute-filter.xml` do IdP alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/attribute-filter.xml` do projeto.
-    
-    ```bash
-    sudo vi /opt/shibboleth-idp/conf/attribute-filter.xml
-    ```
-    
 3.   Edite o arquivo `general-authn.xml` do IdP alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/authn/general-authn.xml` do projeto.
     
     ```bash
     sudo vi /opt/shibboleth-idp/conf/authn/general-authn.xml
     ```
-    
-4.   Edite o arquivo `messages.properties` do IdP e configure conforme instruções comentadas no arquivo `alteracoes/messages/messages.properties` do projeto.
-    
-    ```bash
-    sudo vi /opt/shibboleth-idp/messages/messages.properties
-    ```
-    
-## Build IdP, Permissões e Reinicialização de serviços
+ ## Build IdP, Permissões e Reinicialização de serviços
 
 - Execute o script para finalizar a configuração:
 

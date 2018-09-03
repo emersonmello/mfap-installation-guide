@@ -64,7 +64,12 @@ def config_mfa_idp():
     # 3. general-authn.xml
     
     # 4 messages.properties
-
+    if not  write_messages_idp_properties():
+        msg = """
+        Não foi possível editar o arquivo messages.properties.
+        Por favor,edite manualmente conforme tutorial.
+        """
+        print(msg)
     # 5. Copie o arquivo alteracoes/conf/authn/mfa-authn-config.xml para /opt/shibboleth-idp/conf/authn/
     # sudo cp alteracoes/conf/authn/mfa-authn-config.xml /opt/shibboleth-idp/conf/authn/
 
@@ -186,6 +191,17 @@ def write_mongo_properties():
         return False
     return True
 
+    def write_messages_idp_properties():
+    try:
+        # messages.properties a partir do diretorio do Idp
+        # deste script
+        with open('alteracoes/messages/messages.properties', 'w+') as fmp:
+            fmp.write('mfaprovider.host=' + config.get('mfap','host.name') + config.get('mfap','mfapbasepath'))
+    except OSError as err:
+        print("Não foi possível escrever o arquivo messages.properties. Erro: " + err)
+        return False
+    return True
+
 
 def main():
     ##
@@ -266,8 +282,13 @@ def main():
 
     config_mfa_idp()
     # chamar script de cópias
-    # retcode_copy =  subprocess.call('', shell=True)
-
+    try:
+        retcode_copy =  subprocess.call('implantacao_mfa_idpv3.sh', shell=True)
+    except IOError as fne:
+        print("O script implantacao_mfa_idpv3.sh não foi encontrado")
+        if retcode_deploy == 0:
+             print("Script finalizado com sucesso")
+        exit()
 
 if __name__ == '__main__':
     #TODO : avisar que o script faz backup, mas sugerir backup

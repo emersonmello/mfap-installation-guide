@@ -1,0 +1,128 @@
+##
+## Velocity Template for DisplayUsernamePasswordPage view-state
+##
+## Velocity context will contain the following properties
+## flowExecutionUrl - the form action location
+## flowRequestContext - the Spring Web Flow RequestContext
+## flowExecutionKey - the SWF execution key (this is built into the flowExecutionUrl)
+## profileRequestContext - root of context tree
+## authenticationContext - context with authentication request information
+## authenticationErrorContext - context with login error state
+## authenticationWarningContext - context with login warning state
+## ldapResponseContext - context with LDAP state (if using native LDAP)
+## rpUIContext - the context with SP UI information from the metadata
+## extendedAuthenticationFlows - collection of "extended" AuthenticationFlowDescriptor objects
+## passwordPrincipals - contents of the shibboleth.authn.Password.PrincipalOverride bean
+## encoder - HTMLEncoder class
+## request - HttpServletRequest
+## response - HttpServletResponse
+## environment - Spring Environment object for property resolution
+## custom - arbitrary object injected by deployer
+##
+#set ($fator = $authenticationContext.getSubcontext('br.rnp.mfaprovider.mfadialogo.bean.MfaDTO'))
+#set ($rpContext = $profileRequestContext.getSubcontext('net.shibboleth.idp.profile.context.RelyingPartyContext'))
+#set ($username = $authenticationContext.getSubcontext('net.shibboleth.idp.authn.context.UsernamePasswordContext', true).getUsername())
+##
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>#springMessageText("idp.title", "Web Login Service")</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script>
+           function mask_totp() {
+          var totp_input = document.getElementById("totp_input");
+           var str = totp_input.value;
+          if (str.length == 3) {
+               totp_input.value = str + " "
+            }
+        }
+        function mask_bkp() {
+          var bkp_input = document.getElementById("bkp_input");
+           var str = bkp_input.value;
+          if (str.length == 4) {
+               bkp_input.value = str + " "
+            }
+        }
+       </script>
+	#if ($fator.getFatorPreferencial()=="501")
+        	<script>
+            	setTimeout(function() {
+            	document.forms["formprincipal"].submit();
+            	}, 1000);
+        	</script>
+	#end
+    </head>
+  
+    <body OnLoad="document.formprincipal.codigo.focus();">
+       
+    <div class="container">
+            <div class="row">
+
+            <div class="col-sm-12 col-md-12 col-xl-12 text-center">
+                <br />
+                <img src="$request.getContextPath()/images/logo-instituicao.png" class="img-responsive center-block" alt="Responsive image" height="130" width="130">
+                <h1 class="text-primary bold">Identity Provider 2</h1>
+            </div>
+        </div>
+
+        <br />
+        <br />
+        <br />
+
+           
+                        <form method="post" name="formprincipal" action="${flowExecutionUrl}">
+			 
+                        <div class="row pt-2 pb-2">
+                            <div class="card mx-auto center">
+                                <div class="card-body">
+                                    <input type="hidden" name="_eventId" value="performLogin"> 
+                                    <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}" />
+                                    #if ($fator.getFatorPreferencial()=="501")
+                                        <h3 class="card-title text-center">Desbloqueie seu smartphone</h3>  
+                                        <img src="$request.getContextPath()#springMessage("mfaprovider.animation")"     class="img-fluid" height="450" width="200" alt="#springMessageText(" mfaprovider.animation.alt-text", "Autenticação MFA")">   
+                                        <h5 class="card-title">
+                                        O MfaProvider enviou uma notificação para seu  dispositivo.  
+                                        </h5>   
+                                        <p class="card-text pl-2 pr-2 pt-2">
+                                        Pressione <b> SIM </b> para liberar a autenticação
+                                        </p>    
+                                    #elseif ($fator.getFatorPreferencial()=="503")                    
+                                        <div class="form-group">
+                                            <h5 class="card-title">Código de 6 dígitos apresentado no aplicativo para autenticação.</h5>
+                                             <div class="col-xs-2">
+                                                <input id="totp_input" class="form-control form-control-lg" size="6" placeholder="Informe o código aqui…" maxlength="7" type="text" name="codigo" onkeyup="mask_totp()" />
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mb-2">Confirmar</button>
+                                    #elseif ($fator.getFatorPreferencial()=="504")                    
+                                        <div class="form-group">
+                                           <h5 class="card-title">Se autentique com código de backup gerado no cadastro do segundo fator.</h5>
+                                            <input type="text" input id="bkp_input" class="form-control form-control-lg" placeholder="Informe o código aqui…" name="codigo" maxlength="9"  onkeyup="mask_bkp()" />
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mb-2">Confirmar</button>
+                                    #end
+                                </div>
+                            </div>
+                        </div>                   
+                        </form>
+                        #if ($fator.getFatorPreferencial()!="501")
+                        <form action="${flowExecutionUrl}" method="post" name="formopcoes">
+                           <div class="row pt-2 pb-2" >
+                                <div class="card mx-auto">
+                                    <div class="card-body">
+                                    
+                                        <input type="hidden" name="_eventId" value="performFactorOption">
+                                        <button type="submit" name="options" value="pageOption" class="btn btn-primary mb-2">
+                                            Escolher outro método de autenticação
+                                        </button>        
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        #end
+    </div>
+    </body>
+</html>
