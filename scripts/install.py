@@ -137,8 +137,8 @@ def config_sp_properties():
  admin.user=%s
  admin.password=%s
     """ % (config.get('mfap','host.name') + config.get('mfap','mfapbasepath'), 
-            config.get('idp','idp.metadata'), config.get('idp','restsecurity.user'), 
-            config.get('idp','restsecurity.password'),
+            config.get('idp','idp.metadata'), config.get('mfap','idp.mfaprovider.username'), 
+            config.get('mfap','idp.mfaprovider.password'),
             config.get('idp','admin.user'), config.get('idp','admin.password'))
     try:
         with open('MfaProvider/src/main/resources/sp.properties', 'w+') as fp:
