@@ -29,10 +29,14 @@ def config_mfa_idp(cfg):
         print(msg)
 
     # Configuração Rest do MfaProvider
-    if not config_mfa_properties(config.get('idp','idp.mfaprovider.apiHost'),
-        config.get('idp','idp.mfaprovider.username'),
-        config.get('idp','idp.mfaprovider.password'),
-        config.get('idp','dir_base_idp_shibboleth')):
+    if not config_mfa_properties(config.get('mfap','idp.mfaprovider.apiHost'),
+        config.get('mfap','idp.mfaprovider.username'),
+        config.get('mfap','idp.mfaprovider.password'),
+        config.get('idp','dir_base_idp_shibboleth'),
+        config.get('fcm','br.rnp.xmpp.serverKey'),
+        config.get('fcm','br.rnp.xmpp.senderId'),
+        config.get('mfap','mfapbasepath'),
+        config.get('idp','idp_logo')):
         msg = """
         Não foi possível editar o arquivo mfaprovider.properties.
         Por favor,edite manualmente conforme tutorial.
