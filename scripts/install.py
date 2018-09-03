@@ -191,7 +191,7 @@ def write_mongo_properties():
         return False
     return True
 
-    def write_messages_idp_properties():
+def write_messages_idp_properties():
     try:
         # messages.properties a partir do diretorio do Idp
         # deste script
