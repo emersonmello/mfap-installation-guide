@@ -58,8 +58,8 @@ def create_elem_rule(attribute, root):
     elem_rule.tail = "\n    "
 
 def config_metadata_provider(idp_base_dir):
-    metadata_file  = idp_base_dir + 'conf/metadata-providers.xml'
-    sp_file = idp_base_dir + 'metadata/mfaprovider-metadata.xml'
+    metadata_file  = idp_base_dir + '/conf/metadata-providers.xml'
+    sp_file = idp_base_dir + '/metadata/mfaprovider-metadata.xml'
     print ("sp file: "+ sp_file)
     print("Metadata_file : " + metadata_file)
     utils.backup_original_file(metadata_file)
