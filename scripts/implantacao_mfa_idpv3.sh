@@ -34,7 +34,6 @@ echo "Fim do processo de backup"
 
 echo "Fazendo as copias dos arquivos para o IDP"
 
-cp alteracoes/conf/authn/mfaprovider.properties "${VAR_HOME_IDP_V3}"/conf/authn/mfaprovider.properties
 cp alteracoes/conf/authn/mfa-authn-config.xml "${VAR_HOME_IDP_V3}"/conf/authn/
 cp -R alteracoes/flows/authn/* "${VAR_HOME_IDP_V3}"/flows/authn/
 cp alteracoes/views/* "${VAR_HOME_IDP_V3}"/views/
