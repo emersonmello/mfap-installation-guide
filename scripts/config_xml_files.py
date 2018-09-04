@@ -25,7 +25,7 @@ RELYING_PARTY_FILE = '/conf/relying-party.xml'
 
 
 def config_attribute_filters(idp_base_dir):
-    filter_file = idp_base_dir + 'conf/attribute-filter.xml'
+    filter_file = idp_base_dir + '/conf/attribute-filter.xml'
     utils.backup_original_file(filter_file)
     ET.register_namespace('','urn:mace:shibboleth:2.0:afp')
     # namespace for attribute filter policy.
