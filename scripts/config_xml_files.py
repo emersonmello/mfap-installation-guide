@@ -42,7 +42,7 @@ def config_attribute_filters(idp_base_dir):
 
     filter_policy = ET.SubElement(root,'AttributeFilterPolicy', {'id': 'releaseToMfaProvider'})
     filter_policy.tail = "\n  "
-    filter_policy_sub = ET.SubElement(filter_policy, 'PolicyRequirementRule', {'xsi:type':"Requester", "value": '"'+config.get('default','uri')+'"'})
+    filter_policy_sub = ET.SubElement(filter_policy, 'PolicyRequirementRule', {'xsi:type':"Requester", "value": config.get('default','uri')})
 
     with open('attribute_rules.txt', 'r') as fa:
         for line in fa:
