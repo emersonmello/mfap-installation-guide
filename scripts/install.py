@@ -33,11 +33,7 @@ def config_mfa_idp():
     if not config_mfa_properties(config.get('mfap','idp.mfaprovider.apiHost'),
         config.get('mfap','restsecurity.user'),
         config.get('mfap','restsecurity.password'),
-        config.get('idp','dir_base_idp_shibboleth'),
-        config.get('fcm','br.rnp.xmpp.serverKey'),
-        config.get('fcm','br.rnp.xmpp.senderId'),
-        config.get('mfap','mfapbasepath'),
-        config.get('idp','idp_logo')):
+        config.get('idp','dir_base_idp_shibboleth')):
         msg = """
         Não foi possível editar o arquivo mfaprovider.properties.
         Por favor,edite manualmente conforme tutorial.
@@ -150,6 +146,32 @@ def config_sp_properties():
         return False
     return True
 
+def config_mfaprovider_properties():
+    file_contents = """
+##substitua por chave herdada do servidor FCM
+br.rnp.xmpp.serverKey=%s
+
+##substitua por codigo do remetente FCM
+br.rnp.xmpp.senderId=%s
+
+#substitua somente se utilizar um pathname diferente do padr�o conta
+mfapbasepath=%s
+
+#substitua o idphost com o caminho completo do idp para obter o logo ex: https://insituicao.edu.br/idp/images/logo-instituicao.png
+idplogo=%s
+    """ % (config.get('fcm','br.rnp.xmpp.serverKey'), 
+            config.get('fcm','br.rnp.xmpp.senderId') 
+            config.get('mfap','mfapbasepath'), 
+            config.get('idp','idp_logo'))
+    try:
+        with open('MfaProvider/src/main/resources/mfaprovider.properties', 'w+') as fp:
+            fp.write(file_contents)
+    except OSError as err:
+        print("Nao foi possível escrever o arquivo sp.properties")
+        return False
+    return True
+
+
 def config_apache():
     apache_conf_file = config.get('apache','apache_conf_file')
     if os.path.exists(apache_conf_file):
@@ -233,6 +255,8 @@ def main():
 
     # Configuração apache
     config_apache()
+    
+    config_mfaprovider_properties()
 
     ## Configuração do MfaP como Service Provider:
     if config_sp_properties():
