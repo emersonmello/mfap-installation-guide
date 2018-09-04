@@ -10,6 +10,7 @@ Versão: 1.0
 import xml.etree.ElementTree as ET
 
 import utils
+from utils import CommentedTreeBuilder
 
 import ConfigParser
 config = ConfigParser.ConfigParser()
@@ -30,7 +31,8 @@ def config_attribute_filters(idp_base_dir):
     # namespace for attribute filter policy.
     # See https://wiki.shibboleth.net/confluence/display/IDP30/AttributeFilterPolicyConfiguration
     ns = {"afp": "urn:mace:shibboleth:2.0:afp"} 
-    tree = ET.parse(filter_file, utils.parser)
+    parser = ET.XMLParser(target=CommentedTreeBuilder())
+    tree = ET.parse(filter_file, parser)
     root = tree.getroot()
     for child in root.findall('afp:AttributeFilterPolicy', ns):
         if child.attrib['id'] == 'config_metadata_provider':
@@ -68,7 +70,8 @@ def config_metadata_provider(idp_base_dir):
     # https://wiki.shibboleth.net/confluence/display/IDP30/MetadataConfiguration
     ET.register_namespace('','urn:mace:shibboleth:2.0:metadata')
     ns = {"mdp": "urn:mace:shibboleth:2.0:metadata", "xsitype": "http://www.w3.org/2001/XMLSchema-instance"} 
-    tree = ET.parse(metadata_file, utils.parser)
+    parser = ET.XMLParser(target=CommentedTreeBuilder())
+    tree = ET.parse(metadata_file, parser)
     root = tree.getroot()
     for child in root.findall('./mdp:MetadataProvider', ns):
         if child.attrib['id'] == 'MfaProviderMetadata':
@@ -94,7 +97,8 @@ def config_relying_party(idp_base_dir):
             'xsi': 'http://www.w3.org/2001/XMLSchema-instance'}
     for prefix, uri in namespaces.items():
         ET.register_namespace(prefix,uri)
-    tree = ET.parse(relying_file, utils.parser)
+    parser = ET.XMLParser(target=CommentedTreeBuilder())
+    tree = ET.parse(relying_file, parser)
     root = tree.getroot()
     elem = root.find('.//{http://id.incommon.org/assurance/mfa}bean')
     print(elem)

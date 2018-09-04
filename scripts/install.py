@@ -7,6 +7,7 @@ import subprocess
 from urllib2 import urlopen
 
 import utils
+from utils import CommentedTreeBuilder
 
 from config_idp_mfa import edit_idp_properties, config_mfa_properties
 from config_xml_files import config_relying_party, config_metadata_provider
@@ -108,7 +109,8 @@ def config_tomcat():
         return False
 
     utils.backup_original_file(config.get('tomcat','tomcat_server_config'))
-    tree = ET.parse(config.get('tomcat','tomcat_server_config'), utils.parser)
+    parser = ET.XMLParser(target=CommentedTreeBuilder())
+    tree = ET.parse(config.get('tomcat','tomcat_server_config'), parser)
     root = tree.getroot()
     service_catalina = root.find('Service/[@name="Catalina"]')
     for child in service_catalina:
@@ -207,7 +209,6 @@ def main():
     ##
     #   1. Roteiro de instalação da aplicação MfaProvider
     ##
-   
     print("\n=== Clonando o repositório do projeto MfaProvider ===\n")
     print("Você será solicitado a informar seu usuário e senha do git\n")
     # clone repositório MFAProvider
@@ -255,7 +256,6 @@ def main():
     ## 1. Copiar metadata do sp
     metadatadest = config.get('idp', 'dir_base_idp_shibboleth') + '/metadata/' + 'mfaprovider-metadata.xml' 
     shutil.copyfile(metadatafile, metadatadest)
-
 
     ## 2. Editar metadata-providers.xml
     if not config_metadata_provider(config.get('idp','dir_base_idp_shibboleth')):
