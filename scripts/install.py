@@ -160,7 +160,7 @@ mfapbasepath=%s
 #substitua o idphost com o caminho completo do idp para obter o logo ex: https://insituicao.edu.br/idp/images/logo-instituicao.png
 idplogo=%s
     """ % (config.get('fcm','br.rnp.xmpp.serverKey'), 
-            config.get('fcm','br.rnp.xmpp.senderId') 
+            config.get('fcm','br.rnp.xmpp.senderId'), 
             config.get('mfap','mfapbasepath'), 
             config.get('idp','idp_logo'))
     try:
