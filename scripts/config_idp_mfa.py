@@ -27,7 +27,7 @@ def config_mfa_properties(apiHost, user, password, idp_dir):
     try:
         with open(idp_dir + '/conf/authn/mfaprovider.properties', 'w+') as mfap:
             mfap.write("## Endereço do MfaProvider\n")
-            mfap.write("idp.mfaprovider.apiHost=" + apiHost + "\n")
+            mfap.write("idp.mfaprovider.apiHost=" + apiHost +"/"+"\n")
             mfap.write("## Usuário e senha para autenticação REST \n")
             mfap.write("## configurado no sp.properties do projeto MfaProvider\n")
             mfap.write("idp.mfaprovider.username=" + user + "\n")
