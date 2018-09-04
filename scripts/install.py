@@ -30,8 +30,8 @@ def config_mfa_idp():
 
     # Configuração Rest do MfaProvider
     if not config_mfa_properties(config.get('mfap','idp.mfaprovider.apiHost'),
-        config.get('mfap','idp.mfaprovider.username'),
-        config.get('mfap','idp.mfaprovider.password'),
+        config.get('mfap','restsecurity.user'),
+        config.get('mfap','restsecurity.password'),
         config.get('idp','dir_base_idp_shibboleth'),
         config.get('fcm','br.rnp.xmpp.serverKey'),
         config.get('fcm','br.rnp.xmpp.senderId'),
@@ -137,8 +137,8 @@ def config_sp_properties():
  admin.user=%s
  admin.password=%s
     """ % (config.get('mfap','host.name') + config.get('mfap','mfapbasepath'), 
-            config.get('idp','idp.metadata'), config.get('mfap','idp.mfaprovider.username'), 
-            config.get('mfap','idp.mfaprovider.password'),
+            config.get('idp','idp.metadata'), config.get('mfap','restsecurity.user'), 
+            config.get('mfap','restsecurity.password'),
             config.get('idp','admin.user'), config.get('idp','admin.password'))
     try:
         with open('MfaProvider/src/main/resources/sp.properties', 'w+') as fp:
@@ -236,15 +236,15 @@ def main():
     ## Configuração do MfaP como Service Provider:
     if config_sp_properties():
         try:
-            retcode_deploy = subprocess.call('MfaProvider/deploy.sh', shell=True)
+            retcode_deploy = subprocess.call('cd MfaProvider && ./deploy.sh', shell=True)
         except IOError as fne:
             print("O arquivo de deploy não foi encontrado")
             exit()
     # Gerar SP Metadata
     metadatafile = 'MfaProvider/src/main/resources/metadata/mfaprovider-metadata.xml'
     if retcode_deploy == 0:
-        generate_metadata(config.get('idp','restsecurity.user'),
-                config.get('idp','restsecurity.password'),
+        generate_metadata(config.get('mfap','restsecurity.user'),
+                config.get('mfap','restsecurity.password'),
                 config.get('mfap','host.name') + config.get('mfap', 'mfapbasepath'),
                 metadatafile)
     else:
@@ -267,7 +267,7 @@ def main():
 
     ## 3. Deploy do sp
     try:
-        retcode_deploy = subprocess.call('MfaProvider/deploy.sh', shell=True)
+        retcode_deploy = subprocess.call('cd MfaProvider && ./deploy.sh', shell=True)
     except IOError as fne:
         print("O arquivo de deploy não foi encontrado")
         exit()
@@ -286,7 +286,7 @@ def main():
         retcode_copy =  subprocess.call('implantacao_mfa_idpv3.sh', shell=True)
     except IOError as fne:
         print("O script implantacao_mfa_idpv3.sh não foi encontrado")
-        if retcode_deploy == 0:
+        if retcode_copy == 0:
              print("Script finalizado com sucesso")
         exit()
 
