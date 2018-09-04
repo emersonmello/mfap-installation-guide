@@ -206,9 +206,9 @@ def write_mongo_properties():
         # codigo fonte clonado em MfaProvider, a partir do diretorio
         # deste script
         with open('MfaProvider/src/main/resources/mongo.properties', 'w+') as fmp:
-            fmp.write('mongo.user=' + config.get('mongo','user'))
-            fmp.write('mongo.pass=' + config.get('mongo','password'))
-            fmp.write('mongo.host=' + config.get('mongo','host'))
+            fmp.write('mongo.user=' + config.get('mongo','user')+"\n")
+            fmp.write('mongo.pass=' + config.get('mongo','password')+"\n")
+            fmp.write('mongo.host=' + config.get('mongo','host')+"\n")
             fmp.write('mongo.db=' + config.get('mongo','db'))
     except OSError as err:
         print("Não foi possível escrever o arquivo mongo.properties. Erro: " + err)
@@ -307,7 +307,7 @@ def main():
     config_mfa_idp()
     # chamar script de cópias
     try:
-        retcode_copy =  subprocess.call('implantacao_mfa_idpv3.sh', shell=True)
+        retcode_copy =  subprocess.call('./implantacao_mfa_idpv3.sh', shell=True)
     except IOError as fne:
         print("O script implantacao_mfa_idpv3.sh não foi encontrado")
         if retcode_copy == 0:

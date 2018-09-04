@@ -6,7 +6,7 @@
 
 ## Organização do roteiro
 
-Este roteiro está dividido em 5 partes:
+Este roteiro está dividido em:
 
 1. Configuração do FCM
 2. Configurações de variáveis para utilização nos scritps
@@ -42,9 +42,7 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
 
      ![](./images/confcm2.png)
 
-# Configuração de variáveis
-
-## Roterio de instalação
+# Configurações das variáveis
 
 *Obs: executar todos os comandos como root*
 
@@ -62,7 +60,7 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
 
 2.   No diretório scripts, edite o arquivo `config.ini` e ajuste os valores conforme comentários do próprio arquivo.
 
-      ```bash
+     ```bash
      vi config.ini
      ```
 
@@ -78,10 +76,11 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
 
 *Obs: O script irá realizar o backup e cópia dos arquivos originais do IdP para o diretório Backup.*
 
-1.  No diretório scripts, execute o script install.py
+1.  No diretório scripts, execute o script `install.py`
+    
      ```bash
-    python2 install.py
-    ```
+     python2 install.py
+     ```
 
 *Obs: Os trechos de código a partir deste momento estarão em arquivos de exemplo com comentários no diretório scripts/alteracoes, para facilitar a visualização do local exato onde devem ser configurados no Idp*
 
