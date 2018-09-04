@@ -46,8 +46,8 @@ def main():
     if sys.version_info[0] != 2:
         print("Este script requer python2 e pode não funcionar com outra versão!")
     
-    metadata_generated = generate_metadata(config.get('idp','restsecurity.user'),
-            config.get('idp','restsecurity.password'),
+    metadata_generated = generate_metadata(config.get('mfap','restsecurity.user'),
+            config.get('mfap','restsecurity.password'),
             config.get('mfap','host.name') + config.get('mfap', 'mfapbasepath'), 
             'MfaProvider/src/main/resources/metadata/sp-metadata.xml')
     if metadata_generated:
