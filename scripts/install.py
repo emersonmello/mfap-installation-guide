@@ -178,8 +178,8 @@ def config_apache():
         utils.backup_original_file(apache_conf_file)
         try:
             with open('insert_apache.txt', 'w+') as fp:
-                fp.write('\n    ProxyPass /%s ajp://localhost:9443/conta retry=5 \n' 
-                        % config.get('mfap','mfapbasepath'))
+                fp.write('\n    ProxyPass /%s ajp://localhost:9443/%s retry=5 \n' 
+                        % (config.get('mfap','mfapbasepath'), config.get('mfap','mfapbasepath')))
                 fp.write('  <Proxy ajp://localhost:9443>\n')
                 fp.write('      Require all granted\n')
                 fp.write('  </Proxy>\n')
