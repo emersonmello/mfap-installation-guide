@@ -253,7 +253,7 @@ def main():
 
     # Configurar SP Metadata no IdP
     ## 1. Copiar metadata do sp
-    metadatadest = config.get('idp', 'dir_base_idp_shibboleth') + 'metadata/' + 'mfaprovider-metadata.xml' 
+    metadatadest = config.get('idp', 'dir_base_idp_shibboleth') + '/metadata/' + 'mfaprovider-metadata.xml' 
     shutil.copyfile(metadatafile, metadatadest)
 
 
