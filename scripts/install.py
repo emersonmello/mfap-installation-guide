@@ -266,7 +266,7 @@ def main():
             print("O arquivo de deploy não foi encontrado")
             exit()
     # Gerar SP Metadata
-    metadatafile = 'MfaProvider/src/main/resources/metadata/mfaprovider-metadata.xml'
+    metadatafile = 'MfaProvider/src/main/resources/metadata/sp-metadata.xml'
     if retcode_deploy == 0:
         generate_metadata(config.get('mfap','restsecurity.user'),
                 config.get('mfap','restsecurity.password'),

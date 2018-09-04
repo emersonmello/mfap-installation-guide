@@ -84,20 +84,20 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
 
 *Obs: Os trechos de código a partir deste momento estarão em arquivos de exemplo com comentários no diretório scripts/alteracoes, para facilitar a visualização do local exato onde devem ser configurados no Idp*
 
-1.   Edite o arquivo `relying-party.xml` do IdP e configure conforme instruções comentadas no arquivo `alteracoes/conf/relying-party.xml` do projeto.
+1.   Edite o arquivo `relying-party.xml` do IdP e configure conforme instruções comentadas no arquivo `scripts/alteracoes/conf/relying-party.xml` do projeto.
     
     ```bash
     sudo vi /opt/shibboleth-idp/conf/relying-party.xml
     ```
     
-3.   Edite o arquivo `general-authn.xml` do IdP alterando as propriedades conforme instruções comentadas no arquivo `alteracoes/conf/authn/general-authn.xml` do projeto.
+3.   Edite o arquivo `general-authn.xml` do IdP alterando as propriedades conforme instruções comentadas no arquivo `scripts/alteracoes/conf/authn/general-authn.xml` do projeto.
     
     ```bash
     sudo vi /opt/shibboleth-idp/conf/authn/general-authn.xml
     ```
  ## Build IdP, Permissões e Reinicialização de serviços
 
-- Execute o script para finalizar a configuração:
+- No diretório roteiro-instalacao/scripts, execute o script para finalizar a configuração:
 
     ```bash
     sudo ./finaliza_configuracao.sh 
