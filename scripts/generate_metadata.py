@@ -6,13 +6,6 @@ Autor: bristot@gmail.com - 2018
 import subprocess
 import sys
 import base64
-try:
-    # For Python 3.0 and later
-    import urllib.request as urllib2
-except ImportError:
-    # Fall back to Python 2's urllib2
-    import urllib2
-import utils
 
 try:
     import configparser
@@ -24,22 +17,7 @@ except ImportError:
 config.read('config.ini')
 
 def generate_metadata(user, password, host, destdir):
-    # create a password manager
-    password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
-    password_mgr.add_password(None, host, user, password)
-    handler = urllib2.HTTPBasicAuthHandler(password_mgr)
-    opener = urllib2.build_opener(handler)
-    urllib2.install_opener(opener)
-    pagehandler = urllib2.urlopen(host+"/saml/web/metadata/getNewMetaData")
-    if pagehandler.code == 200:   
-        try:
-            with open(destdir, 'wb+') as fh:
-                fh.write(pagehandler.read())
-        except OSError as err:
-            print("Náo foi possível salvar o metadata")
-    else:
-        print("Não foi possível acessar os metadados do mfaprovider")
-
+    pagehandler = subprocess.call("wget -O %s --user %s --password %s %s/saml/web/metadata/getNewMetaData --no-check-certificate" % (destdir, user, password, host), shell=True)
     return True
 
 def main():

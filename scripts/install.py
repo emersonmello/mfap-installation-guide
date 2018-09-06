@@ -238,7 +238,7 @@ def main():
         print("Diretorio MfaProvider existe, fazendo backup")
         dt = datetime.now()
         shutil.move('MfaProvider','MfaProvider.orig.%s' % dt.strftime("%d%m%Y%H%M%S"))
-    retcode_gitclone = subprocess.call("git clone https://git.rnp.br/GT-AMPTo/MfaProvider.git", 
+    retcode_gitclone = subprocess.call("git -c http.sslVerify=false clone https://git.rnp.br/GT-AMPTo/MfaProvider.git", 
         shell=True)
     if retcode_gitclone != 0:
         msg = """
