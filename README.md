@@ -140,6 +140,8 @@ e que o server_name seja devampto.cafeexpresso.rnp.br, o comando final ficaria d
 
 ```/usr/lib/jvm/java-8-oracle/bin/keytool -import -alias devampto.cafeexpresso.rnp.br -keystore /usr/lib/jvm/java-8-oracle/jre/lib/security/cacerts -file /etc/ssl/certs/server.crt```
 
+Atenção: A senha de administração da keystore da JVM vai ser solicitada...  A senha padrão, caso não tenha sido mudada, é *changeit*
+
 Se o certificado estiver em outra máquina, pode ser baixado, usando comando similar ao abaixo:
 
 
