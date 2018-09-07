@@ -356,19 +356,23 @@ def main():
     # Gerar SP Metadata
     metadatafile = 'MfaProvider/src/main/resources/metadata/sp-metadata.xml'
     if retcode_deploy == 0:
-        generate_metadata(config.get('mfap','restsecurity.user'),
+        if generate_metadata(config.get('mfap','restsecurity.user'),
                 config.get('mfap','restsecurity.password'),
                 config.get('mfap','host.name') + config.get('mfap', 'mfapbasepath'),
-                metadatafile)
+                metadatafile):
+            metadatadest = config.get('idp', 'dir_base_idp_shibboleth') + '/metadata/' + 'mfaprovider-metadata.xml' 
+            shutil.copyfile(metadatafile, metadatadest)
+            print ("Metadados configurado com sucesso")
+        else:
+            print("Não foi possível gerar metadados do MfaProvider")
+            exit()    
     else:
         print("Não foi possível gerar metadados do MfaProvider")
         exit()
 
     # Configurar SP Metadata no IdP
     ## 1. Copiar metadata do sp
-    metadatadest = config.get('idp', 'dir_base_idp_shibboleth') + '/metadata/' + 'mfaprovider-metadata.xml' 
-    shutil.copyfile(metadatafile, metadatadest)
-
+    
     ## 2. Editar metadata-providers.xml
     if not config_metadata_provider(config.get('idp','dir_base_idp_shibboleth')):
         msg = """
