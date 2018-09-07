@@ -299,7 +299,7 @@ def write_messages_idp_properties():
     try:
         # messages.properties a partir do diretorio do Idp
         # deste script
-        with open('alteracoes/messages/messages.properties', 'w+') as fmp:
+        with open(config.get('idp','dir_base_idp_shibboleth') + '/messages/messages.properties', 'w+') as fmp:
             fmp.write('mfaprovider.host=' + config.get('mfap','host.name') + config.get('mfap','mfapbasepath'))
     except OSError as err:
         print("Não foi possível escrever o arquivo messages.properties. Erro: " + err)
