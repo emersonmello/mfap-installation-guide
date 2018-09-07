@@ -18,7 +18,11 @@ config.read('config.ini')
 
 def generate_metadata(user, password, host, destdir):
     pagehandler = subprocess.call("wget -O %s --user %s --password %s %s/saml/web/metadata/getNewMetaData --no-check-certificate" % (destdir, user, password, host), shell=True)
-    return True
+    if pagehandler == 0:
+        return True
+    else:
+        print("Ocorreu um erro ao gerar o MetaData")
+        return False 
 
 def main():
     if sys.version_info[0] != 2:

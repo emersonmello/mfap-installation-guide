@@ -196,10 +196,10 @@ def config_tomcat():
 
 def config_sp_properties():
     #TODO: Ajustar MFAP pois não é mais necessário senha administrativa do idp.
-    uri_idp = set_value('default','uri','Informe o endereço do IdP, sem o https: ex: idp.instituicao.edu.br')
+    uri_idp = set_value('default','uri','Informe o endereço do IdP, sem o https ex: idp.instituicao.edu.br: ')
     host_name = set_value_without_ask('mfap','host.name','https://'+uri_idp+'/')
-    user_rest_mfa = set_value('mfap','restsecurity.user','Defina um usuário para proteção dos recursos rest:'), 
-    pass_rest_mfa = set_value('mfap','restsecurity.password','Defina uma senha:')
+    user_rest_mfa = set_value('mfap','restsecurity.user','Defina um usuário para proteção dos recursos rest: ') 
+    pass_rest_mfa = set_value('mfap','restsecurity.password','Defina uma senha: ')
     file_contents = """
 
  ##Caminho completo do idp com o pathname
