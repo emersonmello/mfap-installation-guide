@@ -16,12 +16,86 @@ from generate_metadata import generate_metadata
 
 import ConfigParser
 config = ConfigParser.ConfigParser()
-
+editVariables = True
 # Lê as variáveis
 config.read('config.ini')
 
+def set_value(group,field,message):
+    variable = config.get(group,field) 
+    if variable =='' or editVariables:
+        variable = raw_input(message)
+        while variable =='':
+            variable = raw_input('valor não pode ser nulo, digite novamente: ')
+        config.set(group,field,variable)
+        with open('config.ini', 'w') as configfile:
+            config.write(configfile)
+    return variable
+
+def set_value_without_ask(group,field,value):
+    variable = config.get(group,field) 
+    if variable =='' or editVariables:
+        config.set(group,field,value)
+        with open('config.ini', 'w') as configfile:
+            config.write(configfile)
+    return variable 
+
+def verify_edit_variables():
+    mongouser = config.get('mongo','user') 
+    if mongouser !='' :
+        choise = raw_input('Você já tentou realizar uma instalação anteriormente, continuar utilizando os mesmos dados informados? (S,N)')
+        if (choise =='S'):
+            return False
+    return True
+
+def install_mongodb():
+    mongouser = set_value('mongo','user','Crie um usuário para segurança do banco de dados:') 
+    mongopass = set_value('mongo','password','Defina uma senha:')
+    with open('scriptMongo.js', 'w') as sm:
+        mongouser = config.get('mongo','user') 
+        script_text = """
+        use %s
+        db.createUser(
+            {
+                user:"%s",
+                pwd:"%s",
+                roles: ["readWrite","dbAdmin"]
+            }
+        )
+        """ % (config.get('mongo','db'), mongouser, mongopass)
+        sm.write(script_text)
+
+    #retcode_install_mongo = subprocess.call(["sudo","apt-get","install", "mongodb", "-y"])
+    #if retcode_install_mongo == 0: # serve para instalaçao recem realizada e já instalado
+    try:
+        retcode_mongo_status = subprocess.call("systemctl status mongodb", shell=True)
+        if retcode_mongo_status != 0 :
+            print ("O mongodb não está rodando")
+            retcode_start_mongo = subprocess.call("systemctl start mongodb", shell=True)
+            if retcode_start_mongo != 0:
+                print("Não foi possível iniciar o mongodb.")
+                print("Por favor, corrija manualmente esta questão e volte a executar \
+                        este script.")
+                return False
+        
+        retcode_config_mongo = subprocess.call("mongo < scriptMongo.js", shell=True)
+        if retcode_config_mongo == 0: # usuario foi criado
+            retcode_edit_config = subprocess.call(["sudo", "sed", "-i", "s/#auth = true/auth = true/g", "/etc/mongodb.conf"])
+            if retcode_edit_config == 0: 
+                retcode_run_mongo = subprocess.call("systemctl restart mongodb", shell=True)
+                if retcode_run_mongo != 0:
+                    return False
+        else:
+            print("Houve algum erro na criação do usuario do mongodb.")
+            return False
+
+    except OSError as e:
+        print ("Error ao executar a instalação e configuração do mongodb: ", e)
+        return False
+    return True
+
 def config_mfa_idp():
     # Alteração do fluxo principal para multifator
+    apiHost = set_value_without_ask('mfap','idp.mfaprovider.apiHost',config.get('mfap','host.name')+config.get('mfap','mfapbasepath'))
     if not edit_idp_properties():
         msg = """
         Não foi possível editar o arquivo idp.properties.
@@ -30,7 +104,7 @@ def config_mfa_idp():
         print(msg)
 
     # Configuração Rest do MfaProvider
-    if not config_mfa_properties(config.get('mfap','idp.mfaprovider.apiHost'),
+    if not config_mfa_properties(apiHost,
         config.get('mfap','restsecurity.user'),
         config.get('mfap','restsecurity.password'),
         config.get('idp','dir_base_idp_shibboleth')):
@@ -101,6 +175,7 @@ def config_tomcat():
             fh.write('</Context>')
     except OSError as err:
         print("Erro ao escrever arquivo " + config.get('tomcat','docBase'))
+        print("verifique se a propriedade dir_tomcat_app_config no config.ini esta com o caminho correto do tomcat ")
         print ("IOError: ", err)
         return False
 
@@ -120,7 +195,13 @@ def config_tomcat():
     return True
 
 def config_sp_properties():
+    #TODO: Ajustar MFAP pois não é mais necessário senha administrativa do idp.
+    uri_idp = set_value('default','uri','Informe o endereço do IdP, sem o https: ex: idp.instituicao.edu.br')
+    host_name = set_value_without_ask('mfap','host.name','https://'+uri_idp+'/')
+    user_rest_mfa = set_value('mfap','restsecurity.user','Defina um usuário para proteção dos recursos rest:'), 
+    pass_rest_mfa = set_value('mfap','restsecurity.password','Defina uma senha:')
     file_contents = """
+
  ##Caminho completo do idp com o pathname
  host.name=%s
 
@@ -130,14 +211,9 @@ def config_sp_properties():
  ##Defina um usuario e senha para proteção dos recursos rest
  restsecurity.user=%s
  restsecurity.password=%s
-
- ##Defina um usuario e senha para administrador do IdP
- admin.user=%s
- admin.password=%s
-    """ % (config.get('mfap','host.name') + config.get('mfap','mfapbasepath'), 
-            config.get('idp','idp.metadata'), config.get('mfap','restsecurity.user'), 
-            config.get('mfap','restsecurity.password'),
-            config.get('idp','admin.user'), config.get('idp','admin.password'))
+    """ % (host_name + config.get('mfap','mfapbasepath'), 
+            config.get('idp','idp.metadata'), user_rest_mfa, 
+            pass_rest_mfa)
     try:
         with open('MfaProvider/src/main/resources/sp.properties', 'w+') as fp:
             fp.write(file_contents)
@@ -147,6 +223,10 @@ def config_sp_properties():
     return True
 
 def config_mfaprovider_properties():
+    print("Informações geradas conforme item 9 do Readme.md (seção: configurações FCM para Diálogo de Confirmação)")
+    set_value('fcm','br.rnp.xmpp.serverKey','Informe a chave herdada do servidor FCM: ')
+    set_value('fcm','br.rnp.xmpp.senderId','Informe o codigo do remetente do servidor FCM: ')
+    set_value_without_ask('idp','idp_logo',config.get('mfap','host.name')+'idp/images/logo-instituicao.png')
     file_contents = """
 ##substitua por chave herdada do servidor FCM
 br.rnp.xmpp.serverKey=%s
@@ -228,6 +308,11 @@ def write_messages_idp_properties():
 
 
 def main():
+    ## Verifica se houve tentativa de instalação anterior
+    global editVariables
+    print editVariables
+    editVariables = verify_edit_variables()
+    print editVariables
     ##
     #   1. Roteiro de instalação da aplicação MfaProvider
     ##
@@ -248,6 +333,8 @@ def main():
         print(msg)
         exit()
     else:
+        ## Adiciona segurança ao Mongo DB
+        install_mongodb()
         write_mongo_properties()
 
     # configuração do Tomcat 8 para servir o SP MfaProvider
@@ -256,10 +343,11 @@ def main():
     # Configuração apache
     config_apache()
     
-    config_mfaprovider_properties()
+    
 
     ## Configuração do MfaP como Service Provider:
     if config_sp_properties():
+        config_mfaprovider_properties()
         try:
             retcode_deploy = subprocess.call('cd MfaProvider && ./deploy.sh', shell=True)
         except IOError as fne:
