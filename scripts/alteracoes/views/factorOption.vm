@@ -41,7 +41,6 @@
                         <div class="col-sm-52 col-md-12 col-xl-42 text-center">
                             <br />
                             <img src="$request.getContextPath()/images/logo-instituicao.png" class="img-responsive center-block" alt="Responsive image"    height="130" width="130">
-                            <h1 class="text-primary bold">Identity Provider 2</h1>
                         </div>
                 </div>
                  <div class="row pt-2 pb-2" >
