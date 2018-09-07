@@ -19,10 +19,10 @@ fi
 
 echo "Realizando backups dos arquivos do script"
 
-cp -r --parents  "${VAR_HOME_IDP_V3}"/conf/relying-party.xml backup 
-cp -r --parents  "${VAR_HOME_IDP_V3}"/conf/attribute-filter.xml backup
-cp -r --parents  "${VAR_HOME_IDP_V3}"/conf/authn/general-authn.xml backup
-cp -r --parents  "${VAR_HOME_IDP_V3}"/conf/authn/mfa-authn-config.xml backup
+cp -r --parents  "${VAR_HOME_IDP_V3}"/conf/relying-party.xml "${VAR_HOME_IDP_V3}"/conf/relying-party.xml.orig 
+cp -r --parents  "${VAR_HOME_IDP_V3}"/conf/attribute-filter.xml "${VAR_HOME_IDP_V3}"/conf/attribute-filter.xml.orig
+cp -r --parents  "${VAR_HOME_IDP_V3}"/conf/authn/general-authn.xml "${VAR_HOME_IDP_V3}"/conf/authn/general-authn.xml.orig
+cp -r --parents  "${VAR_HOME_IDP_V3}"/conf/authn/mfa-authn-config.xml "${VAR_HOME_IDP_V3}"/conf/authn/mfa-authn-config.xml.orig
 cp -r --parents  "${VAR_HOME_IDP_V3}"/flows/authn/* backup
 cp -r --parents  "${VAR_HOME_IDP_V3}"/views/* backup
 cp -r --parents  "${VAR_HOME_IDP_V3}"/webapp/images/* backup
@@ -34,6 +34,7 @@ echo "Fim do processo de backup"
 
 echo "Fazendo as copias dos arquivos para o IDP"
 
+cp alteracoes/messages/messages.properties "${VAR_HOME_IDP_V3}"/messages/messages.properties
 cp alteracoes/conf/authn/mfa-authn-config.xml "${VAR_HOME_IDP_V3}"/conf/authn/
 cp -R alteracoes/flows/authn/* "${VAR_HOME_IDP_V3}"/flows/authn/
 cp alteracoes/views/* "${VAR_HOME_IDP_V3}"/views/
