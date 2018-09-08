@@ -316,13 +316,13 @@ def write_messages_idp_properties():
         # messages.properties a partir do diretorio do Idp
         # deste script
         with open('alteracoes/messages/messages.properties', 'w+') as fmp:
-            fmp.write('mfaprovider.host=' + config.get('mfap','host.name') + config.get('mfap','mfapbasepath'))
-            fmp.write('mfaprovider.host = https://idp2ampto.cafeexpresso.rnp.br/conta')
-            fmp.write('# Os demais não precisam ser alterados, mas podem caso desejar customizar as mensagens.')
-            fmp.write('mfaprovider.animation.alt-text = Autenticação MFA')
-            fmp.write('mfaprovider.animation = /images/dialogo.gif')
-            fmp.write('mfaprovider.information = Confirme a autenticação no dispositivo')
-            fmp.write('idp.logo.alt-text = GtAmpto')
+            fmp.write('mfaprovider.host=' + config.get('mfap','host.name') + config.get('mfap','mfapbasepath')+"\n")
+            fmp.write('mfaprovider.host = https://idp2ampto.cafeexpresso.rnp.br/conta'+"\n")
+            fmp.write('# Os demais não precisam ser alterados, mas podem caso desejar customizar as mensagens.'+"\n")
+            fmp.write('mfaprovider.animation.alt-text = Autenticação MFA'+"\n")
+            fmp.write('mfaprovider.animation = /images/dialogo.gif'+"\n")
+            fmp.write('mfaprovider.information = Confirme a autenticação no dispositivo'+"\n")
+            fmp.write('idp.logo.alt-text = MfaProvider'+"\n")
 
     except OSError as err:
         print("Não foi possível escrever o arquivo messages.properties. Erro: " + err)
