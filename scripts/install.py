@@ -47,6 +47,26 @@ def verify_edit_variables():
             return False
     return True
 
+def set_auth_mongoconf():
+    retcode_edit_config = subprocess.call(["sudo", "sed", "-i", "s/#auth = true/auth = true/g", "/etc/mongodb.conf"])
+        if retcode_edit_config == 0: 
+           retcode_run_mongo = subprocess.call("systemctl restart mongodb", shell=True)
+           if retcode_run_mongo != 0:
+                return False
+           else :
+                return True
+        return True
+
+def set_noauth_mongoconf():
+    retcode_edit_config = subprocess.call(["sudo", "sed", "-i", "s/auth = true/#auth = true/g", "/etc/mongodb.conf"])
+        if retcode_edit_config == 0: 
+           retcode_run_mongo = subprocess.call("systemctl restart mongodb", shell=True)
+           if retcode_run_mongo != 0:
+                return False
+           else :
+                return True
+        return True
+
 def install_mongodb():
     mongouser = set_value('mongo','user','Crie um usuário para segurança do banco de dados:') 
     mongopass = set_value('mongo','password','Defina uma senha:')
@@ -76,14 +96,12 @@ def install_mongodb():
                 print("Por favor, corrija manualmente esta questão e volte a executar \
                         este script.")
                 return False
+        #Garante que a autenticação não está setada        
+        set_noauth_mongoconf()
         
         retcode_config_mongo = subprocess.call("mongo < scriptMongo.js", shell=True)
         if retcode_config_mongo == 0: # usuario foi criado
-            retcode_edit_config = subprocess.call(["sudo", "sed", "-i", "s/#auth = true/auth = true/g", "/etc/mongodb.conf"])
-            if retcode_edit_config == 0: 
-                retcode_run_mongo = subprocess.call("systemctl restart mongodb", shell=True)
-                if retcode_run_mongo != 0:
-                    return False
+            set_auth_mongoconf()
         else:
             print("Houve algum erro na criação do usuario do mongodb.")
             return False
