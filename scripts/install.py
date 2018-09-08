@@ -49,23 +49,23 @@ def verify_edit_variables():
 
 def set_auth_mongoconf():
     retcode_edit_config = subprocess.call(["sudo", "sed", "-i", "s/#auth = true/auth = true/g", "/etc/mongodb.conf"])
-        if retcode_edit_config == 0: 
-           retcode_run_mongo = subprocess.call("systemctl restart mongodb", shell=True)
-           if retcode_run_mongo != 0:
-                return False
-           else :
-                return True
-        return True
+    if retcode_edit_config == 0: 
+        retcode_run_mongo = subprocess.call("systemctl restart mongodb", shell=True)
+        if retcode_run_mongo != 0:
+            return False
+        else :
+            return True
+    return True
 
 def set_noauth_mongoconf():
     retcode_edit_config = subprocess.call(["sudo", "sed", "-i", "s/auth = true/#auth = true/g", "/etc/mongodb.conf"])
-        if retcode_edit_config == 0: 
-           retcode_run_mongo = subprocess.call("systemctl restart mongodb", shell=True)
-           if retcode_run_mongo != 0:
-                return False
-           else :
-                return True
-        return True
+    if retcode_edit_config == 0: 
+       retcode_run_mongo = subprocess.call("systemctl restart mongodb", shell=True)
+       if retcode_run_mongo != 0:
+            return False
+       else :
+            return True
+    return True
 
 def install_mongodb():
     mongouser = set_value('mongo','user','Crie um usuário para segurança do banco de dados:') 
