@@ -96,9 +96,7 @@ def install_mongodb():
                 print("Por favor, corrija manualmente esta questão e volte a executar \
                         este script.")
                 return False
-        #Garante que a autenticação não está setada        
-        set_noauth_mongoconf()
-        
+
         retcode_config_mongo = subprocess.call("mongo < scriptMongo.js", shell=True)
         if retcode_config_mongo == 0: # usuario foi criado
             set_auth_mongoconf()
@@ -319,6 +317,13 @@ def write_messages_idp_properties():
         # deste script
         with open('alteracoes/messages/messages.properties', 'w+') as fmp:
             fmp.write('mfaprovider.host=' + config.get('mfap','host.name') + config.get('mfap','mfapbasepath'))
+            fmp.write('mfaprovider.host = https://idp2ampto.cafeexpresso.rnp.br/conta')
+            fmp.write('# Os demais não precisam ser alterados, mas podem caso desejar customizar as mensagens.')
+            fmp.write('mfaprovider.animation.alt-text = Autenticação MFA')
+            fmp.write('mfaprovider.animation = /images/dialogo.gif')
+            fmp.write('mfaprovider.information = Confirme a autenticação no dispositivo')
+            fmp.write('idp.logo.alt-text = GtAmpto')
+
     except OSError as err:
         print("Não foi possível escrever o arquivo messages.properties. Erro: " + err)
         return False
