@@ -19,10 +19,8 @@ fi
 
 echo "Realizando backups dos arquivos do script"
 
-cp -r --parents  "${VAR_HOME_IDP_V3}"/conf/relying-party.xml "${VAR_HOME_IDP_V3}"/conf/relying-party.xml.orig 
-cp -r --parents  "${VAR_HOME_IDP_V3}"/conf/attribute-filter.xml "${VAR_HOME_IDP_V3}"/conf/attribute-filter.xml.orig
-cp -r --parents  "${VAR_HOME_IDP_V3}"/conf/authn/general-authn.xml "${VAR_HOME_IDP_V3}"/conf/authn/general-authn.xml.orig
-cp -r --parents  "${VAR_HOME_IDP_V3}"/conf/authn/mfa-authn-config.xml "${VAR_HOME_IDP_V3}"/conf/authn/mfa-authn-config.xml.orig
+cp "${VAR_HOME_IDP_V3}"/messages/messages.properties "${VAR_HOME_IDP_V3}"/messages/messages.properties.orig 
+cp "${VAR_HOME_IDP_V3}"/conf/authn/mfa-authn-config.xml "${VAR_HOME_IDP_V3}"/conf/authn/mfa-authn-config.xml.orig
 cp -r --parents  "${VAR_HOME_IDP_V3}"/flows/authn/* backup
 cp -r --parents  "${VAR_HOME_IDP_V3}"/views/* backup
 cp -r --parents  "${VAR_HOME_IDP_V3}"/webapp/images/* backup
