@@ -43,7 +43,7 @@ def verify_edit_variables():
     mongouser = config.get('mongo','user') 
     if mongouser !='' :
         choise = raw_input('Você já tentou realizar uma instalação anteriormente, continuar utilizando os mesmos dados informados? (S,N)')
-        if (choise =='S'):
+        if (choise in ('S','s')):
             return False
     return True
 
@@ -328,9 +328,7 @@ def write_messages_idp_properties():
 def main():
     ## Verifica se houve tentativa de instalação anterior
     global editVariables
-    print editVariables
     editVariables = verify_edit_variables()
-    print editVariables
     ##
     #   1. Roteiro de instalação da aplicação MfaProvider
     ##
