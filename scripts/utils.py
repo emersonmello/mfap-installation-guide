@@ -50,8 +50,9 @@ def backup_original_file(filename):
     print("Fazendo backup de "  + filename)
     try:
         copyfile(filename, filename + ".orig")
-    except FileNotFoundError as fnf:
-        print("O arquivo %s não foi encontrado", filename)
+    except IOError as io:
+        print("Erro ao fazer backup do arquivo", filename)
+        print("Error ", io)
 
 
 def indent(elem, level=0):
