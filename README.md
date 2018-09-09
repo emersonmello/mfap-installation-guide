@@ -122,3 +122,38 @@ Para funcionamento da opção multi-fator de diálogo de confirmação, é neces
 #### Habilitar e desabilitar métodos de segundo fator:
 
 - Na pasta do projeto do MfaProvider, edite o arquivo  `src/main/resource/factor.properties` e utilize `true` para habilitar ou `false` para desabilitar o fator desejado.
+
+#### Uso de certificado autoassinado ou expiração de certificado
+
+A comunicação IdP - MfaProvider se dá utilizando requisições via HTTPS, as quais necessitam que a Java Virtual Machine (JVM) confie no certificado utilizado.
+Se não houver a confiança, o seguinte erro pode ser apresentado:
+
+    Conection refused: javax.ws.rs.ProcessingException: javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification
+
+Nesse caso, o certificado deve ser importado para a JVM, usando o seguinte comando:
+
+
+```<JAVA_HOME>/bin/keytool -import -alias <server_name> -keystore <JAVA_HOME>/jre/lib/security/cacerts -file public.crt```
+    
+Supondo que JAVA_HOME seja /usr/lib/jvm/java-8-oracle e que o certificado utilizado esteja no caminho /etc/ssl/certs/server.crt, 
+e que o server_name seja devampto.cafeexpresso.rnp.br, o comando final ficaria da seguinte forma:
+
+```/usr/lib/jvm/java-8-oracle/bin/keytool -import -alias devampto.cafeexpresso.rnp.br -keystore /usr/lib/jvm/java-8-oracle/jre/lib/security/cacerts -file /etc/ssl/certs/server.crt```
+
+Atenção: A senha de administração da keystore da JVM vai ser solicitada...  A senha padrão, caso não tenha sido mudada, é *changeit*
+
+Se o certificado estiver em outra máquina, pode ser baixado, usando comando similar ao abaixo:
+
+
+```openssl s_client -connect google.com:443 < /dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > public.crt ```
+
+
+Após baixá-lo, o mesmo comando de importação apresentado acima pode ser executado. Mas atenção, o conteúdo do arquivo deve ser
+apresentado como no exemplo:
+
+-----BEGIN CERTIFICATE-----  
+< Conteúdo do certificado >  
+-----END CERTIFICATE-----
+
+
+Esse procedimento deve ser repetido sempre que o certificado for trocado.
