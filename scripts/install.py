@@ -133,7 +133,7 @@ def config_mfa_idp():
     # Configurações gerais, flows, views, properties,
     # libs e arquivos necessários:
     # 1. relying-party.xml
-    if not config_relying_party(config.get(idp,dir_base_idp_shibboleth)):
+    if not config_relying_party(config.get('idp','dir_base_idp_shibboleth')):
         msg = """
        Não foi possível editar o arquivo relying-party.xml.
         Por favor,edite manualmente conforme tutorial.
