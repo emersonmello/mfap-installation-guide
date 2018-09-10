@@ -66,8 +66,6 @@ def create_elem_rule(attribute, root):
 def config_metadata_provider(idp_base_dir):
     metadata_file  = idp_base_dir + '/conf/metadata-providers.xml'
     sp_file = idp_base_dir + '/metadata/mfaprovider-metadata.xml'
-    print ("sp file: "+ sp_file)
-    print("Metadata_file : " + metadata_file)
     utils.backup_original_file(metadata_file)
     try:
         # namespace for Metadata Provider.
@@ -166,6 +164,85 @@ def config_general_authn(idp_base_dir):
         tree = ET.parse(authn_file, parser)
         root = tree.getroot()
 
+        # configura fluxo da autenticação com multifator
+
+        elem_list = root.find('util:list[@id="shibboleth.AvailableAuthenticationFlows"]', ns)
+        ## remove  se já existe
+        if elem_list is not None:
+            elem_bean_flow = root.find('util:list/{http://www.springframework.org/schema/beans}bean[@id="authn/mfa-provider-flow"]', ns)
+            if elem_bean_flow is not None:
+                elem_list.remove(elem_bean_flow)
+
+            ## cria bean
+            bean_authn_mfa = ET.SubElement(elem_list,
+                '{http://www.springframework.org/schema/beans}bean',
+                {'id':'authn/mfa-provider-flow',
+                'parent':'shibboleth.AuthenticationFlow',
+                '{http://www.springframework.org/schema/p}passiveAuthenticationSupported' : 'true',
+                '{http://www.springframework.org/schema/p}forcedAuthenticationSupported' : 'true',
+                '{http://www.springframework.org/schema/p}nonBrowserSupported' :  'true'
+                })
+            bean_authn_mfa_property = ET.SubElement( bean_authn_mfa,
+            '{http://www.springframework.org/schema/beans}property',
+            {'name' : 'supportedPrincipals'})
+
+            bean_authn_mfa_property_list = ET.SubElement( bean_authn_mfa_property,
+            '{http://www.springframework.org/schema/beans}list')
+
+            bean_mfa1 = ET.SubElement(  bean_authn_mfa_property_list,
+            '{http://www.springframework.org/schema/beans}bean',
+            {'parent' : 'shibboleth.SAML2AuthnContextClassRef',
+            '{http://www.springframework.org/schema/c}classRef':
+                'http://id.incommon.org/assurance/mfa'})
+
+            bean_mfa2= ET.SubElement(bean_authn_mfa_property_list,
+            '{http://www.springframework.org/schema/beans}bean',
+            {'parent' : 'shibboleth.SAML1AuthenticationMethod',
+            '{http://www.springframework.org/schema/c}method':
+                'http://id.incommon.org/assurance/mfa'})
+
+            elem_bean_flow_failure = root.find('util:list/{http://www.springframework.org/schema/beans}bean[@id="authn/mfa-failure-request-flow"]', ns)
+            if elem_bean_flow_failure is not None:
+                elem_list.remove(elem_bean_flow_failure)
+
+            elem_bean_flow_failure = ET.SubElement(elem_list,
+            '{http://www.springframework.org/schema/beans}bean',
+            {'id':'authn/mfa-failure-request-flow',
+            'parent':'shibboleth.AuthenticationFlow',
+            '{http://www.springframework.org/schema/p}passiveAuthenticationSupported':'true',
+            '{http://www.springframework.org/schema/p}forcedAuthenticationSupported':'true',
+            })
+
+            elem_bean_fido = root.find('util:list/{http://www.springframework.org/schema/beans}bean[@id="authn/fido-ecp-flow"]', ns)
+            if elem_bean_fido is not None:
+                elem_list.remove(elem_bean_fido)
+
+            elem_bean_fido = ET.SubElement(elem_list,'bean', {
+                'id' : 'authn/fido-ecp-flow',
+                'parent' : 'shibboleth.AuthenticationFlow',
+                '{http://www.springframework.org/schema/p}passiveAuthenticationSupported':'true',
+                '{http://www.springframework.org/schema/p}forcedAuthenticationSupported':'true',
+                '{http://www.springframework.org/schema/p}nonBrowserSupported':'true'
+            })
+
+        # cria <bean parent="shibboleth.SAML2AuthnContextClassRef"
+        #                        c:classRef="http://id.incommon.org/assurance/mfa" />
+        # no bean id="authn/MFA", dentro de property->list
+        # Remove se já existir, antes de criar
+
+        elem_list = root.find('util:list[@id="shibboleth.AvailableAuthenticationFlows"]/{http://www.springframework.org/schema/beans}bean[@id="authn/MFA"]/{http://www.springframework.org/schema/beans}property[@name="supportedPrincipals"]/{http://www.springframework.org/schema/beans}list', ns)
+
+        elem_mfa = root.find('util:list[@id="shibboleth.AvailableAuthenticationFlows"]/{http://www.springframework.org/schema/beans}bean[@id="authn/MFA"]/{http://www.springframework.org/schema/beans}property[@name="supportedPrincipals"]/{http://www.springframework.org/schema/beans}list/{http://www.springframework.org/schema/beans}bean[@c:classRef="http://id.incommon.org/assurance/mfa"]', ns)
+
+        if elem_mfa is not None:
+            elem_list.remove(elem_mfa)
+
+        bean_elem =  ET.SubElement(elem_list, '{http://www.springframework.org/schema/beans}bean',
+            {'parent': 'shibboleth.SAML2AuthnContextClassRef',
+            '{http://www.springframework.org/schema/c}classRef':
+            'http://id.incommon.org/assurance/mfa'})
+
+        # configura ordem dos fatores
         elem =  root.find('util:map/[@id="shibboleth.AuthenticationPrincipalWeightMap"]', ns)
         if elem is not None:
             root.remove(elem)
