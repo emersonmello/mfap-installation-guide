@@ -149,6 +149,12 @@ def config_mfa_idp():
         print(msg)
 
     # 3. general-authn.xml
+    if not config_general_authn(config.get('idp','dir_base_idp_shibboleth')):
+        msg = """
+        Não foi possível editar o arquivo general-authn.xml.
+        Por favor,edite manualmente conforme tutorial.
+        """
+        print(msg)
     
     # 4 messages.properties
     if not  write_messages_idp_properties():
@@ -362,8 +368,6 @@ def main():
 
     # Configuração apache
     config_apache()
-    
-    
 
     ## Configuração do MfaP como Service Provider:
     if config_sp_properties():
