@@ -155,6 +155,51 @@ def config_relying_party(idp_base_dir):
         return False
     return True
 
+def config_general_authn(idp_base_dir):
+    authn_file = idp_base_dir + '/conf/authn/general-authn.xml'
+    utils.backup_original_file(authn_file)
+    try:
+        ns= dict([node for _, node in ET.iterparse(authn_file, events=['start-ns'])])
+        for prefix, uri in ns.items():
+            ET.register_namespace(prefix,uri)
+        parser = ET.XMLParser(target=CommentedTreeBuilder())
+        tree = ET.parse(authn_file, parser)
+        root = tree.getroot()
+
+        elem =  root.find('util:map/[@id="shibboleth.AuthenticationPrincipalWeightMap"]', ns)
+        if elem is not None:
+            root.remove(elem)
+
+        authn_principal = ET.SubElement(root,'util:map',
+                {'id': 'shibboleth.AuthenticationPrincipalWeightMap'})
+
+        entry1 = ET.SubElement(authn_principal, 'entry')
+        key1 = ET.SubElement(entry1, 'key')
+        value1 = ET.SubElement(key1, 'value')
+        value1.text = "1"
+        bean1 = ET.SubElement(key1,'{http://www.springframework.org/schema/beans}bean',
+            {'parent': 'shibboleth.SAML2AuthnContextClassRef',
+            '{http://www.springframework.org/schema/c}classRef':
+            'http://id.incommon.org/assurance/mfa'})
+
+        entry2 = ET.SubElement(authn_principal, 'entry')
+        key2 = ET.SubElement(entry2, 'key')
+        bean2 = ET.SubElement(key2,'{http://www.springframework.org/schema/beans}bean',
+            {'parent': 'shibboleth.SAML2AuthnContextClassRef',
+            '{http://www.springframework.org/schema/c}classRef':
+            'urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport'})
+        value2 = ET.SubElement(key2, 'value')
+        value2.text = "2"
+        utils.indent(root)
+        tree.write(authn_file)
+    except Exception as e:
+        #TODO: Reverter para arquivo original
+        print("Houve algum erro ao escrever no arquivo: " , authn_file)
+        print("Erro: ", e)
+        return False
+
+    return True
+
 def main():
     '''
         O objetivo desde método é facilitar o debug deste script. Na instalação
@@ -164,6 +209,7 @@ def main():
     config_attribute_filters(config.get('idp','dir_base_idp_shibboleth'))
     config_metadata_provider(config.get('idp','dir_base_idp_shibboleth'))
     config_relying_party(config.get('idp','dir_base_idp_shibboleth'))
+    config_general_authn(config.get('idp', 'dir_base_idp_shibboleth'))
 
 
 if __name__ == '__main__':
