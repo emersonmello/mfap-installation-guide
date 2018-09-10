@@ -68,8 +68,8 @@ def set_noauth_mongoconf():
     return True
 
 def install_mongodb():
-    mongouser = set_value('mongo','user','Crie um usuário para segurança do banco de dados:') 
-    mongopass = set_value('mongo','password','Defina uma senha:')
+    mongouser = set_value('mongo','user','Informe um nome de usuário para ser utilizado como administrador do banco de dados:') 
+    mongopass = set_value('mongo','password','Defina uma senha para o usuário ' + mongouser+ ': ')
     with open('scriptMongo.js', 'w') as sm:
         mongouser = config.get('mongo','user') 
         script_text = """
@@ -133,12 +133,12 @@ def config_mfa_idp():
     # Configurações gerais, flows, views, properties,
     # libs e arquivos necessários:
     # 1. relying-party.xml
-    #if not config_relying_party(config.get(idp,dir_base_idp_shibboleth)):
-    #    msg = """
-    #   Não foi possível editar o arquivo relying-party.xml.
-    #    Por favor,edite manualmente conforme tutorial.
-    #    """
-    #    print(msg)
+    if not config_relying_party(config.get(idp,dir_base_idp_shibboleth)):
+        msg = """
+       Não foi possível editar o arquivo relying-party.xml.
+        Por favor,edite manualmente conforme tutorial.
+        """
+        print(msg)
 
     # 2. attribute-filter.xml
     if not config_attribute_filters(config.get('idp','dir_base_idp_shibboleth')):
