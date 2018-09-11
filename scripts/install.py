@@ -43,7 +43,7 @@ def set_value_without_ask(group,field,value):
 def verify_edit_variables():
     mongouser = config.get('mongo','user') 
     if mongouser !='' :
-        choise = raw_input('Você já tentou realizar uma instalação anteriormente, continuar utilizando os mesmos dados informados? (S,N)')
+        choise = raw_input('Você já tentou realizar uma instalação anteriormente, continuar utilizando os mesmos dados informados? (N,s)')
         if (choise in ('S','s')):
             return False
     return True
