@@ -149,6 +149,12 @@ def config_mfa_idp():
         print(msg)
 
     # 3. general-authn.xml
+    if not config_general_authn(config.get('idp','dir_base_idp_shibboleth')):
+        msg = """
+        Não foi possível editar o arquivo general-authn.xml.
+        Por favor,edite manualmente conforme tutorial.
+        """
+        print(msg)
     
     # 4 messages.properties
     if not  write_messages_idp_properties():
@@ -157,24 +163,6 @@ def config_mfa_idp():
         Por favor,edite manualmente conforme tutorial.
         """
         print(msg)
-    # 5. Copie o arquivo alteracoes/conf/authn/mfa-authn-config.xml para /opt/shibboleth-idp/conf/authn/
-    # sudo cp alteracoes/conf/authn/mfa-authn-config.xml /opt/shibboleth-idp/conf/authn/
-
-    # 6 Copie o conteúdo do diretório alteracoes/flows/authn para  /opt/shibboleth-idp/flows/authn
-    # sudo cp -R alteracoes/flows/authn/* /opt/shibboleth-idp/flows/authn/
-
-    # 7 Copie o conteúdo do diretório alteracoes/views para  /opt/shibboleth-idp/views;
-    # sudo cp alteracoes/views/* /opt/shibboleth-idp/views/
-
-    # 8 Copie o conteúdo do diretório alteracoes/webapp/images para  /opt/shibboleth-idp/webapp/images;
-    # sudo cp alteracoes/webapp/images/* /opt/shibboleth-idp/webapp/images/
-
-    # 9 Copie o conteúdo do diretório alteracoes/webapp/WEB-INF/lib para /opt/shibboleth-idp/webapp/WEB-INF/lib
-    #sudo cp alteracoes/webapp/WEB-INF/lib/* /opt/shibboleth-idp/webapp/WEB-INF/lib/
-
-    # build do idp 
-    # cd /opt/shibboleth-idp/
-    # ./bin/build.sh
 
 def config_tomcat():
     '''
@@ -362,8 +350,6 @@ def main():
 
     # Configuração apache
     config_apache()
-    
-    
 
     ## Configuração do MfaP como Service Provider:
     if config_sp_properties():
