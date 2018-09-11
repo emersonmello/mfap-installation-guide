@@ -335,11 +335,11 @@ def deploy():
         if not os.path.exists(sp_dir):
             os.path.makedirs(sp_dir)
         os.chdir('./MfaProvider')  # estamos clonando pra esse endereço
-        retcode_gradle_clean = subprocess.call('gradlew clean', shell=True)
+        retcode_gradle_clean = subprocess.call('./gradlew clean', shell=True)
         if retcode_gradle_clean == 0:
-            retcode_gradle_build = subprocess.call('gradlew build', shell=True)
+            retcode_gradle_build = subprocess.call('./gradlew build', shell=True)
             if retcode_gradle_build == 0:
-                retcode_gradle_war = subprocess.call('gradlew war', shell=True)
+                retcode_gradle_war = subprocess.call('./gradlew war', shell=True)
                 if retcode_gradle_war == 0:
                     try:
                         if os.path.exists(sp_dir + '/mfaprovider.war'):
