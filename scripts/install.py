@@ -344,6 +344,13 @@ def deploy():
         if retcode_restart_tomcat != 0:
             print ("Não foi possível reiniciar o tomcat após o deploy")
             return False
+        try:
+            os.remove('./build')
+        except Exception as e:
+            # nao vamos parar o processo se nao conseguir remover, o clean
+            # deve dar conta 
+            pass
+        os.chdir('../')
     except OSError as ose:
         print ("Erro ao fazer o deploy ", ose)
         return False
