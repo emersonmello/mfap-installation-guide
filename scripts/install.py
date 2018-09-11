@@ -334,7 +334,6 @@ def deploy():
                         if os.path.exists(sp_dir + '/mfaprovider.war'):
                             os.remove(sp_dir + '/mfaprovider.war')
                         shutil.copyfile('./build/libs/mfaprovider.war', sp_dir + '/mfaprovider.war')
-                        subprocess.call('chown tomcat8:tomcat8 ' + sp_dir + '/mfaprovider.war',shell=True)
                     except IOError as e:
                         print ("Não foi possível copiar o arquivo mfaprovider.war")
                         print ("Erro: ", e)
