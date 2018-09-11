@@ -121,7 +121,7 @@ def config_mfa_idp():
         print(msg)
 
     # Configuração Rest do MfaProvider
-    if not config_mfa_properties(apiHost,
+    if not config_mfa_properties(config.get('mfap','idp.mfaprovider.apiHost'),
         config.get('mfap','restsecurity.user'),
         config.get('mfap','restsecurity.password'),
         config.get('idp','dir_base_idp_shibboleth')):
