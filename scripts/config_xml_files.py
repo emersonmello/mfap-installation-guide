@@ -252,7 +252,7 @@ def config_general_authn(idp_base_dir):
 
         entry1 = ET.SubElement(authn_principal, 'entry')
         key1 = ET.SubElement(entry1, 'key')
-        value1 = ET.SubElement(key1, 'value')
+        value1 = ET.SubElement(entry1, 'value')
         value1.text = "1"
         bean1 = ET.SubElement(key1,'{http://www.springframework.org/schema/beans}bean',
             {'parent': 'shibboleth.SAML2AuthnContextClassRef',
@@ -265,7 +265,7 @@ def config_general_authn(idp_base_dir):
             {'parent': 'shibboleth.SAML2AuthnContextClassRef',
             '{http://www.springframework.org/schema/c}classRef':
             'urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport'})
-        value2 = ET.SubElement(key2, 'value')
+        value2 = ET.SubElement(entry2, 'value')
         value2.text = "2"
         utils.indent(root)
         tree.write(authn_file)
