@@ -322,8 +322,8 @@ def deploy():
     sp_dir=config.get('apache', 'sp_dir')
     try:
         if not os.path.exists(sp_dir):
-            os.path.makedirs(sp_dir)
-        os.chdir('./MfaProvider')  # estamos clonando pra esse endereço
+            os.makedirs(sp_dir)
+        os.chdir('./MfaProvider')
         retcode_gradle_clean = subprocess.call('./gradlew clean', shell=True)
         if retcode_gradle_clean == 0:
             retcode_gradle_build = subprocess.call('./gradlew build', shell=True)
@@ -333,14 +333,17 @@ def deploy():
                     try:
                         if os.path.exists(sp_dir + '/mfaprovider.war'):
                             os.remove(sp_dir + '/mfaprovider.war')
-                        shutil.copyfile('build/libs/mfaprovider.war', sp_dir + 'mfaprovider.war')
-                        os.chown(sp_dir + '/mfaprovider.war', 'tomcat8', 'tomcat8')
-                        subprocess.call('chown tomcat8:tomcat8 ' + sp_dir + '/mfaprovider.war')
+                        shutil.copyfile('./build/libs/mfaprovider.war', sp_dir + '/mfaprovider.war')
+                        subprocess.call('chown tomcat8:tomcat8 ' + sp_dir + '/mfaprovider.war',shell=True)
                     except IOError as e:
                         print ("Não foi possível copiar o arquivo mfaprovider.war")
                         print ("Erro: ", e)
 
         retcode_restart_tomcat = subprocess.call('sudo systemctl restart tomcat8', shell=True)
+        try:
+            os.remove('./build/')
+        except Exception as e:
+            pass
         if retcode_restart_tomcat != 0:
             print ("Não foi possível reiniciar o tomcat após o deploy")
             return False
@@ -350,11 +353,12 @@ def deploy():
             # nao vamos parar o processo se nao conseguir remover, o clean
             # deve dar conta 
             pass
-        os.chdir('../')
     except OSError as ose:
         print ("Erro ao fazer o deploy ", ose)
         return False
-    
+    except Exception as e:
+        print e
+    os.chdir('..')
     return True
 
 
