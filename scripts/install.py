@@ -317,6 +317,39 @@ def write_messages_idp_properties():
         return False
     return True
 
+def deploy():
+    ## Alterar a variável SP_DIR para o diretório que está configurado no servidor de aplicação apache  ##
+    sp_dir=config.get('apache', 'sp_dir')
+    try:
+        if not os.path.exists(sp_dir):
+            os.path.makedirs(sp_dir)
+        os.chdir('./MfaProvider')  # estamos clonando pra esse endereço
+        retcode_gradle_clean = subprocess.call('./gradlew clean', shell=True)
+        if retcode_gradle_clean == 0:
+            retcode_gradle_build = subprocess.call('./gradlew build', shell=True)
+            if retcode_gradle_build == 0:
+                retcode_gradle_war = subprocess.call('./gradlew war', shell=True)
+                if retcode_gradle_war == 0:
+                    try:
+                        if os.path.exists(sp_dir + '/mfaprovider.war'):
+                            os.remove(sp_dir + '/mfaprovider.war')
+                        shutil.copyfile('build/libs/mfaprovider.war', sp_dir + 'mfaprovider.war')
+                        os.chown(sp_dir + '/mfaprovider.war', 'tomcat8', 'tomcat8')
+                        subprocess.call('chown tomcat8:tomcat8 ' + sp_dir + '/mfaprovider.war')
+                    except IOError as e:
+                        print ("Não foi possível copiar o arquivo mfaprovider.war")
+                        print ("Erro: ", e)
+
+        retcode_restart_tomcat = subprocess.call('sudo systemctl restart tomcat8', shell=True)
+        if retcode_restart_tomcat != 0:
+            print ("Não foi possível reiniciar o tomcat após o deploy")
+            return False
+    except OSError as ose:
+        print ("Erro ao fazer o deploy ", ose)
+        return False
+    
+    return True
+
 
 def main():
     ## Verifica se houve tentativa de instalação anterior
@@ -355,14 +388,9 @@ def main():
     ## Configuração do MfaP como Service Provider:
     if config_sp_properties():
         config_mfaprovider_properties()
-        try:
-            retcode_deploy = subprocess.call('cd MfaProvider && ./deploy.sh', shell=True)
-        except IOError as fne:
-            print("O arquivo de deploy não foi encontrado")
-            exit()
-    # Gerar SP Metadata
-    metadatafile = 'MfaProvider/src/main/resources/metadata/sp-metadata.xml'
-    if retcode_deploy == 0:
+    if deploy():
+        # Gerar SP Metadata
+        metadatafile = 'MfaProvider/src/main/resources/metadata/sp-metadata.xml'
         if generate_metadata(config.get('mfap','restsecurity.user'),
                 config.get('mfap','restsecurity.password'),
                 config.get('mfap','host.name') + config.get('mfap', 'mfapbasepath'),
@@ -373,45 +401,36 @@ def main():
         else:
             print("Não foi possível gerar metadados do MfaProvider")
             exit()    
-    else:
-        print("Não foi possível gerar metadados do MfaProvider")
-        exit()
 
-    # Configurar SP Metadata no IdP
-    ## 1. Copiar metadata do sp
-    
-    ## 2. Editar metadata-providers.xml
-    if not config_metadata_provider(config.get('idp','dir_base_idp_shibboleth')):
-        msg = """
-        Não foi possível editar o arquivo metadata-providers.xml.
-        Por favor,edite manualmente conforme tutorial.
-        """
-        print(msg)
+        # Configurar SP Metadata no IdP
+        ## 1. Copiar metadata do sp
+        
+        ## 2. Editar metadata-providers.xml
+        if not config_metadata_provider(config.get('idp','dir_base_idp_shibboleth')):
+            msg = """
+            Não foi possível editar o arquivo metadata-providers.xml.
+            Por favor,edite manualmente conforme tutorial.
+            """
+            print(msg)
 
-    ## 3. Deploy do sp
-    try:
-        retcode_deploy = subprocess.call('cd MfaProvider && ./deploy.sh', shell=True)
-    except IOError as fne:
-        print("O arquivo de deploy não foi encontrado")
-        exit()
+        ## 3. Deploy do sp
+        if deploy():
+                ##
+                #   2. Roteiro de configuração para solução de multifator no Shibboleth IdP
+                ##
 
+                # Download do projeto:
+                # git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
 
-    ##
-    #   2. Roteiro de configuração para solução de multifator no Shibboleth IdP
-    ##
-
-    # Download do projeto:
-    # git clone https://git.rnp.br/GT-AMPTo/IdP-Customizado-GtAmpto.git
-
-    config_mfa_idp()
-    # chamar script de cópias
-    try:
-        retcode_copy =  subprocess.call('./implantacao_mfa_idpv3.sh', shell=True)
-    except IOError as fne:
-        print("O script implantacao_mfa_idpv3.sh não foi encontrado")
-        if retcode_copy == 0:
-             print("Script finalizado com sucesso")
-        exit()
+            config_mfa_idp()
+            # chamar script de cópias
+            try:
+                retcode_copy =  subprocess.call('./implantacao_mfa_idpv3.sh', shell=True)
+            except IOError as fne:
+                print("O script implantacao_mfa_idpv3.sh não foi encontrado")
+                if retcode_copy == 0:
+                     print("Script finalizado com sucesso")
+                exit()
 
 if __name__ == '__main__':
     #TODO : avisar que o script faz backup, mas sugerir backup
