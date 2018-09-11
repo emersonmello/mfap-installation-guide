@@ -351,7 +351,7 @@ def deploy():
                         print ("Não foi possível copiar o arquivo mfaprovider.war")
                         print ("Erro: ", e)
 
-        retcode_restart_tomcat = subprocess.call('sudo systemctl restart tomcat8')
+        retcode_restart_tomcat = subprocess.call('sudo systemctl restart tomcat8', shell=True)
         if retcode_restart_tomcat != 0:
             print ("Não foi possível reiniciar o tomcat após o deploy")
             return False
@@ -395,8 +395,6 @@ def main():
 
     # Configuração apache
     config_apache()
-    
-    
 
     ## Configuração do MfaP como Service Provider:
     if config_sp_properties():
