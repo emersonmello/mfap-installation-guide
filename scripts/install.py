@@ -11,9 +11,9 @@ from utils import CommentedTreeBuilder
 
 from config_idp_mfa import edit_idp_properties, config_mfa_properties
 from config_xml_files import config_relying_party, config_metadata_provider
-from config_xml_files import config_attribute_filters
+from config_xml_files import config_attribute_filters, config_general_authn
 from generate_metadata import generate_metadata
-from config_general_authn import config_general_authn
+
 
 import ConfigParser
 config = ConfigParser.ConfigParser()
