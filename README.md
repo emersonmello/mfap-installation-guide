@@ -67,7 +67,7 @@ Segue imagem exemplificando o local dos atributos:
      git clone https://git.rnp.br/GT-AMPTo/roteiro-instalacao.git
      ```
 
-     **Obs: Caso tiver problemas com certificado, utilize o comando: `git -c http.sslVerify=false clone https://git.rnp.br/GT-AMPTo/roteiro-instalacao.git`  
+     **Obs: Em caso de problemas com certificado, utilize o comando: `git -c http.sslVerify=false clone https://git.rnp.br/GT-AMPTo/roteiro-instalacao.git`**  
 
 1.   Dentro do diretório baixado do git,  acesse o diretório `scripts`. Este será nosso diretório base para execução dos próximos passos.
 
@@ -75,35 +75,76 @@ Segue imagem exemplificando o local dos atributos:
      cd scripts
      ```
 
-*Obs: O script irá realizar o backup e cópia dos arquivos originais do IdP com o sufilxo .orig *
+Há duas formas de realizar a instalação, de forma básica ou de forma avançada.
+- Na instalação básica, o script irá questionar os valores das variáveis básicas para funcionamento padrão da solução de multifator.
+- A instalação avançada é recomendada caso queira alterar o pathname padrão do MfaProvider (idp.instituicao.edu.br/conta) ou tenha algum problema na instalação básica devido a locais e diretórios diferente do padrão.
 
-1.  No diretório scripts, execute o script `install.py`
+
+## Instalação Básica
+
+1.   No diretório scripts, execute o script `install.py`
     
-     ```bash
-     python2 install.py
-     ```
-2. Será realizado perguntas sobre configurações 
+      ```bash
+      python2 install.py
+      ```
+Serão realizados questionamentos durante a instalação, tais como:
 
+ - Definição de usuario e senha do banco de dados;
+ - Definição de usuario e senha para proteção dos recursos rest;
+ - Endereço do IdP sem https, ex:  idp.instituicao.edu.br.
+
+ Após processo de instalação concluído, verificar a seção teste para verificar o funcionamento da aplicação.
+
+## Instalação Avançada
+
+1.   No diretório scripts, edite o arquivo config.ini
+    
+      ```bash
+      vi config.ini
+      ```
+
+Edite o arquivo conforme abaixo:
+
+a) Caso desejar alterar o caminho dos diretórios:
+
+ - Endereço do metadata:
+alterar o atributo: `idp.metadata=/opt/shibboleth-idp/metadata/idp-metadata.xml`
+
+- Diretório base do Idp:
+alterar o atributo: dir_base_idp_shibboleth=/opt/shibboleth-idp
+
+- Endereço do server.xml do tomcat:
+alterar o atributo: `tomcat_server_config=/etc/tomcat8/server.xml`
+
+- Endereço do arquivo de configuração do site do idp no apache:
+alterar o atributo: `apache_conf_file=/etc/apache2/sites-enabled/01-idp.conf`
+
+b) Caso desejar alterar o pathname  (nome a ser acessado pelo usuário para acessar o MfaProvider no Idp) :
+
+- Endereço do pathname:
+alterar o atributo `mfapbasepath=conta`
+
+**Os demais atributos não devem ser alterados, os que estão sem informação o script de instalação irá solicitar durante o processo.**
+
+1.   No diretório scripts, execute o script `install.py`
+    
+      ```bash
+      python2 install.py
+      ```
+
+ Após processo de instalação concluído, verificar a seção teste para verificar o funcionamento da aplicação.
 
 ## Teste
 
-- A aplicação será disponibilizada no endereço configurado, ex: `https://endereco-idp/conta`.
+- A aplicação será disponibilizada no endereço configurado, ex: `https://idp.instituicao.edu.br/conta`.
+
+Ao acessar o endereço, caso apresentar a mesangem "Sua conexão não é segura" ou  "Sua conexão não é particular" (dependendo do navegador), isto indica que você possui um certificado autoassinado, e será necessário realizar o processo descrito
+na seção: Utilitários para Administrador > Uso de certificado autoassinado ou expiração de certificado.
+**Este processo evitará erro após processo de login.**
+
 - Faça a autenticação e verifique o auxílio da página para cadastrar e utilizar o segundo fator.
 
-
-# (Extras) Utilitários para Administrador:
-
-#### Remover segundo fator de determinado usuário:
-
-- Na pasta do projeto do MfaProvider,  utilize o script abaixo e informe o login do usuário para remover as configurações de segundo fator
-
-     ```bash
-     ./removeSecondFactor.sh
-     ```
-
-#### Habilitar e desabilitar métodos de segundo fator:
-
-- Na pasta do projeto do MfaProvider, edite o arquivo  `src/main/resource/factor.properties` e utilize `true` para habilitar ou `false` para desabilitar o fator desejado.
+# Utilitários para Administrador:
 
 #### Uso de certificado autoassinado ou expiração de certificado
 
@@ -139,3 +180,16 @@ apresentado como no exemplo:
 
 
 Esse procedimento deve ser repetido sempre que o certificado for trocado.
+
+#### Remover segundo fator de determinado usuário:
+
+- Na pasta do projeto do MfaProvider,  utilize o script abaixo e informe o login do usuário para remover as configurações de segundo fator
+
+     ```bash
+     ./removeSecondFactor.sh
+     ```
+
+#### Habilitar e desabilitar métodos de segundo fator:
+
+- Na pasta do projeto do MfaProvider, edite o arquivo  `src/main/resource/factor.properties` e utilize `true` para habilitar ou `false` para desabilitar o fator desejado.
+
