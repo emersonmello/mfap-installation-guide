@@ -30,7 +30,7 @@ Siga os passos a seguir para configurar o FCM:
 
 2.   Clique em `Adicionar Projeto`.
 
-3.   Digite um nome para o projeto (ingnore os demais campos), marque a opção "Aceito os termos.." e clique em `Criar projeto`.
+3.   Digite um nome para o projeto (ignore os demais campos), marque a opção "Aceito os termos.." e clique em `Criar projeto`.
 
 4.   Clique no ícone do Android para adicionar o Firebase ao app para Android, conforme imagem abaixo:
 
@@ -61,13 +61,13 @@ Segue imagem exemplificando o local dos atributos:
      sudo apt-get install mongodb
      ```
 
-    *Obs: Ao termino da instalação, o serviço do MongoDB será instânciado automaticamente, o qual pode ser conferido pelo comando `ps -aux | grep mongo` (caso não estiver iniciado, utilize o comando `sudo systemctl start mongodb`).* 
+    *Obs: Ao término da instalação, o serviço do MongoDB será instanciado automaticamente, o qual pode ser conferido pelo comando `ps -aux | grep mongo` (caso não estiver iniciado, utilize o comando `sudo systemctl start mongodb`).* 
 
 # Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP.
 
 *Obs: executar todos os comandos como root*
 
-1.   Faça o download do projeto `roterio-instalacao` para o diretório de sua preferência. Pode ser utilizado o diretório home do usuário por exemplo.
+1.   Faça o download do projeto `roteiro-instalacao` para o diretório de sua preferência. Pode ser utilizado o diretório home do usuário por exemplo.
 
      ```bash
      git clone https://git.rnp.br/GT-AMPTo/roteiro-instalacao.git
@@ -181,8 +181,9 @@ apresentado como no exemplo:
 < Conteúdo do certificado >  
 -----END CERTIFICATE-----
 
-
 Esse procedimento deve ser repetido sempre que o certificado for trocado.
+
+Após, reinicie o Tomcat: `sudo systemctl restart tomcat8`
 
 ## Remover segundo fator de determinado usuário:
 
@@ -194,5 +195,5 @@ Esse procedimento deve ser repetido sempre que o certificado for trocado.
 
 ## Habilitar e desabilitar métodos de segundo fator:
 
-- Na pasta do projeto do MfaProvider, edite o arquivo  `src/main/resource/factor.properties` e utilize `true` para habilitar ou `false` para desabilitar o fator desejado.
+- Na pasta do projeto `scripts/MfaProvider`, edite o arquivo  `src/main/resource/factor.properties` e utilize `true` para habilitar ou `false` para desabilitar o fator desejado.
 
