@@ -8,16 +8,17 @@
 
 Este roteiro está dividido em:
 
-1. [Configuração do FCM para Diálogo de Confirmação](# Configurações FCM para Diálogo de Confirmação)
-2. [Instalação e configuração do banco de dados MongoDB](# Instalação e configuração do banco de dados MongoDB)
-3. [Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP](# Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP)
-    - [Instalação Básica](## Instalação Básica)
-    - [Instalação Avançada](## Instalação Avançada)
-    - [Testes](## Testes)
-4. [Utilitários para Administrador](# Utilitários para Administrador)
-    - [Uso de certificado autoassinado ou expiração de certificado](## Uso de certificado autoassinado ou expiração de certificado)
-    - [Remover segundo fator de determinado usuário](## Remover segundo fator de determinado usuário)
-    - [Habilitar e desabilitar métodos de segundo fator:](## Habilitar e desabilitar métodos de segundo fator)
+1. [Configuração do FCM para Diálogo de Confirmação](#Configurações FCM para Diálogo de Confirmação)
+2. [Instalação e configuração do banco de dados MongoDB](#Instalação e configuração do banco de dados MongoDB)
+3. [Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP](#Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP)
+    - [Instalação Básica](##Instalação Básica)
+    - [Instalação Avançada](##Instalação Avançada)
+    - [Testes](##Testes)
+4. [Utilitários para Administrador](#Utilitários para Administrador)
+    - [Uso de certificado autoassinado ou expiração de certificado](##Uso de certificado autoassinado ou expiração de certificado)
+    - [Remover segundo fator de determinado usuário](##Remover segundo fator de determinado usuário)
+    - [Habilitar e desabilitar métodos de segundo fator:](##Habilitar e desabilitar métodos de segundo fator)
+
 # Configurações FCM para Diálogo de Confirmação 
 
 Para funcionamento da opção multi-fator com diálogo de confirmação, é necessário utilizar o servidor de fila de mensagens FCM do Google. 
@@ -98,7 +99,7 @@ Serão realizados questionamentos durante a instalação, tais como:
  - Definição de usuario e senha para proteção dos recursos rest;
  - Endereço do IdP sem https, ex:  idp.instituicao.edu.br.
 
- Após processo de instalação concluído, verificar a seção [Testes](## Testes) para verificar o funcionamento da aplicação.
+ Após processo de instalação concluído, verificar a seção [Testes](#Testes) para verificar o funcionamento da aplicação.
 
 ## Instalação Avançada
 
@@ -131,13 +132,13 @@ b) Caso desejar alterar o pathname  (nome a ser acessado pelo usuário para aces
 
 **Os demais atributos não devem ser alterados, os que estão sem informação o script de instalação irá solicitar durante o processo.**
 
-Após, no diretório scripts, execute o script `install.py`
+Por fim, no diretório scripts, execute o script `install.py`
     
       ```bash
       python2 install.py
       ```
 
- Após processo de instalação concluído, verificar a seção [Testes](## Testes) para verificar o funcionamento da aplicação.
+Após processo de instalação concluído, verificar a seção [Testes](#Testes) para verificar o funcionamento da aplicação.
 
 ## Testes
 
