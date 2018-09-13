@@ -88,16 +88,6 @@ def install_mongodb():
     #retcode_install_mongo = subprocess.call(["sudo","apt-get","install", "mongodb", "-y"])
     #if retcode_install_mongo == 0: # serve para instalaçao recem realizada e já instalado
     try:
-        retcode_mongo_status = subprocess.call("systemctl status mongodb", shell=True)
-        if retcode_mongo_status != 0 :
-            print ("O mongodb não está rodando")
-            retcode_start_mongo = subprocess.call("systemctl start mongodb", shell=True)
-            if retcode_start_mongo != 0:
-                print("Não foi possível iniciar o mongodb.")
-                print("Por favor, corrija manualmente esta questão e volte a executar \
-                        este script.")
-                return False
-
         retcode_config_mongo = subprocess.call("mongo < scriptMongo.js", shell=True)
         if retcode_config_mongo == 0: # usuario foi criado
             set_auth_mongoconf()
