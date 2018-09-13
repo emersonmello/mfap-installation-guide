@@ -8,16 +8,16 @@
 
 Este roteiro está dividido em:
 
-1. [Configurações do FCM para Diálogo de Confirmação](#Configurações FCM para Diálogo de Confirmação)
-2. [Instalação e configuração do banco de dados MongoDB](#Instalação e configuração do banco de dados MongoDB)
-3. [Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP](#Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP)
-    - [Instalação Básica](#Instalação Básica)
-    - [Instalação Avançada](#Instalação Avançada)
+1. [Configurações do FCM para Diálogo de Confirmação](#Configurações-FCM-para-Diálogo-de-Confirmação)
+2. [Instalação e configuração do banco de dados MongoDB](#Instalação-e-configuração-do-banco-de-dados-MongoDB)
+3. [Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP](#Instalação-da-aplicação-MfaProvider-e-configuração-da-solução-de-multifator-no-Shibboleth-IdP)
+    - [Instalação Básica](#Instalação-Básica)
+    - [Instalação Avançada](#Instalação-Avançada)
     - [Testes](#Testes)
-4. [Utilitários para Administrador](#Utilitários para Administrador)
-    - [Uso de certificado autoassinado ou expiração de certificado](#Uso de certificado autoassinado ou expiração de certificado)
-    - [Remover segundo fator de determinado usuário](#Remover segundo fator de determinado usuário)
-    - [Habilitar e desabilitar métodos de segundo fator:](#Habilitar e desabilitar métodos de segundo fator)
+4. [Utilitários para Administrador](#Utilitários-para-Administrador)
+    - [Uso de certificado autoassinado ou expiração de certificado](#Uso-de-certificado-autoassinado-ou-expiração-de-certificado)
+    - [Remover segundo fator de determinado usuário](#Remover-segundo-fator-de-determinado-usuário)
+    - [Habilitar e desabilitar métodos de segundo fator:](#Habilitar-e-desabilitar-métodos-de-segundo-fator)
 
 # Configurações FCM para Diálogo de Confirmação 
 
