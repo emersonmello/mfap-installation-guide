@@ -8,10 +8,16 @@
 
 Este roteiro está dividido em:
 
-1. Configuração do FCM para Diálogo de Confirmação.
-2. Instalação e configuração do banco de dados MongoDB
-3. Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP.
-4. (Extras) Utilitários para Administrador.
+1. [Configurações do FCM para Diálogo de Confirmação](#configurações-fcm-para-diálogo-de-confirmação)
+2. [Instalação e configuração do banco de dados MongoDB](#instalação-e-configuração-do-banco-de-dados-mongodb)
+3. [Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP](#instalação-da-aplicação-mfaProvider-e-configuração-da-solução-de-multifator-no-shibboleth-idP)
+    - [Instalação Básica](#instalação-básica)
+    - [Instalação Avançada](#instalação-avançada)
+    - [Testes](#testes)
+4. [Utilitários para Administrador](#utilitários-para-administrador)
+    - [Uso de certificado autoassinado ou expiração de certificado](#uso-de-certificado-autoassinado-ou-expiração-de-certificado)
+    - [Remover segundo fator de determinado usuário](#remover-segundo-fator-de-determinado-usuário)
+    - [Habilitar e desabilitar métodos de segundo fator:](#habilitar-e-desabilitar-métodos-de-segundo-fator)
 
 # Configurações FCM para Diálogo de Confirmação 
 
@@ -93,7 +99,7 @@ Serão realizados questionamentos durante a instalação, tais como:
  - Definição de usuario e senha para proteção dos recursos rest;
  - Endereço do IdP sem https, ex:  idp.instituicao.edu.br.
 
- Após processo de instalação concluído, verificar a seção teste para verificar o funcionamento da aplicação.
+ Após processo de instalação concluído, verificar a seção [Testes](#testes) para verificar o funcionamento da aplicação.
 
 ## Instalação Avançada
 
@@ -105,40 +111,40 @@ Serão realizados questionamentos durante a instalação, tais como:
 
 Edite o arquivo conforme abaixo:
 
-a) Caso desejar alterar o caminho dos diretórios:
+a) Caso deseje alterar o caminho dos diretórios:
 
- - Endereço do metadata:
-alterar o atributo: `idp.metadata=/opt/shibboleth-idp/metadata/idp-metadata.xml`
+- Endereço do metadata:
+    alterar o atributo: `idp.metadata=/opt/shibboleth-idp/metadata/idp-metadata.xml`
 
 - Diretório base do Idp:
-alterar o atributo: dir_base_idp_shibboleth=/opt/shibboleth-idp
+    alterar o atributo: `dir_base_idp_shibboleth=/opt/shibboleth-idp`
 
 - Endereço do server.xml do tomcat:
-alterar o atributo: `tomcat_server_config=/etc/tomcat8/server.xml`
+    alterar o atributo: `tomcat_server_config=/etc/tomcat8/server.xml`
 
 - Endereço do arquivo de configuração do site do idp no apache:
-alterar o atributo: `apache_conf_file=/etc/apache2/sites-enabled/01-idp.conf`
+    alterar o atributo: `apache_conf_file=/etc/apache2/sites-enabled/01-idp.conf`
 
 b) Caso desejar alterar o pathname  (nome a ser acessado pelo usuário para acessar o MfaProvider no Idp) :
 
 - Endereço do pathname:
-alterar o atributo `mfapbasepath=conta`
+    alterar o atributo `mfapbasepath=conta`
 
 **Os demais atributos não devem ser alterados, os que estão sem informação o script de instalação irá solicitar durante o processo.**
 
-1.   No diretório scripts, execute o script `install.py`
+Por fim, no diretório scripts, execute o script `install.py`
     
       ```bash
       python2 install.py
       ```
 
- Após processo de instalação concluído, verificar a seção teste para verificar o funcionamento da aplicação.
+Após processo de instalação concluído, verificar a seção [Testes](#testes) para verificar o funcionamento da aplicação.
 
-## Teste
+## Testes
 
 - A aplicação será disponibilizada no endereço configurado, ex: `https://idp.instituicao.edu.br/conta`.
 
-Ao acessar o endereço, caso apresentar a mesangem "Sua conexão não é segura" ou  "Sua conexão não é particular" (dependendo do navegador), isto indica que você possui um certificado autoassinado, e será necessário realizar o processo descrito
+Ao acessar o endereço, caso apresentar a mesangem "Sua conexão não é segura" ou "Sua conexão não é particular" (dependendo do navegador), isto pode indicar que você possui um certificado autoassinado, e será necessário realizar o processo descrito
 na seção: Utilitários para Administrador > Uso de certificado autoassinado ou expiração de certificado.
 **Este processo evitará erro após processo de login.**
 
@@ -146,15 +152,14 @@ na seção: Utilitários para Administrador > Uso de certificado autoassinado ou
 
 # Utilitários para Administrador:
 
-#### Uso de certificado autoassinado ou expiração de certificado
+## Uso de certificado autoassinado ou expiração de certificado
 
 A comunicação IdP - MfaProvider se dá utilizando requisições via HTTPS, as quais necessitam que a Java Virtual Machine (JVM) confie no certificado utilizado.
-Se não houver a confiança, o seguinte erro pode ser apresentado:
+Se não houver a confiança, o seguinte erro pode ser apresentado nos logs do IdP após login (`/opt/shibboleth-idp/logs/idp-process.log`):
 
     Conection refused: javax.ws.rs.ProcessingException: javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification
 
 Nesse caso, o certificado deve ser importado para a JVM, usando o seguinte comando:
-
 
 ```<JAVA_HOME>/bin/keytool -import -alias <server_name> -keystore <JAVA_HOME>/jre/lib/security/cacerts -file public.crt```
     
@@ -167,9 +172,7 @@ Atenção: A senha de administração da keystore da JVM vai ser solicitada...  
 
 Se o certificado estiver em outra máquina, pode ser baixado, usando comando similar ao abaixo:
 
-
 ```openssl s_client -connect google.com:443 < /dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > public.crt ```
-
 
 Após baixá-lo, o mesmo comando de importação apresentado acima pode ser executado. Mas atenção, o conteúdo do arquivo deve ser
 apresentado como no exemplo:
@@ -181,15 +184,15 @@ apresentado como no exemplo:
 
 Esse procedimento deve ser repetido sempre que o certificado for trocado.
 
-#### Remover segundo fator de determinado usuário:
+## Remover segundo fator de determinado usuário:
 
-- Na pasta do projeto do MfaProvider,  utilize o script abaixo e informe o login do usuário para remover as configurações de segundo fator
+- Na pasta do projeto `scripts/MfaProvider`,  utilize o script abaixo e informe o login do usuário para remover as configurações de segundo fator
 
      ```bash
      ./removeSecondFactor.sh
      ```
 
-#### Habilitar e desabilitar métodos de segundo fator:
+## Habilitar e desabilitar métodos de segundo fator:
 
 - Na pasta do projeto do MfaProvider, edite o arquivo  `src/main/resource/factor.properties` e utilize `true` para habilitar ou `false` para desabilitar o fator desejado.
 
