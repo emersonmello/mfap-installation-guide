@@ -17,7 +17,7 @@ config = ConfigParser.ConfigParser()
 
 config.read('config.ini')
 
-def config_attribute_filters(idp_base_dir):
+def config_attribute_filters(idp_base_dir,idphost):
     filter_file = idp_base_dir + '/conf/attribute-filter.xml'
     utils.backup_original_file(filter_file)
     try:
@@ -38,7 +38,7 @@ def config_attribute_filters(idp_base_dir):
         filter_policy = ET.SubElement(root,'AttributeFilterPolicy',
                 {'id': 'releaseToMfaProvider'})
         filter_policy_sub = ET.SubElement(filter_policy, 'PolicyRequirementRule',
-                {'xsi:type':"Requester", "value": config.get('default','uri')})
+                {'xsi:type':"Requester", "value": idphost})
 
         # cria uma regra de liberação de atributo para cada atributo definido em
         # attribute_rules.txt. Cada atributo deve estar em uma linha, na forma atributo,regra: 

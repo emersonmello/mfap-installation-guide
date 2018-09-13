@@ -132,7 +132,7 @@ def config_mfa_idp():
         print(msg)
 
     # 2. attribute-filter.xml
-    if not config_attribute_filters(config.get('idp','dir_base_idp_shibboleth')):
+    if not config_attribute_filters(config.get('idp','dir_base_idp_shibboleth'),config.get('default','uri')):
         msg = """
         Não foi possível editar o arquivo attribute-filter.xml.
         Por favor,edite manualmente conforme tutorial.
