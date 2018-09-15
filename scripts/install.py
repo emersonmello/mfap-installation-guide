@@ -190,7 +190,6 @@ def config_tomcat():
     return True
 
 def config_sp_properties():
-    #TODO: Ajustar MFAP pois não é mais necessário senha administrativa do idp.
     uri_idp = set_value('default','uri','Informe o endereço do IdP, sem o https ex: idp.instituicao.edu.br: ')
     host_name = set_value_without_ask('mfap','host.name','https://'+uri_idp+'/')
     user_rest_mfa = set_value('mfap','restsecurity.user','Defina um usuário para proteção dos recursos rest: ') 
@@ -200,13 +199,16 @@ def config_sp_properties():
  ##Caminho completo do idp com o pathname
  host.name=%s
 
+ ##Nome do host do idp sem o pathname e htpps ex: insituicao.edu.br
+ entity.id=%s
+
  ##Caminho completo para o metadata do idp
  idp.metadata=%s
 
  ##Defina um usuario e senha para proteção dos recursos rest
  restsecurity.user=%s
  restsecurity.password=%s
-    """ % (host_name + config.get('mfap','mfapbasepath'), 
+    """ % (host_name + config.get('mfap','mfapbasepath'), uri_idp, 
             config.get('idp','idp.metadata'), user_rest_mfa, 
             pass_rest_mfa)
     try:
@@ -390,10 +392,11 @@ def main():
         config_mfaprovider_properties()
     if deploy():
         # Gerar SP Metadata
+        ip = set_value('default','ip','Informe o endereço de IP do servidor IdP: ')
         metadatafile = 'MfaProvider/src/main/resources/metadata/sp-metadata.xml'
         if generate_metadata(config.get('mfap','restsecurity.user'),
                 config.get('mfap','restsecurity.password'),
-                config.get('mfap','host.name') + config.get('mfap', 'mfapbasepath'),
+                'https://'+ip+'/'+config.get('mfap', 'mfapbasepath'),
                 metadatafile):
             metadatadest = config.get('idp', 'dir_base_idp_shibboleth') + '/metadata/' + 'mfaprovider-metadata.xml' 
             shutil.copyfile(metadatafile, metadatadest)
