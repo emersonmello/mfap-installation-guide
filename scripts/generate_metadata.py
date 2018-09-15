@@ -17,7 +17,8 @@ except ImportError:
 config.read('config.ini')
 
 def generate_metadata(user, password, host, destdir):
-    pagehandler = subprocess.call("wget -O %s --user %s --password %s %s/saml/web/metadata/getNewMetaData --no-check-certificate" % (destdir, user, password, host), shell=True)
+    pagehandler = subprocess.call("curl -X GET --user %s:%s %s/saml/web/metadata/getNewMetaData --insecure > %s" % (user, password, host, destdir), shell=True) 
+    #subprocess.call("wget -O %s --user %s --password %s %s/saml/web/metadata/getNewMetaData --no-check-certificate" % (destdir, user, password, host), shell=True)
     if pagehandler == 0:
         return True
     else:
