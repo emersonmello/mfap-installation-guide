@@ -399,9 +399,7 @@ def main():
         if generate_metadata(config.get('mfap','restsecurity.user'),
                 config.get('mfap','restsecurity.password'),
                 'https://'+ip+'/'+config.get('mfap', 'mfapbasepath'),
-                metadatafile,
-                config.get('apache','certificado_autoassinado')):
-
+                metadatafile):
             metadatadest = config.get('idp', 'dir_base_idp_shibboleth') + '/metadata/' + 'mfaprovider-metadata.xml' 
             shutil.copyfile(metadatafile, metadatadest)
             print ("Metadados configurado com sucesso")
