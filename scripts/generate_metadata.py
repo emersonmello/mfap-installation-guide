@@ -14,7 +14,7 @@ config = ConfigParser.ConfigParser()
 
 config.read('config.ini')
 
-def generate_metadata(user, password, host, destdir, autoassinado=False):
+def generate_metadata(user, password, host, destdir, autoassinado=True):
     # verifica se usa certificado autoassinado, o que pelo comportamento 
     # padrão do python lança o erro :
     # SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed (_ssl.c:590)
@@ -23,11 +23,9 @@ def generate_metadata(user, password, host, destdir, autoassinado=False):
     # vai ficar como configuração padrão na instalação do MfaProvider, para que,
     # na instalação avançada, caso a instituição não queira deixar essa opção
     # por não utilizar certificado autoassinado
-    if autoassinado.lower() == 'true':
-        print 'oi'
+    if autoassinado:
         context = ssl._create_unverified_context()
     else:
-        print 'tchau'
         context = ssl._create_default_https_context()
     # create a password manager
     password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
