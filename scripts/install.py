@@ -208,8 +208,10 @@ def config_sp_properties():
  ##Defina um usuario e senha para proteção dos recursos rest
  restsecurity.user=%s
  restsecurity.password=%s
-    """ % (host_name + config.get('mfap','mfapbasepath'), uri_idp, 
-            config.get('idp','idp.metadata'), user_rest_mfa, 
+    """ % ((host_name + config.get('mfap','mfapbasepath')), 
+            uri_idp, 
+            config.get('idp','idp.metadata'), 
+            user_rest_mfa, 
             pass_rest_mfa)
     try:
         with open('MfaProvider/src/main/resources/sp.properties', 'w+') as fp:
