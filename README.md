@@ -9,12 +9,13 @@
 Este roteiro está dividido em:
 
 1. [Configurações do FCM para Diálogo de Confirmação](#configurações-fcm-para-diálogo-de-confirmação)
-2. [Instalação e configuração do banco de dados MongoDB](#instalação-e-configuração-do-banco-de-dados-mongodb)
-3. [Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP](#instalação-da-aplicação-mfaProvider-e-configuração-da-solução-de-multifator-no-shibboleth-idP)
+2. [Ajustes de configuração da maquina](#ajustes-de-configuração-da-maquina)
+3. [Instalação e configuração do banco de dados MongoDB](#instalação-e-configuração-do-banco-de-dados-mongodb)
+4. [Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP](#instalação-da-aplicação-mfaProvider-e-configuração-da-solução-de-multifator-no-shibboleth-idP)
     - [Instalação Básica](#instalação-básica)
     - [Instalação Avançada](#instalação-avançada)
     - [Testes](#testes)
-4. [Utilitários para Administrador](#utilitários-para-administrador)
+5. [Utilitários para Administrador](#utilitários-para-administrador)
     - [Uso de certificado autoassinado ou expiração de certificado](#uso-de-certificado-autoassinado-ou-expiração-de-certificado)
     - [Remover segundo fator de determinado usuário](#remover-segundo-fator-de-determinado-usuário)
     - [Habilitar e desabilitar métodos de segundo fator:](#habilitar-e-desabilitar-métodos-de-segundo-fator)
@@ -53,6 +54,23 @@ Segue imagem exemplificando o local dos atributos:
 
      ![](./images/confcm2.png)
 
+# Ajustes de configuração da maquina 
+
+Para que o IdP consiga realizar requisições para seu próprio endereço, é necessário um ajuste na configuração do /etc/hosts
+
+1.  Edite o arquivo /etc/hosts:
+
+     ```bash
+     sudo vi /etc/hosts
+     ```
+2.  Apague a linha que contém o endereço `127.0.1.1`. O arquivo deverá ficará semelhante ao exemplo abaixo:
+
+    ```config
+    127.0.0.1       localhost
+    #Endereço de Ip e Host
+    191.36.8.39     idpexemplo.idp.edu.br idpexemplo
+    ```
+
 # Instalação e configuração do banco de dados MongoDB
 
 1.   Baixe e instale o MongoDB pelo gerenciador de pacotes:
@@ -62,7 +80,7 @@ Segue imagem exemplificando o local dos atributos:
      ```
 
     *Obs: Ao término da instalação, o serviço do MongoDB será instanciado automaticamente, o qual pode ser conferido pelo comando `ps -aux | grep mongo` (caso não estiver iniciado, utilize o comando `sudo systemctl start mongodb`).* 
-
+    
 # Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP.
 
 *Obs: executar todos os comandos como root*
