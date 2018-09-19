@@ -70,6 +70,12 @@ Para que o IdP consiga realizar requisições para seu próprio endereço, é ne
     #Endereço de Ip e Host
     191.36.8.39     idpexemplo.idp.edu.br idpexemplo
     ```
+3.  Reinicie o serviço de rede para aplicação da nova configuração:
+    
+    ```bash
+    sudo systemctl restart networking.service
+    ```
+
 
 # Instalação e configuração do banco de dados MongoDB
 
