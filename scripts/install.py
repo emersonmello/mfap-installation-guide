@@ -394,11 +394,10 @@ def main():
         config_mfaprovider_properties()
     if deploy():
         # Gerar SP Metadata
-        ip = set_value('default','ip','Informe o endereço de IP do servidor IdP: ')
         metadatafile = 'MfaProvider/src/main/resources/metadata/sp-metadata.xml'
         if generate_metadata(config.get('mfap','restsecurity.user'),
                 config.get('mfap','restsecurity.password'),
-                'https://'+ip+'/'+config.get('mfap', 'mfapbasepath'),
+                config.get('mfap','host.name')+config.get('mfap', 'mfapbasepath'),
                 metadatafile):
             metadatadest = config.get('idp', 'dir_base_idp_shibboleth') + '/metadata/' + 'mfaprovider-metadata.xml' 
             shutil.copyfile(metadatafile, metadatadest)
