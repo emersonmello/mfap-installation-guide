@@ -2,9 +2,9 @@
 from datetime import datetime
 import xml.etree.ElementTree as ET
 import os
+import re
 import shutil
 import subprocess
-from urllib2 import urlopen
 
 import utils
 from utils import CommentedTreeBuilder
@@ -253,15 +253,44 @@ idplogo=%s
 
 def config_apache():
     apache_conf_file = config.get('apache','apache_conf_file')
+    insert_apache_str = """
+        ProxyPass /%s ajp://localhost:9443/%s retry=5
+        <Proxy ajp://localhost:9443>
+            Require all granted
+        </Proxy>
+    """ % (config.get('mfap','mfapbasepath'), config.get('mfap','mfapbasepath'))
+
     if os.path.exists(apache_conf_file):
         utils.backup_original_file(apache_conf_file)
+        # Verifica se o conteudo de insert_apache_str já foi adicionado anteriormente e apaga
+        vhost_contents = ''
+        try:
+            with open(apache_conf_file, 'r') as fh:
+                vhost_contents = fh.read()
+        except IOError as e:
+            print "Houve um erro ao abrir %s para leitura" % apache_conf_file
+            print "Erro:  %s " % err
+        if re.findall(insert_apache_str, vhost_contents, re.M):
+            new_contents = re.sub(insert_apache_str, '', vhost_contents)
+            # só abre pra escrita/remoção de conteúdo o arquivo se o conteúdo já existir
+            if new_contents != '' and new_contents != vhost_contents:
+                try:
+                    with open(apache_conf_file, 'w+') as fh:
+                        fh.write(new_contents)
+                except Exception as err:
+                    msg = """
+                        Erro ao verificar se a configuração do MfaProvider já existia
+                        em %s. Pode ser que a configuração fique duplicada, caso você já
+                        tenha realizado esta instalação anteriormente. Porém pode ser
+                        removida manualmente mais tarde.
+                        Configuração a ser adicionada por este script:
+                        %s
+                        Erro:  %s
+                    """ % (apache_conf_file, insert_apache_str, err)
+                    print msg
         try:
             with open('insert_apache.txt', 'w+') as fp:
-                fp.write('\n    ProxyPass /%s ajp://localhost:9443/%s retry=5 \n' 
-                        % (config.get('mfap','mfapbasepath'), config.get('mfap','mfapbasepath')))
-                fp.write('  <Proxy ajp://localhost:9443>\n')
-                fp.write('      Require all granted\n')
-                fp.write('  </Proxy>\n')
+                fp.write(insert_apache_str)
         except IOError as err:
             print("Erro ao escrever arquivo " + apache_conf_file)
             print ("IOError: ", err)
