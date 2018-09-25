@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from shutil import copyfile
 import xml.etree.ElementTree as ET
+import shutil
+
+backup_files = {}
 
 class CommentedTreeBuilder(ET.TreeBuilder):
     def __init__(self, *args, **kwargs):
@@ -49,7 +52,9 @@ def check_missing_variables(config_variables, required_variables):
 def backup_original_file(filename):
     print("Fazendo backup de "  + filename)
     try:
-        copyfile(filename, filename + ".orig")
+        backup_filename = filename + ".orig"
+        copyfile(filename, backup_filename)
+        backup_files[filename] = backup_filename
     except IOError as io:
         print("Erro ao fazer backup do arquivo", filename)
         print("Error ", io)
@@ -78,6 +83,21 @@ def indent(elem, level=0):
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = j
     return elem
+
+def revert_backup_files():
+    if len(backup_files) > 0:
+        for original in backup_files:
+            try:
+                print "Revertendo arquivo %s para %s " % (backup_files[original], original)
+                shutil.move(backup_files[original], original)
+                backup_files[original]
+            except IOError as err:
+                msg = """
+                    Houve um erro ao retornar o arquivo %s para o seu estado original %s.
+                    Favor realizar o ajuste manualmente.
+                    Erro:  %s
+                """ % (original, backup_files[original], err)
+                print(msg)
 
 if __name__ == "__main__":
     read_config_variables()

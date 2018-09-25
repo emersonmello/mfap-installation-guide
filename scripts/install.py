@@ -406,6 +406,7 @@ def main():
         Por favor, corrija o problema indicado e tente novamente.
         """
         print(msg)
+        utils.revert_backup_files()
         exit()
     else:
         ## Adiciona segurança ao Mongo DB
@@ -433,6 +434,7 @@ def main():
             print ("Metadados configurado com sucesso")
         else:
             print("Não foi possível gerar metadados do MfaProvider")
+            utils.revert_backup_files()
             exit()    
 
         # Configurar SP Metadata no IdP
@@ -463,6 +465,7 @@ def main():
                 print("O script implantacao_mfa_idpv3.sh não foi encontrado")
                 if retcode_copy == 0:
                      print("Script finalizado com sucesso")
+                utils.revert_backup_files()
                 exit()
 
 if __name__ == '__main__':
