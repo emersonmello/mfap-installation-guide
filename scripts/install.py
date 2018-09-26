@@ -271,39 +271,30 @@ def config_apache():
             print "Houve um erro ao abrir %s para leitura" % apache_conf_file
             print "Erro:  %s " % err
         if re.findall(insert_apache_str, vhost_contents, re.M):
-            new_contents = re.sub(insert_apache_str, '', vhost_contents)
-            # só abre pra escrita/remoção de conteúdo o arquivo se o conteúdo já existir
-            if new_contents != '' and new_contents != vhost_contents:
-                try:
-                    with open(apache_conf_file, 'w+') as fh:
-                        fh.write(new_contents)
-                except Exception as err:
-                    msg = """
-                        Erro ao verificar se a configuração do MfaProvider já existia
-                        em %s. Pode ser que a configuração fique duplicada, caso você já
-                        tenha realizado esta instalação anteriormente. Porém pode ser
-                        removida manualmente mais tarde.
-                        Configuração a ser adicionada por este script:
-                        %s
-                        Erro:  %s
-                    """ % (apache_conf_file, insert_apache_str, err)
-                    print msg
-        try:
-            with open('insert_apache.txt', 'w+') as fp:
-                fp.write(insert_apache_str)
-        except IOError as err:
-            print("Erro ao escrever arquivo " + apache_conf_file)
-            print ("IOError: ", err)
-            return False
-        retcode = subprocess.call("sed -i '/<\/Proxy>/r insert_apache.txt' %s" % apache_conf_file, shell=True)
-        if retcode == 0:
-            print ("Reiniciando apache..." )
-            retcode_restart_apache = subprocess.call('systemctl restart apache2', shell=True)
-            if retcode_restart_apache == 0:
-                print("Apache reiniciado com sucesso!")
-                return True
-            else:
-                print("Nao foi possivel reiniciar o apache")
+            msg = """
+                Foi encontrada uma configuração idêntica do MfaProvider no apache, em
+                em %s. Portanto, esse passo não será executado.
+                Configuração que seria adicionada por este script, e que já existia:
+                %s
+            """ % (apache_conf_file, insert_apache_str)
+            print msg
+        else:
+            try:
+                with open('insert_apache.txt', 'w+') as fp:
+                    fp.write(insert_apache_str)
+            except IOError as err:
+                print("Erro ao escrever arquivo " + apache_conf_file)
+                print ("IOError: ", err)
+                return False
+            retcode = subprocess.call("sed -i '/<\/Proxy>/r insert_apache.txt' %s" % apache_conf_file, shell=True)
+            if retcode == 0:
+                print ("Reiniciando apache..." )
+                retcode_restart_apache = subprocess.call('systemctl restart apache2', shell=True)
+                if retcode_restart_apache == 0:
+                    print("Apache reiniciado com sucesso!")
+                    return True
+                else:
+                    print("Nao foi possivel reiniciar o apache")
     else:
         print ("Arquivo " + config.get('apache','apache_conf_file') + " de configuração do apache não encontrado!")
 
