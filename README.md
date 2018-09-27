@@ -8,6 +8,7 @@
 
 Este roteiro está dividido em:
 
+### Primeira Instalação
 1. [Configurações do FCM para Diálogo de Confirmação](#configurações-fcm-para-diálogo-de-confirmação)
 2. [Ajustes de configuração da maquina](#ajustes-de-configuração-da-maquina)
 3. [Instalação e configuração do banco de dados MongoDB](#instalação-e-configuração-do-banco-de-dados-mongodb)
@@ -15,7 +16,15 @@ Este roteiro está dividido em:
     - [Instalação Básica](#instalação-básica)
     - [Instalação Avançada](#instalação-avançada)
     - [Testes](#testes)
-5. [Utilitários para Administrador](#utilitários-para-administrador)
+
+### Atualização
+
+1. [Atualização da aplicação multifator MfaProvider)](#atualização-da-aplicação-multifator-mfaprovider)
+2. [Atualização do IdP (para suporte a mudanças no multifator, quando necessário)](#atualizacao-multifator-idp)
+
+### Utilitários para administração
+
+1. [Utilitários para Administrador](#utilitários-para-administrador)
     - [Uso de certificado autoassinado ou expiração de certificado](#uso-de-certificado-autoassinado-ou-expiração-de-certificado)
     - [Remover segundo fator de determinado usuário](#remover-segundo-fator-de-determinado-usuário)
     - [Habilitar e desabilitar métodos de segundo fator:](#habilitar-e-desabilitar-métodos-de-segundo-fator)
@@ -173,6 +182,18 @@ na seção: Utilitários para Administrador > Uso de certificado autoassinado ou
 **Este processo evitará erro após processo de login.**
 
 - Faça a autenticação e verifique o auxílio da página para cadastrar e utilizar o segundo fator.
+
+
+# Atualização da aplicação multifator MfaProvider
+
+Eventualmente pode ser necessário atualizar a aplicação multifator MfaProvider e esse procedimento pode ser feito separadamente.
+
+Para isso, no diretório do roteiro de instalação (baixado conforme passo [Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP](#instalação-da-aplicação-mfaProvider-e-configuração-da-solução-de-multifator-no-shibboleth-idP) da instalação inicial), execute o seguinte comando:
+
+```python update_mfaprovider.py ```
+    
+O script acima irá realizar a atualização da aplicação multifator MfaProvider, baixando o código fonte do repositório git, gerando o pacote necessário para implantação no tomcat8, e reiniciando-o.
+
 
 # Utilitários para Administrador:
 
