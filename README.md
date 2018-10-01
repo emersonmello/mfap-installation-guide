@@ -94,7 +94,7 @@ Para que o IdP consiga realizar requisições para seu próprio endereço, é ne
      sudo apt-get install mongodb
      ```
 
-    *Obs: Ao término da instalação, o serviço do MongoDB será instanciado automaticamente, o qual pode ser conferido pelo comando `ps -aux | grep mongo` (caso não estiver iniciado, utilize o comando `sudo systemctl start mongodb`).* 
+    *Obs: Ao término da instalação, o serviço do MongoDB será instanciado automaticamente, o qual pode ser conferido pelo comando `sudo systemctl status mongodb.service` (caso não estiver iniciado, utilize o comando `sudo systemctl start mongodb`).* 
     
 # Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP.
 
