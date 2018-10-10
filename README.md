@@ -46,7 +46,7 @@ Siga os passos a seguir para configurar o FCM:
 
      ![](./images/addapp.png)
 
-5.  Informe no campo *Nome do pacote Android*: `br.gtampto.app2ampto` e clique em `Registrar APP`.
+5.  Informe no campo *Nome do pacote Android*: `br.edu.ifsc.sj.gtampto` e clique em `Registrar APP`.
 
 6.   Na etapa: *Fazer o download do arquivo de configuração* , clique em `Próxima`.
 
