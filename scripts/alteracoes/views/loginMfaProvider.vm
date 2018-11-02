@@ -47,16 +47,9 @@
             }
         }
        </script>
-	#if ($fator.getFatorPreferencial()=="501")
-        	<script>
-            	setTimeout(function() {
-            	document.forms["formprincipal"].submit();
-            	}, 1000);
-        	</script>
-	#end
     </head>
   
-    <body OnLoad="document.formprincipal.codigo.focus();">
+    <body>
        
     <div class="container">
             <div class="row">
@@ -72,7 +65,7 @@
         <br />
 
            
-                        <form method="post" name="formprincipal" action="${flowExecutionUrl}">
+                        <form method="post" name="formprincipal" id="formprincipal" action="${flowExecutionUrl}">
 			 
                         <div class="row pt-2 pb-2">
                             <div class="card mx-auto center">
@@ -107,7 +100,6 @@
                             </div>
                         </div>                   
                         </form>
-                        #if ($fator.getFatorPreferencial()!="501")
                         <form action="${flowExecutionUrl}" method="post" name="formopcoes">
                            <div class="row pt-2 pb-2" >
                                 <div class="card mx-auto">
@@ -121,7 +113,25 @@
                                 </div>
                             </div>
                         </form>
-                        #end
+                         <form method="post" name="formprincipalDialogo" id="formprincipalDialogo" action="${flowExecutionUrl}">
+                                    <input type="hidden" name="_eventIdDialogo"  id="_eventIdDialogo" value="performLoginDialogo"/>
+                         </form>
+
     </div>
+    #if ($fator.getFatorPreferencial()=="501")
+          <script>
+            var url = $("form#formprincipalDialogo").attr("action");
+            var event = $("input#_eventIdDialogo").val();
+            $.ajax({
+              url: url,
+              data: {"_eventId":event}
+            }).done(function(data, status, xhr){
+                 console.log(data);
+                 console.log(status);
+                 console.log(xhr);
+                 $("form#formprincipal").submit();           
+            })
+          </script>
+  #end
     </body>
 </html>
