@@ -133,5 +133,15 @@
             })
           </script>
   #end
+    <script>
+        $(document).ready(function(){
+            if ($('input#totp_input').length){
+                $('input#totp_input').focus();
+            }
+            if ($('input#bkp_input').length){
+                $('input#bkp_input').focus();
+            }
+        });
+    </script>
     </body>
 </html>
