@@ -142,7 +142,10 @@
             url: url,
             async: true,
             data: { "_eventId":"performCancelDialogo" }
-               });
+               }).done(function(data, status, xhr){
+                 console.log(data);
+                 console.log(status);
+                 console.log(xhr);
             });
           </script>
   #end
