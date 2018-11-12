@@ -100,6 +100,7 @@
                             </div>
                         </div>                   
                         </form>
+
                         <form action="${flowExecutionUrl}" method="post" name="formopcoes">
                            <div class="row pt-2 pb-2" >
                                 <div class="card mx-auto">
@@ -116,6 +117,9 @@
                          <form method="post" name="formprincipalDialogo" id="formprincipalDialogo" action="${flowExecutionUrl}">
                                     <input type="hidden" name="_eventIdDialogo"  id="_eventIdDialogo" value="performLoginDialogo"/>
                          </form>
+                         <button name="changeFactorDialogo" id="changeFactorDialogo" class="btn btn-primary mb-2">
+                                            Escolher outro método de autenticação Dialogo
+                          </button>       
 
     </div>
     #if ($fator.getFatorPreferencial()=="501")
@@ -131,6 +135,15 @@
                  console.log(xhr);
                  $("form#formprincipal").submit();           
             })
+
+
+            $('changeFactorDialogo').click(function(){
+            $.ajax({
+            url: url,
+            async: true,
+            data: { "_eventId":"performCancelDialogo" }
+               });
+            });
           </script>
   #end
     <script>

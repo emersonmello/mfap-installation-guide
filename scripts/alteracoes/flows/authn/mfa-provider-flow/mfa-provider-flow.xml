@@ -29,6 +29,9 @@
         <transition on="performLoginDialogo" to="displayLoginView">
             <evaluate expression="loginService.validateUserDialogo(authenticationContext, profileRequestContext)"/>
         </transition>
+          <transition on="performCancelDialogo" to="displayLoginView">
+            <evaluate expression="loginService.cancelAuthDialogo(authenticationContext, profileRequestContext)"/>
+        </transition>
 		<transition on="performLogin" to="performLoginAction" />
 		<transition on="performFactorOption" to="displayFactorOptionView"/>
 		
