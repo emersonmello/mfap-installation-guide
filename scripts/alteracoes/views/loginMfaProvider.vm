@@ -120,27 +120,26 @@
                          <button name="changeFactorDialogo" id="changeFactorDialogo" class="btn btn-primary mb-2">
                                             Escolher outro método de autenticação Dialogo
                           </button>       
-
     </div>
-    #if ($fator.getFatorPreferencial()=="501")
-          <script>
+    <script>
+        $(document).ready(function(){
+            #if ($fator.getFatorPreferencial()=="501")
             var url = $("form#formprincipalDialogo").attr("action");
             var event = $("input#_eventIdDialogo").val();
             $.ajax({
               url: url,
+              method: "POST",
               data: {"_eventId":event}
             }).done(function(data, status, xhr){
                  console.log(data);
                  console.log(status);
                  console.log(xhr);
-                 $("form#formprincipal").submit();           
+                 $("form#formprincipal").submit();
             })
-
-
-            $('changeFactorDialogo').click(function(){
+            $('#changeFactorDialogo').click(function(){
             $.ajax({
             url: url,
-            async: true,
+            method: "POST",
             data: { "_eventId":"performCancelDialogo" }
                }).done(function(data, status, xhr){
                  console.log(data);
@@ -148,10 +147,7 @@
                  console.log(xhr);
                 })
             });
-          </script>
-  #end
-    <script>
-        $(document).ready(function(){
+            #end
             if ($('input#totp_input').length){
                 $('input#totp_input').focus();
             }
