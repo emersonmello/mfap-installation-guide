@@ -5,8 +5,8 @@
  	parent="authn.abstract, authn/conditions">
 
  	<var name="loginBean" class="br.rnp.mfaprovider.mfadialogo.bean.LoginBean" />
-        <var name="factorChoiseBean" class="br.rnp.mfaprovider.mfadialogo.bean.FactorChoiseBean" />
-	<var name="loginService" class="br.rnp.mfaprovider.mfadialogo.service.LoginService" />
+    <var name="factorChoiseBean" class="br.rnp.mfaprovider.mfadialogo.bean.FactorChoiseBean" />
+    <var name="loginService" class="br.rnp.mfaprovider.mfadialogo.service.LoginService" />
 
 	<on-start>
 		<evaluate expression="opensamlProfileRequestContext" result="flowScope.profileRequestContext"/>
@@ -43,7 +43,8 @@
         
 		<transition on="201" to="proceed" /> 
 		<transition on="202" to="noAuthentication" />
-		<transition on="203" to="displayError" />
+        <transition on="203" to="displayError" />
+        <transition on="204" to="displayFactorOptionView" />
 
 	</action-state>
 

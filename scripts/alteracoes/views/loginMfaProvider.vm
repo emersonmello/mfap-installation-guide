@@ -100,7 +100,7 @@
                             </div>
                         </div>                   
                         </form>
-
+                        #if ($fator.getFatorPreferencial()!="501")
                         <form action="${flowExecutionUrl}" method="post" name="formopcoes">
                            <div class="row pt-2 pb-2" >
                                 <div class="card mx-auto">
@@ -114,12 +114,14 @@
                                 </div>
                             </div>
                         </form>
+                        #else
                          <form method="post" name="formprincipalDialogo" id="formprincipalDialogo" action="${flowExecutionUrl}">
                                     <input type="hidden" name="_eventIdDialogo"  id="_eventIdDialogo" value="performLoginDialogo"/>
                          </form>
                          <button name="changeFactorDialogo" id="changeFactorDialogo" class="btn btn-primary mb-2">
                                             Escolher outro método de autenticação Dialogo
-                          </button>       
+                          </button>
+                        #end       
     </div>
     <script>
         $(document).ready(function(){
@@ -138,15 +140,18 @@
             })
             $('#changeFactorDialogo').click(function(){
             $.ajax({
-            url: url,
-            method: "POST",
-            data: { "_eventId":"performCancelDialogo" }
-               }).done(function(data, status, xhr){
-                 console.log(data);
-                 console.log(status);
-                 console.log(xhr);
-                })
-            });
+                xhrFields: {
+                    withCredentials: true
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Basic ' + btoa('$fator.getUser():$fator.getPassword()'));
+                },
+                url: '$fator.getCancelContext()/$fator.getEppn()',
+                method: "GET"}).done(function(status, xhr){
+                    console.log(data);
+                    console.log(status);
+                    })
+                });
             #end
             if ($('input#totp_input').length){
                 $('input#totp_input').focus();
