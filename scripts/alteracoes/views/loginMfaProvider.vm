@@ -143,10 +143,7 @@
                 xhrFields: {
                     withCredentials: true
                 },
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Basic ' + btoa('$fator.getUser():$fator.getPassword()'));
-                },
-                url: '$fator.getCancelContext()/$fator.getEppn()',
+                url: '$fator.getCancelContext()/$fator.getEppn()/$fator.getNonceTemp()',
                 method: "GET"}).done(function(status, xhr){
                     console.log(data);
                     console.log(status);
