@@ -31,21 +31,182 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-        <script>
+        <!--
+	<script type="application/javascript" src="https://gist.githubusercontent.com/I-am-Gabi/2d97b79b3d523016248457c88db0026f/raw/227a2f3ed4cba33c5629aaec62805f7745f703ad/base64url.js"></script>
+        <script type="application/javascript" src="https://gist.githubusercontent.com/I-am-Gabi/b08a2714cf6d76135d8a021e4697fb29/raw/caaa2a97b9d2045ad6bc332b318c169ba4ef1faa/webauthn.js"></script>
+        -->
+	<script src="$request.getContextPath()/lib/base64js/base64js-1.2.0.min.js"></script>
+	<script src="$request.getContextPath()/js/base64url.js"></script>
+	<script src="$request.getContextPath()/js/webauthn.js"></script>
+	<script src="$request.getContextPath()/lib/base64js/base64js-1.2.0.min.js"></script>
+	<script>
+           function showMsg(text) { 
+		console.log(text);
+	   }
            function mask_totp() {
-          var totp_input = document.getElementById("totp_input");
-           var str = totp_input.value;
-          if (str.length == 3) {
-               totp_input.value = str + " "
+                var totp_input = document.getElementById("totp_input");
+                var str = totp_input.value;
+                if (str.length == 3) {
+                    totp_input.value = str + " "
+                }
             }
-        }
-        function mask_bkp() {
-          var bkp_input = document.getElementById("bkp_input");
-           var str = bkp_input.value;
-          if (str.length == 4) {
-               bkp_input.value = str + " "
+            function mask_bkp() {
+                var bkp_input = document.getElementById("bkp_input");
+                var str = bkp_input.value;
+                if (str.length == 4) {
+                    bkp_input.value = str + " "
+                }
             }
-        }
+	    function rejected(err) {
+		  console.log('rejected: ' + JSON.stringify(err));
+		  return new Promise((resolve, reject) => reject(err));
+	    }
+	    function rejectIfNotSuccess(response) {
+		  console.log('rejectIfNotSuccess: ' + JSON.stringify(response));
+		  if (response.success) {
+		    return response;
+		  } else {
+		    return new Promise((resolve, reject) => reject(response));
+		  }
+	    }
+            function executeAuthenticateRequest(request) {
+                console.log('executeAuthenticateRequest', request);
+                
+                return webauthn.getAssertion(request.publicKeyCredentialRequestOptions);
+            }
+
+            function getAuthenticateRequest(urls, username) {
+                return fetch(urls.authenticate, { 
+		    body: new URLSearchParams(username ? { username } : {}),
+                    method: 'POST',
+                })
+                    .then(response => response.json())
+                    .then(rejectIfNotSuccess)
+                ;
+            }
+        
+            function getIndexActions() {
+                    //return fetch('https://devampto.cafeexpresso.rnp.br/conta/mfa/cadastrar/fido2/info')
+                    //    .then(response => response.json());
+		    return fetch('$fator.getFidoInfoContext()').then(response => response.json());
+            }
+	    function submitResponse(url, requestId, response) {
+		  console.log('submitResponse', url, requestId, response);
+		
+		  const body = {
+		    username: '$fator.getEppn()',
+		    requestId,
+		    credential: response,
+		  };
+		
+		  return fetch(url, {
+		    method: 'POST',
+		    body: JSON.stringify(body),
+		  }).then(response => response.json());
+		  
+	    }
+
+            function performCeremony(params) {
+                const callbacks = params.callbacks || {}; /* { init, authenticatorRequest, serverRequest } */
+                const getIndexActions = params.getIndexActions; /* function(): object */
+                const getRequest = params.getRequest; /* function(urls: object): { publicKeyCredentialCreationOptions: object } | { publicKeyCredentialRequestOptions: object } */
+                const statusStrings = params.statusStrings; /* { init, authenticatorRequest, serverRequest, success, } */
+                const executeRequest = params.executeRequest; /* function({ publicKeyCredentialCreationOptions: object } | { publicKeyCredentialRequestOptions: object }): Promise[PublicKeyCredential] */
+                const handleError = params.handleError; /* function(err): ? */ 
+                console.log('Looking up API paths...');
+                //resetDisplays();
+                
+                return getIndexActions()
+                    .then(data => data.actions)
+                
+                    .then(urls => {
+                    console.log(statusStrings.int);
+                    console.log(urls);
+			
+		    if (callbacks.init) {
+                        callbacks.init(urls);
+                    }
+                    return getRequest(urls);
+                    })
+                
+                    .then((params) => {
+                    const request = params.request;
+                    const urls = params.actions;
+		    console.log("urls");
+		    console.log(urls);
+                    console.log(statusStrings.authenticatorRequest);
+                    if (callbacks.authenticatorRequest) {
+                        callbacks.authenticatorRequest({ request, urls });
+                    }
+                    console.log(request);
+                    return executeRequest(request)
+                        .then(webauthn.responseToObject)
+                        .then(response => ({
+                        request,
+                        urls,
+                        response,
+                        }));
+                    })
+                
+                    .then((params) => {
+                    const urls = params.urls;
+                    const request = params.request;
+                    const response = params.response;
+                
+                    console.log(statusStrings.serverRequest || 'Sending response to server...');
+                    if (callbacks.serverRequest) {
+                        callbacks.serverRequest({ urls, request, response });
+                    }
+                    //showAuthenticatorResponse(response);
+                    return submitResponse(urls.finish, request.requestId, response);
+                    })
+                
+                    .then(data => {
+                    if (data && data.success) {
+                            showMsg(statusStrings.success);
+                    } else {
+                            showMsg('Error! ' + data);
+                    }
+                    // showServerResponse(data);
+                    return data;
+                    })
+                ;
+            }
+	        
+            function authenticate(getRequest = getAuthenticateRequest) {
+                return performCeremony({
+                    getIndexActions,
+                    getRequest: urls => getRequest(urls, '$fator.getEppn()'),
+                    statusStrings: {
+                      init: 'Initiating authentication ceremony with server...',
+                      authenticatorRequest: 'Asking authenticators to perform assertion...',
+                      success: 'Authentication successful!',
+                    },
+                    executeRequest: executeAuthenticateRequest,
+                }).then(data => {
+                    if (data.registrations) {
+			    //document.getElementById("form#formprincipal").submit();
+
+		            $("form#formprincipal").submit();
+                            //if (confirm("Você foi autenticado com sucesso!")) {
+                            //        window.location.assign("/conta/");
+                            //}
+                    }
+                    return data;
+                }).catch((err) => {
+                        showMsg('Authentication failed.');
+                    if (err.name === 'InvalidStateError') {
+                            showMsg(`This authenticator is not registered for the account. Please try again with a registered authenticator.`)
+                    } else if (err.message) {
+                            showMsg(`${err.name}: ${err.message}`);
+                    } else if (err.messages) {
+                            showMsg(err.messages);
+                    }
+
+                    console.error('Authentication failed', err);
+                    return rejected(err);
+                });
+            } 
        </script>
     </head>
   
@@ -66,7 +227,10 @@
 
            
                         <form method="post" name="formprincipal" id="formprincipal" action="${flowExecutionUrl}">
-			 
+			 #if ($fator.getFatorPreferencial()=="502")
+			<input type="hidden" name="codigo" value="201">
+			#end
+		 
                         <div class="row pt-2 pb-2">
                             <div class="card mx-auto center">
                                 <div class="card-body">
@@ -80,7 +244,21 @@
                                         </h5>   
                                         <p class="card-text pl-2 pr-2 pt-2">
                                         Pressione <b> SIM </b> para liberar a autenticação
-                                        </p>    
+                                        </p>   
+                                    #elseif ($fator.getFatorPreferencial()=="502")       
+					<!--<input type="hidden" name="codigo" value="201">-->             
+                                        <div class="form-group">
+                                            <h5 class="card-title  pl-2 pr-2 pt-2">Insira sua chave de segurança</h5>
+					    <p class="card-text pl-2 pr-2 pt-2">
+                                                Certifique-se de que a chave de segurança foi inserida na porta USB.
+                                            </p>
+                                             <div class="col-xs-2  pl-2 pr-2 pt-2">
+                                                <button class="btn btn-primary" type="button" onClick="javascript:authenticate()">
+                                                    Autenticar
+                                                </button>	  
+                                            </div>
+                                        </div>
+                                        <!--<button type="submit" class="btn btn-primary mb-2">Confirmar</button>--> 
                                     #elseif ($fator.getFatorPreferencial()=="503")                    
                                         <div class="form-group">
                                             <h5 class="card-title">Código de 6 dígitos apresentado no aplicativo para autenticação.</h5>
@@ -160,3 +338,4 @@
     </script>
     </body>
 </html>
+
