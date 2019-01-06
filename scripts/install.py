@@ -238,10 +238,13 @@ mfapbasepath=%s
 
 #substitua o idphost com o caminho completo do idp para obter o logo ex: https://insituicao.edu.br/idp/images/logo-instituicao.png
 idplogo=%s
+
+hostmfap=%s
     """ % (config.get('fcm','br.rnp.xmpp.serverKey'), 
             config.get('fcm','br.rnp.xmpp.senderId'), 
             config.get('mfap','mfapbasepath'), 
-            config.get('idp','idp_logo'))
+            config.get('idp','idp_logo'),
+            config.get('default','uri'))
     try:
         with open('MfaProvider/src/main/resources/mfaprovider.properties', 'w+') as fp:
             fp.write(file_contents)
