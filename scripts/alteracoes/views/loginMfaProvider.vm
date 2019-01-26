@@ -252,11 +252,11 @@
 					    <p class="card-text pl-2 pr-2 pt-2">
                                                 Certifique-se de que a chave de segurança foi inserida na porta USB.
                                             </p>
-                                             <div class="col-xs-2  pl-2 pr-2 pt-2">
+                                            <!--<div class="col-xs-2  pl-2 pr-2 pt-2">
                                                 <button class="btn btn-primary" type="button" onClick="javascript:authenticate()">
                                                     Autenticar
                                                 </button>	  
-                                            </div>
+                                            </div>-->
                                         </div>
                                         <!--<button type="submit" class="btn btn-primary mb-2">Confirmar</button>--> 
                                     #elseif ($fator.getFatorPreferencial()=="503")                    
@@ -303,6 +303,11 @@
     </div>
     <script>
         $(document).ready(function(){
+	
+	    if ($fator.getFatorPreferencial()=="502") {
+	    	authenticate();
+	    }
+	
             #if ($fator.getFatorPreferencial()=="501")
             var url = $("form#formprincipalDialogo").attr("action");
             var event = $("input#_eventIdDialogo").val();
