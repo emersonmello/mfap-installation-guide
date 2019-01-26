@@ -26,7 +26,7 @@ cp -r --parents  "${VAR_HOME_IDP_V3}"/views/* backup
 cp -r --parents  "${VAR_HOME_IDP_V3}"/webapp/images/* backup
 cp -r --parents  "${VAR_HOME_IDP_V3}"/webapp/WEB-INF/lib/* backup
 cp -r --parents  "${VAR_HOME_IDP_V3}"/webapp/images/* backup
-
+cp -r --parents  "${VAR_HOME_IDP_V3}"/webapp/js/* backup
 
 echo "Fim do processo de backup"
 
@@ -37,6 +37,8 @@ cp alteracoes/conf/authn/mfa-authn-config.xml "${VAR_HOME_IDP_V3}"/conf/authn/
 cp -R alteracoes/flows/authn/* "${VAR_HOME_IDP_V3}"/flows/authn/
 cp alteracoes/views/* "${VAR_HOME_IDP_V3}"/views/
 cp alteracoes/webapp/images/* "${VAR_HOME_IDP_V3}"/webapp/images/
+cp alteracoes/webapp/js/* "${VAR_HOME_IDP_V3}"/webapp/js/
+cp -R alteracoes/webapp/lib/* "${VAR_HOME_IDP_V3}"/webapp/
 cp alteracoes/webapp/WEB-INF/lib/* "${VAR_HOME_IDP_V3}"/webapp/WEB-INF/lib/
 echo "Fim do processo de copia"
 
