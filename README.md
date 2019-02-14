@@ -11,7 +11,7 @@ Este roteiro está dividido em:
 ### Primeira Instalação
 1. [Configurações do FCM para Diálogo de Confirmação](#configurações-fcm-para-diálogo-de-confirmação)
 2. [Ajustes de configuração da maquina](#ajustes-de-configuração-da-maquina)
-    - [certificado autoassinado](#certificado-autoassinado)
+    - [Certificado auto-assinado](#certificado-auto-assinado)
 3. [Instalação e configuração do banco de dados MongoDB](#instalação-e-configuração-do-banco-de-dados-mongodb)
 4. [Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP](#instalação-da-aplicação-mfaProvider-e-configuração-da-solução-de-multifator-no-shibboleth-idP)
     - [Instalação Básica](#instalação-básica)
@@ -85,10 +85,10 @@ Para que o IdP consiga realizar requisições para seu próprio endereço, é ne
     sudo systemctl restart networking.service
     ```
 
-## Certificado autoassinado:
+## Certificado auto-assinado:
 
 A comunicação IdP - MfaProvider se dá utilizando requisições via HTTPS, as quais necessitam que a Java Virtual Machine (JVM) confie no certificado utilizado.
-Caso o certificado ssl do IdP for um certificado autoassinado, deve ser importado para a JVM, usando o seguinte comando:
+Caso o certificado ssl do IdP for um certificado do tipo auto-assinado, deve ser importado para a JVM usando o seguinte comando:
 
 ```<JAVA_HOME>/bin/keytool -import -alias <server_name> -keystore <JAVA_HOME>/jre/lib/security/cacerts -file public.crt```
 
