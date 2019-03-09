@@ -71,7 +71,7 @@
             <value>
              <![CDATA[
                 logger = Java.type("org.slf4j.LoggerFactory").getLogger("net.shibboleth.idp.authn");
-                logger.debug("GTAMPTO - nonbrowser = " + input.isBrowserProfile());
+                logger.info("GTAMPTO - browser = " + input.isBrowserProfile());
 
                 // Check if SAML binding is ECP or "default" (anything else)
                 auditCtx = input.getSubcontext("net.shibboleth.idp.profile.context.AuditContext");
@@ -82,12 +82,12 @@
                 nextFlow = "authn/Password"; 
                 while (iter.hasNext() && !isECP) {
                     b = iter.next();
-                    logger.debug("GTAMPTO - b = " + b);
+                    logger.info("GTAMPTO  = " + b);
                     if (b === "urn:oasis:names:tc:SAML:2.0:bindings:SOAP") {
                         isECP = true;
                     }
                 }
-                logger.debug("GTAMPTO - isECP = " + isECP);
+                logger.info("GTAMPTO - isECP = " + isECP);
                 if (isECP){
                     nextFlow = "authn/fido-ecp-flow"
                 }  
@@ -111,39 +111,36 @@
 		rpCtxInput = input.getSubcontext("net.shibboleth.idp.authn.context.RequestedPrincipalContext");
 		if (rpCtxInput != null) {
 			rps = rpCtxInput.getRequestedPrincipals();
-			logger.debug("GTAMPTO - Autenticações requisitadas" + rps);
-			logger.debug("GTAMPTO - getclass Autenticações requisitadas" + rps.getClass());
+			logger.info("GTAMPTO - Authentication required MfaProfile" + rps);
+			logger.info("GTAMPTO - gAuthentication required getClass" + rps.getClass());
 		}
-		logger.debug("GTAMPTO - AutenticationResult = " + authCtx.getAuthenticationResult());            
 		resCtx = input.getSubcontext("net.shibboleth.idp.attribute.resolver.context.AttributeResolutionContext", true);
-		logger.debug("GTAMPTO - resCtx.getPrincipal" + resCtx.getPrincipal());
 		usernameLookupStrategyClass =  Java.type("net.shibboleth.idp.session.context.navigate.CanonicalUsernameLookupStrategy");
 		usernameLookupStrategy = new usernameLookupStrategyClass();
 		resCtx.setPrincipal(usernameLookupStrategy.apply(input));
-
 		// resolve the attribute to determine if a first factor is sufficient
 		resCtx.getRequestedIdPAttributeNames().add("allowedLoginMethods");
 		resCtx.getRequestedIdPAttributeNames().add("uid");
 		resCtx.getRequestedIdPAttributeNames().add("mail");
 		resCtx.getRequestedIdPAttributeNames().add("eduPersonPrincipalName");
 		resCtx.resolveAttributes(custom);
-		logger.debug("GTAMPTO - resCtx.getPrincipal" + resCtx.getPrincipal());
+		logger.info("GTAMPTO - getPrincipal" + resCtx.getPrincipal());
 		
 		eppnAtt   = resCtx.getResolvedIdPAttributes().get("eduPersonPrincipalName");
 		eppn = eppnAtt.getValues().get(0).getValue();
 		valueType =  Java.type("net.shibboleth.idp.attribute.StringAttributeValue");
 		restsegundofator = Java.type("br.rnp.mfaprovider.mfadialogo.service.MfaService");
-		logger.debug("GTAMPTO - eppn  = " + eppn);
+		logger.info("GTAMPTO - eppn  = " + eppn);
 		try {
 			segundoFator = new restsegundofator().verifica(eppn, authCtx);
-			logger.debug("GTAMPTO - rest via mfa = " + segundoFator); 
+			logger.info("GTAMPTO - consuming rest MfaProvider = " + segundoFator); 
 			if (segundoFator=="101"){
 			    nextFlow = "authn/mfa-provider-flow";
 			}
 			else{
-			    logger.debug("GTAMPTO - nextflow nulo"); 
+			    logger.info("GTAMPTO - nextflow nulo"); 
 			    if (mfaCtx.isAcceptable()) { 
-				logger.debug("GTAMPTO -mfaCtx.isAcceptable" + mfaCtx.isAcceptable);
+				logger.info("GTAMPTO - mfaCtx.isAcceptable" + mfaCtx.isAcceptable);
 				input.removeSubcontext(resCtx);
 				nextFlow = null;
 			    }
@@ -156,9 +153,9 @@
 		catch(err) {
 			     // timeout or other error
 			     input.removeSubcontext(resCtx);
-			     logger.debug("GTAMPTO MFA error - conection refused: " + err);
+			     logger.error("GTAMPTO MFA error - conection refused: " + err);
 			   }
-		logger.debug("GTAMPTO MFA nextflow: " + nextFlow);
+		logger.info("GTAMPTO MFA nextflow: " + nextFlow);
                 nextFlow;   // pass control to second factor or end with the first
             ]]>
             </value>
