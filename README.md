@@ -107,7 +107,7 @@ Esse procedimento deve ser repetido sempre que o certificado for trocado.
 Após, reinicie o Tomcat: `sudo systemctl restart tomcat8`
 
 
-# Instalação e configuração do banco de dados MongoDB
+# Instalação do banco de dados MongoDB
 
 1.   Baixe e instale o MongoDB pelo gerenciador de pacotes:
 
