@@ -34,9 +34,7 @@ restsecurity.password=####
 
 5. Para executar a aplicação clique no menu/aba: `Gradle Tasks > conta > gretty > tomcatStart`
 
-6. Com a aplicação rodando, gere o arquivo com metadata do SP através da seguinte URL `https://localhost:9443/conta/saml/web/metadata/getNewMetaData`, usando o comando `curl` por exemplo:
-
-`curl -X GET --user '%s:%s' https://localhost:9443/conta/saml/web/metadata/getNewMetaData --insecure > sp-metadata.xml`
+6. Com a aplicação rodando, gere o arquivo com metadata do SP através da seguinte URL `https://localhost:9443/conta/saml/web/metadata/getNewMetaData`, usando o comando `curl` por exemplo: `curl -X GET --user '%s:%s' https://localhost:9443/conta/saml/web/metadata/getNewMetaData --insecure > sp-metadata.xml`
 
 	* **Obs.:** Altere `%user` e `%password`  para os valores configurados nos campos `restsecurity.user` e `restsecurity.password` do  arquivo `sp.properties` editado no item 4. 
 
