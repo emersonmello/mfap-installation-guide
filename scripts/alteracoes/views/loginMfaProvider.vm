@@ -184,7 +184,8 @@
                     },
                     executeRequest: executeAuthenticateRequest,
                 }).then(data => {
-                    if (data.registrations) {
+                     console.log(data.messages);
+		     if (data.messages == "sucesso") {
 			    //document.getElementById("form#formprincipal").submit();
 
 		            $("form#formprincipal").submit();
@@ -194,15 +195,9 @@
                     }
                     return data;
                 }).catch((err) => {
-                        showMsg('Authentication failed.');
-                    if (err.name === 'InvalidStateError') {
-                            showMsg(`This authenticator is not registered for the account. Please try again with a registered authenticator.`)
-                    } else if (err.message) {
-                            showMsg(`${err.name}: ${err.message}`);
-                    } else if (err.messages) {
-                            showMsg(err.messages);
-                    }
-
+                    showMsg('Authentication failed.');
+                  
+	            console.log(err);
                     console.error('Authentication failed', err);
                     return rejected(err);
                 });
