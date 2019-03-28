@@ -249,7 +249,7 @@ hostmfap=%s
         with open('MfaProvider/src/main/resources/mfaprovider.properties', 'w+') as fp:
             fp.write(file_contents)
     except OSError as err:
-        print("Nao foi possível escrever o arquivo sp.properties")
+        print("Nao foi possível escrever o arquivo mfaprovider.properties")
         return False
     return True
 
