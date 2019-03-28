@@ -1,6 +1,6 @@
 # Manual de gerenciamento de logs
 
-A solução multi-fator MfaProvider permite o acompanhamento de logs para indentificar ações de cadastro, 
+A solução multi-fator MfaProvider permite o acompanhamento de logs para identificar ações de cadastro, 
 autenticação, qual fator utilizado, entre outras informações relevantes.
 Uma parte desta solução está como um módulo dentro do contexto da aplicação Shibboleth-Idp e outra parte está
 em um contexto próprio da aplicação MfaProvider. Segue abaixo, os procedimentos e locais para consulta aos logs da solução.
@@ -11,7 +11,7 @@ Neste contexto serão apresentado os logs das verificações feitas referente a 
 mfaprovider para verificação de fatores extras do usuário, autenticação e tipo de autenticação solicitada ao mfaprovider 
 bem como o retorno desta autenticação .
 
-Os logs do móludo MfaProvider no IdP são gerados junto com os logs do próprio Shibboleth Idp em: `/opt/shibboleth-idp/logs/idp-process.log`.
+Os logs do módulo MfaProvider no IdP são gerados junto com os logs do próprio Shibboleth Idp em: `/opt/shibboleth-idp/logs/idp-process.log`.
 Para filtrar os logs referente ao MfaProvider, pode ser utilizada a palavra chave: `GTAMPTO`.
 Exemplo: `less /opt/shibboleth-idp/logs/idp-process.log | grep GTAMPTO`
 

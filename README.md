@@ -12,7 +12,7 @@ Este roteiro está dividido em:
 1. [Configurações do FCM para Diálogo de Confirmação](#configurações-fcm-para-diálogo-de-confirmação)
 2. [Ajustes de configuração da maquina](#ajustes-de-configuração-da-maquina)
     - [Certificado auto-assinado](#certificado-auto-assinado)
-3. [Instalação e configuração do banco de dados MongoDB](#instalação-e-configuração-do-banco-de-dados-mongodb)
+3. [Instalação do banco de dados MongoDB](#instalação-e-configuração-do-banco-de-dados-mongodb)
 4. [Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP](#instalação-da-aplicação-mfaProvider-e-configuração-da-solução-de-multifator-no-shibboleth-idP)
     - [Instalação Básica](#instalação-básica)
     - [Instalação Avançada](#instalação-avançada)
@@ -107,7 +107,7 @@ Esse procedimento deve ser repetido sempre que o certificado for trocado.
 Após, reinicie o Tomcat: `sudo systemctl restart tomcat8`
 
 
-# Instalação e configuração do banco de dados MongoDB
+# Instalação do banco de dados MongoDB
 
 1.   Baixe e instale o MongoDB pelo gerenciador de pacotes:
 
