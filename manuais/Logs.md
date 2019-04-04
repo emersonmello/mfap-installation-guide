@@ -17,12 +17,16 @@ Exemplo: `less /opt/shibboleth-idp/logs/idp-process.log | grep GTAMPTO`
 
 
 
-## aplicação MfaProvider
+## Aplicação MfaProvider
 
 Neste contexto serão apresentados logs referente ao registro de fatores extras, autenticação após pedido oriundo do Idp, retorno encaminhado ao Idp,
 além de outras informações como dados de execução do servidor FCM. 
 
 Os logs referente a aplicação do Mfaprovider são gerados no diretório `/opt/mfaprovider` com o nome: `logMfaProvider-datadodia.log`.
+
+* Obs: este caminho pode ser alterado caso desejado. Para isto, basta editar o arquivo roteiro-instalação/scripts/MfaProvider/src/main/resources/logback.xml,
+  alterar para o caminho desejado e em roteiro-instalação/scripts/MfaProvider executar o comando ./build.sh para atualizar a aplicação.
+
 Para filtrar os logs, é possível utilizar a palavra chave: `GTAMPTO`. 
 Exemplo: `less /opt/mfaprovider/logMfaProvider-2019-01-01.log | grep GTAMPTO`
 
