@@ -30,6 +30,7 @@ idp.metadata=/home/user/mfap-dev/idp-metadata.xml
 
 restsecurity.user=####
 restsecurity.password=####
+
 ```
 
 5. Para executar a aplicação clique no menu/aba: `Gradle Tasks > conta > gretty > tomcatStart`
@@ -42,9 +43,9 @@ restsecurity.password=####
 
 ### Configuração do MongoDB
 
-1. Verifique se o serviço do MongoDB está rodando `$ sudo systemctl status mongodb.service`
+1. Verifique se o serviço do MongoDB está rodando `$ sudo service mongodb status`
 
-	* **Obs.:** Caso não estiver, execute `$ sudo systemctl start mongodb.service`
+	* **Obs.:** Caso não estiver, execute `$ sudo service mongodb start`
 
 2. No diretório do projeto (ex: `MfaProvider/`), edite o arquivo `scriptMongo.js`, altere os valores dos campos `user` e `pwd` de acordo com o desejado e salve o arquivo.
 
