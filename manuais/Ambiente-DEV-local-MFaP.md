@@ -30,20 +30,22 @@ idp.metadata=/home/user/mfap-dev/idp-metadata.xml
 
 restsecurity.user=####
 restsecurity.password=####
+
 ```
 
 5. Para executar a aplicação clique no menu/aba: `Gradle Tasks > conta > gretty > tomcatStart`
 
-6. Com a aplicação rodando, gere o arquivo com metadata do SP através da seguinte URL `https://localhost:9443/conta/saml/web/metadata/getNewMetaData`, usando o comando `curl` por exemplo.
+6. Com a aplicação rodando, gere o arquivo com metadata do SP através da seguinte URL `https://localhost:9443/conta/saml/web/metadata/getNewMetaData`, usando o comando `curl` por exemplo: `curl -X GET --user '%s:%s' https://localhost:9443/conta/saml/web/metadata/getNewMetaData --insecure > sp-metadata.xml`
+
 	* **Obs.:** Altere `%user` e `%password`  para os valores configurados nos campos `restsecurity.user` e `restsecurity.password` do  arquivo `sp.properties` editado no item 4. 
 
 7. Substituir o arquivo `MfaProvider/src/main/resources/metadata/sp-metadata.xml` pelo arquivo gerado no item anterior.
 
 ### Configuração do MongoDB
 
-1. Verifique se o serviço do MongoDB está rodando `$ sudo systemctl status mongodb.service`
+1. Verifique se o serviço do MongoDB está rodando `$ sudo service mongodb status`
 
-	* **Obs.:** Caso não estiver, execute `$ sudo systemctl start mongodb.service`
+	* **Obs.:** Caso não estiver, execute `$ sudo service mongodb start`
 
 2. No diretório do projeto (ex: `MfaProvider/`), edite o arquivo `scriptMongo.js`, altere os valores dos campos `user` e `pwd` de acordo com o desejado e salve o arquivo.
 
