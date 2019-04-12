@@ -1,20 +1,23 @@
 ## Introdução
 
-Existe um serviço no MfaProvider que pode ser consumido por outra aplicação para remover o segundo fator de um usuário.
-Este serviço atualmente é consumido pelo script /opt/mfaprovider/removeSecondFactor.sh 
+O MfaProvider possui um serviço responsável por remover o segundo fator de um usuário.
+Este serviço atualmente é consumido pelo script /opt/mfaprovider/removeSecondFactor.sh
 
-Caso desejar implementar um gerenciamento administrativo em outro sistema e consumir este serviço, siga as instruções abaixo
+Caso desejar implementar um gerenciamento administrativo em outro sistema e consumir este serviço, siga as instruções a seguir.
 
 ## Endpoint removeSecondFactor
 
-Para consumir o serviço, é necessário acessar por meio de "GET".
-O protocolo de segurança utilizado é do tipo Basic, sendo necessário informar o usuário e senha para proteção dos recursos rest informado durante a execução do script de instalação .
+Para realizar o consumo do serviço serviço, é necessário acessar por meio de "GET".
+O protocolo de segurança utilizado é do tipo "Basic", sendo necessário informar o usuário e senha para proteção dos recursos rest (O mesmo informado durante a execução do script de instalação).
 
 O endereço do endpoint responsável é: ```$host/mfa/resource/remove/$username```
 
 Onde: 
+
+```
 $host = caminho do MfaProvider, ex: https://idp.edu.br/conta
 $username = usuário que deseja remover o fator
+```
 
 Exemplo utilizando curl: 
   ```bash
@@ -23,5 +26,5 @@ Exemplo utilizando curl:
 
 ## Conclusão
 
-Após o consumo do serviço, o MfaProvider irá retornar uma mensagem informando o sucesso ou não na remoção do segundo fator para o usuário informado.
+Após consumir o serviço, o MfaProvider irá apresentar uma mensagem informando o sucesso ou não na remoção do segundo fator para o usuário informado.
 
