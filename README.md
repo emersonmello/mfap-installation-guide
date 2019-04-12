@@ -228,5 +228,11 @@ O script acima irá realizar a atualização da aplicação multifator MfaProvid
 
 ## Habilitar e desabilitar métodos de segundo fator:
 
-- Na pasta do projeto `scripts/MfaProvider`, edite o arquivo  `src/main/resource/factor.properties` e utilize `true` para habilitar ou `false` para desabilitar o fator desejado.
+- Na pasta do projeto `scripts/MfaProvider`, edite o arquivo  `src/main/resource/factor.properties` e utilize `true` para habilitar ou `false` para desabilitar o fator desejado. Após, ainda no diretório `scripts/MfaProvider` execute o deploy da aplicação, através do comando:
+
+     ```bash
+     ./deploy.sh
+     ```
+
+
 
