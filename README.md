@@ -220,7 +220,7 @@ O script acima irá realizar a atualização da aplicação multifator MfaProvid
 
 ## Remover segundo fator de determinado usuário:
 
-- Na pasta do projeto `scripts/MfaProvider`,  utilize o script abaixo e informe o login do usuário para remover as configurações de segundo fator
+- No diretório `/opt/mfaprovider`,  utilize o script abaixo e informe o login do usuário para remover as configurações de segundo fator
 
      ```bash
      ./removeSecondFactor.sh
