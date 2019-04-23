@@ -129,12 +129,12 @@
 		eppnAtt   = resCtx.getResolvedIdPAttributes().get("eduPersonPrincipalName");
 		eppn = eppnAtt.getValues().get(0).getValue();
 		valueType =  Java.type("net.shibboleth.idp.attribute.StringAttributeValue");
-		restsegundofator = Java.type("br.rnp.mfaprovider.mfadialogo.service.MfaService");
+		mfaService = Java.type("br.rnp.mfaprovider.mfadialogo.service.MfaService");
 		logger.info("GTAMPTO - eppn  = " + eppn);
 		try {
-			segundoFator = new restsegundofator().verifica(eppn, authCtx);
-			logger.info("GTAMPTO - consuming rest MfaProvider = " + segundoFator); 
-			if (segundoFator=="101"){
+			secondFactor = new mfaService().checkFactor(eppn, authCtx);
+			logger.info("GTAMPTO - consuming rest MfaProvider = " + secondFactor); 
+			if (secondFactor=="101"){
 			    nextFlow = "authn/mfa-provider-flow";
 			}
 			else{
@@ -163,23 +163,4 @@
     </bean>
 
 
- 
-<!--
-     Example script to see if second factor is required. 
-    <bean id="checkSecondFactor" parent="shibboleth.ContextFunctions.Scripted" factory-method="inlineScript"
-        p:customObject-ref="shibboleth.AttributeResolverService">
-        <constructor-arg>
-            <value>
-            <![CDATA[
-              var maxRetry = 3;            // repeat preauth tries
-            var timeOut  = 5;            // 5 seconds
-         
-            nextFlow = mfadialogo;
-            nextFlow;   // pass control to second factor or end with the first
-                
-            ]]>
-            </value>
-        </constructor-arg>
-    </bean>
-    -->
 </beans>

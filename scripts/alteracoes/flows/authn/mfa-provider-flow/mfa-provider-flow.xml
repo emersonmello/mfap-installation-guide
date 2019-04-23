@@ -61,7 +61,7 @@
 			<evaluate expression="flowRequestContext.getExternalContext().getNativeResponse()" result="viewScope.response"/>
 		</on-render>
 		<transition on="selectionFactor" to="displayLoginView">
-			<evaluate expression="authenticationContext.getSubcontext('br.rnp.mfaprovider.mfadialogo.bean.MfaDTO').setFatorPreferencial(factorChoiseBean.getTipoAutenticacao())" />
+			<evaluate expression="authenticationContext.getSubcontext('br.rnp.mfaprovider.mfadialogo.bean.MfaDTO').setFatorPreferencial(factorChoiseBean.getAuthenticationType())" />
 		</transition>
 	</view-state>
 
@@ -78,7 +78,7 @@
 			<evaluate expression="flowRequestContext.getExternalContext().getNativeResponse()" result="viewScope.response"/>
 		</on-render>
 		<transition on="selectionFactor" to="displayLoginView">
-			<evaluate expression="authenticationContext.getSubcontext('br.rnp.mfaprovider.mfadialogo.bean.MfaDTO').setFatorPreferencial(factorChoiseBean.getTipoAutenticacao())" />
+			<evaluate expression="authenticationContext.getSubcontext('br.rnp.mfaprovider.mfadialogo.bean.MfaDTO').setFatorPreferencial(factorChoiseBean.getAuthenticationType())" />
 		</transition>
 	</view-state>
 

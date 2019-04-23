@@ -50,7 +50,7 @@
                  <div class="row pt-2 pb-2" >
                             <div class="card mx-auto">
                                 <div class="card-body">
-                                    <button type="submit" name="tipoAutenticacao" class="btn btn-primary mb-2" value="$fator.getFirst()">
+                                    <button type="submit" name="authenticationType" class="btn btn-primary mb-2" value="$fator.getFirst()">
                                                     Tentar Novamente
                                     </button>                                 
                                 </div>
@@ -71,11 +71,11 @@
                                     <div class="list-group">
                                         #foreach( $tipoFator in $fator.getFaPriority() )
                                             #if ($tipoFator.toValue() == $fator.getFatorPreferencial())
-                                                <button type="submit" name="tipoAutenticacao" class="list-group-item list-group-item-action active" value = "$tipoFator">
+                                                <button type="submit" name="authenticationType" class="list-group-item list-group-item-action active" value = "$tipoFator">
                                                     $tipoFator.getAfName()
                                                 </button>
                                             #else    
-                                                <button type="submit" name="tipoAutenticacao" class="list-group-item list-group-item-action" value = "$tipoFator">
+                                                <button type="submit" name="authenticationType" class="list-group-item list-group-item-action" value = "$tipoFator">
                                                     $tipoFator.getAfName()
                                                 </button>
                                             #end
