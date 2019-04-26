@@ -223,7 +223,7 @@
            
                         <form method="post" name="formprincipal" id="formprincipal" action="${flowExecutionUrl}">
 			 #if ($fator.getFatorPreferencial()=="502")
-			<input type="hidden" name="codigo" value="201">
+			<input type="hidden" name="code" value="201">
 			#end
 		 
                         <div class="row pt-2 pb-2">
@@ -241,7 +241,7 @@
                                         Pressione <b> SIM </b> para liberar a autenticação
                                         </p>   
                                     #elseif ($fator.getFatorPreferencial()=="502")       
-					<!--<input type="hidden" name="codigo" value="201">-->             
+					<!--<input type="hidden" name="code" value="201">-->             
                                         <div class="form-group">
                                             <h5 class="card-title  pl-2 pr-2 pt-2">Insira sua chave de segurança</h5>
 					    <p class="card-text pl-2 pr-2 pt-2">
@@ -258,14 +258,14 @@
                                         <div class="form-group">
                                             <h5 class="card-title">Código de 6 dígitos apresentado no aplicativo para autenticação.</h5>
                                              <div class="col-xs-2">
-                                                <input id="totp_input" class="form-control form-control-lg" size="6" placeholder="Informe o código aqui…" maxlength="7" type="text" name="codigo" onkeyup="mask_totp()" />
+                                                <input id="totp_input" class="form-control form-control-lg" size="6" placeholder="Informe o código aqui…" maxlength="7" type="text" name="code" onkeyup="mask_totp()" />
                                             </div>
                                         </div>
                                         <button type="submit" class="btn btn-primary mb-2">Confirmar</button>
                                     #elseif ($fator.getFatorPreferencial()=="504")                    
                                         <div class="form-group">
                                            <h5 class="card-title">Se autentique com código de backup gerado no cadastro do segundo fator.</h5>
-                                            <input type="text" input id="bkp_input" class="form-control form-control-lg" placeholder="Informe o código aqui…" name="codigo" maxlength="9"  onkeyup="mask_bkp()" />
+                                            <input type="text" input id="bkp_input" class="form-control form-control-lg" placeholder="Informe o código aqui…" name="code" maxlength="9"  onkeyup="mask_bkp()" />
                                         </div>
                                         <button type="submit" class="btn btn-primary mb-2">Confirmar</button>
                                     #end
