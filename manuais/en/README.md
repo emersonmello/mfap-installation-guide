@@ -9,24 +9,28 @@
 The present manual is organized as follows:
 
 ### First Installation
-1. [FCM configuration for the Phone Prompt](#fcm-configuration-for-the-phone-prompt)
-2. [Host configuration](#host-configuration)
-    - [Self-signed certificate](#self-signed-certificate)
-3. [MongoDB Installation and Configuration](#mongodb-installation-and-configuration)
-4. [MfaProvider Installation and configuration](#mfaprovider-installation-and-configuration)
-    - [Basic Installation](#basic-installation)
-    - [Advanced Installation](#advanced-installation)
-    - [Tests](#tests)
+[FCM configuration for the Phone Prompt](#fcm-configuration-for-the-phone-prompt)
+
+[Host configuration](#host-configuration)
+- [Self-signed certificate](#self-signed-certificate)
+
+[MongoDB Installation and Configuration](#mongodb-installation-and-configuration)
+
+[MfaProvider Installation and configuration](#mfaprovider-installation-and-configuration)
+
+- [Basic Installation](#basic-installation)
+- [Advanced Installation](#advanced-installation)
+- [Tests](#tests)
 
 ### Update
 
-1. [MfaProvider Update)](#mfapprovider-update)
+[MfaProvider Update](#mfapprovider-update)
 
 ### Admin Utilities
 
-1. [Admin Utilities](#admin-utilities)
-    - [User Second Factor Removal](#user-second-factor-removal)
-    - [Enable or Disable Second Factor](#enable-or-disable-second-factor)
+[Admin Utilities](#admin-utilities)
+- [User Second Factor Removal](#user-second-factor-removal)
+- [Enable or Disable Second Factor](#enable-or-disable-second-factor)
 
 # FCM configuration for the Phone Prompt 
 
@@ -37,29 +41,29 @@ Follow the next steps in order to configure FCM:
 
 1.   [Create a Google Account](https://accounts.google.com/SignUp) for the institution (if you already have one, skip this step).
 
-1.   Go to the [FCM console page](https://console.firebase.google.com/) and log in with the account from the step 1.
+2.   Go to the [FCM console page](https://console.firebase.google.com/) and log in with the account from the step 1.
 
-2.   Click on `Add Project`.
+3.   Click on `Add Project`.
 
-3.   Type a name for the project (ignore the other fields), check the "I Accept the terms.." option and then click on `Create Project`.
+4.   Type a name for the project (ignore the other fields), check the "I Accept the terms.." option and then click on `Create Project`.
 
-4.   Click on the Android icon to add Firebase to the Android app, as the following image shows:
+5.   Click on the Android icon to add Firebase to the Android app, as the following image shows:
 
      ![](./images/addapp.png)
 
-5.  Fill in the *Android Package Name* field: `br.edu.ifsc.sj.gtampto` and click on `Register APP`.
+6.  Fill in the *Android Package Name* field: `br.edu.ifsc.sj.gtampto` and click on `Register APP`.
 
-6.   In the *Download the configuration file* step, click on `Next`.
+7.   In the *Download the configuration file* step, click on `Next`.
 
-6.   In the *Add Firebase SDK*, click on `Next`.
+8.   In the *Add Firebase SDK*, click on `Next`.
 
-7.   In *Run your app to verify installation*, FCM will attempt to connect the app. As it is previously configured, this step can be skipped. So click on `Skip this step`
+9.   In *Run your app to verify installation*, FCM will attempt to connect the app. As it is previously configured, this step can be skipped. So click on `Skip this step`
 
-8.  When you finish creating the FCM account and registering the app according to the instructions, click on settings as the following image shows:
+10.  When you finish creating the FCM account and registering the app according to the instructions, click on settings as the following image shows:
 
      ![](./images/confcm.png)
 
-9.  Click on `Project Configurations` and then in the Cloud Messaging tab. Take note of the `Legacy server key` and `Sender ID` attribute values because they will be needed by the installation script.
+11.  Click on `Project Configurations` and then in the Cloud Messaging tab. Take note of the `Legacy server key` and `Sender ID` attribute values because they will be needed by the installation script.
 
      ![](./images/confcm2.png)
 
@@ -110,13 +114,14 @@ After you finish the import, restart the Tomcat: `sudo systemctl restart tomcat8
 
 # MongoDB Installation and Configuration
 
-1.  Install MongoDB using the package manager:
+Install MongoDB using the package manager:
 
 ```bash
 sudo apt-get install mongodb
 ```
 
-> Obs: When the installation is finished, the MongoDB service will start automatically. You can check if it is running, execute the following command: `sudo systemctl status mongodb.service` (it it is not running, you can start it by running `sudo systemctl start mongodb`).
+> Obs: When the installation is finished, the MongoDB service will start automatically. You can check if it is running, execute the following command: `sudo systemctl status mongodb.service` (if it is not running, you can start it by running `sudo systemctl start mongodb`).
+
     
 # MfaProvider Installation and configuration
 
@@ -130,35 +135,36 @@ git clone https://git.rnp.br/GT-AMPTo/roteiro-instalacao.git
 
 > Obs: If you run into certificate issues, you can run the following: `git -c http.sslVerify=false clone https://git.rnp.br/GT-AMPTo/roteiro-instalacao.git`
 
-1.   Dentro do diretório baixado do git,  acesse o diretório `scripts`. Este será nosso diretório base para execução dos próximos passos.
+2.   Enter the directory where you have cloned the repository and cd into `scripts`. This will be our working dir in the next steps.
 
 ```bash
 cd scripts
 ```
 
-Há duas formas de realizar a instalação, de forma básica ou de forma avançada.
-- Na instalação básica, o script irá questionar os valores das variáveis básicas para funcionamento padrão da solução de multifator.
-- A instalação avançada é recomendada caso queira alterar o pathname padrão do MfaProvider (idp.instituicao.edu.br/conta) ou tenha algum problema na instalação básica devido a locais e diretórios diferente do padrão.
-
+There are two ways of proceeding with the installation, a basic and an advanced one.
+- In the basic one, the script will prompt you for the values of the basic variables for a standard multifactor installation.
+- In the advanced one, you can change the default path for the MfaProvider (idp.instituicao.edu.br/conta) or any other value related to dir paths and the like.
 
 ## Basic Installation
 
-1.   In the scripts dir, run the `install.py` script:
+In the scripts dir, run the `install.py` script:
     
 ```bash
 python2 install.py
 ```
-Serão realizados questionamentos durante a instalação, tais como:
 
- - Definição de usuario e senha do banco de dados;
- - Definição de usuario e senha para proteção dos recursos rest;
- - Endereço do IdP sem https, ex:  idp.instituicao.edu.br.
+The installation script will prompt you to define the following:
 
-Após processo de instalação concluído, verificar a seção [Testes](#testes) para verificar o funcionamento da aplicação.
+ - Username and password for the database;
+ - Username and password for the REST endpoints;
+ - IdP address without the protocol part. Ex.: idp.instituicao.edu.br;
+
+When you finish the installation, check the section [Tests](#tests) to verify if the application is running.
+
 
 ## Advanced Installation
 
-1.   In the scripts dir, edit the config.ini file
+In the scripts dir, edit the config.ini file
 
 ```bash
 vi config.ini
@@ -166,26 +172,26 @@ vi config.ini
 
 Edit the file as the following:
 
-a) Caso deseje alterar o caminho dos diretórios:
+a) In case you want to change pathnames:
 
-- Endereço do metadata:
-    alterar o atributo: `idp.metadata=/opt/shibboleth-idp/metadata/idp-metadata.xml`
+- Metadata filepath:
+    change the attribute: `idp.metadata=/opt/shibboleth-idp/metadata/idp-metadata.xml`
 
-- Diretório base do Idp:
-    alterar o atributo: `dir_base_idp_shibboleth=/opt/shibboleth-idp`
+- IdP base dir:
+    change the attribute: `dir_base_idp_shibboleth=/opt/shibboleth-idp`
 
-- Endereço do server.xml do tomcat:
-    alterar o atributo: `tomcat_server_config=/etc/tomcat8/server.xml`
+- Tomcat's server.xml filepath:
+    change the attribute: `tomcat_server_config=/etc/tomcat8/server.xml`
 
-- Endereço do arquivo de configuração do site do idp no apache:
-    alterar o atributo: `apache_conf_file=/etc/apache2/sites-enabled/01-idp.conf`
+- Configuration file of the IdP in Apache:
+    change the attribute: `apache_conf_file=/etc/apache2/sites-enabled/01-idp.conf`
 
-b) Caso desejar alterar o pathname  (nome a ser acessado pelo usuário para acessar o MfaProvider no Idp) :
+b) In case you want to change the MfaProvider pathname:
 
-- Endereço do pathname:
-    alterar o atributo `mfapbasepath=conta`
+-  Pathname:
+    change the attribute `mfapbasepath=conta`
 
-**Os demais atributos não devem ser alterados, os que estão sem informação o script de instalação irá solicitar durante o processo.**
+**Don't change the other attributes, the blank ones, because the installation script will prompt you to provide the information during the installation process.**
 
 Finally, in the scripts dir, run the `install.py` script:
     
@@ -193,24 +199,21 @@ Finally, in the scripts dir, run the `install.py` script:
 python2 install.py
 ```
 
-Após processo de instalação concluído, verificar a seção [Testes](#testes) para verificar o funcionamento da aplicação.
+When you finish the installation, check the section [Tests](#tests) to verify if the application is running.
+
 
 ## Tests
 
-- A aplicação será disponibilizada no endereço configurado, ex: `https://idp.instituicao.edu.br/conta`.
+The MfAProvider will be available at the configured address, ex: `https://idp.instituicao.edu.br/conta`. Go to that address and log in to check the available help in the dashboard in order to configure and use a second factor.
 
-Ao acessar o endereço, caso apresentar a mesangem "Sua conexão não é segura" ou "Sua conexão não é particular" (dependendo do navegador), isto pode indicar que você possui um certificado autoassinado, e será necessário realizar o processo descrito
-na seção: Utilitários para Administrador > Uso de certificado autoassinado ou expiração de certificado.
-**Este processo evitará erro após processo de login.**
-
-- Faça a autenticação e verifique o auxílio da página para cadastrar e utilizar o segundo fator.
+> Obs.: If when you access that address, you are warned about certificate issues like *your connection is not private*, this may indicates that you have a self-signed certificate and will have to execute the procedure described in the section [Self-signed Certificate](#self-signed-certificate). **This will prevent errors after the login.**
 
 
 # MfaProvider Update
 
-Eventualmente pode ser necessário atualizar a aplicação multifator MfaProvider e esse procedimento pode ser feito separadamente.
+When an update is available, you can update the MfaProvider using an available update script for that.
 
-Para isso, no diretório do roteiro de instalação (baixado conforme passo [Instalação da aplicação MfaProvider e configuração da solução de multifator no Shibboleth IdP](#instalação-da-aplicação-mfaProvider-e-configuração-da-solução-de-multifator-no-shibboleth-idP) da instalação inicial), execute o seguinte comando:
+To do so, go to the directory where you have cloned the `roteiro de instalação` (according to the installation guide [MfaProvider Installation and configuration](#mfaProvider-installation-and-configuration)), and run the following:
 
 ```python update_mfaprovider.py ```
 
@@ -221,7 +224,7 @@ The above script will update the MfaProvider, by downloading the source code fro
 
 ## User Second Factor Removal
 
-- In the `/opt/mfaprovider` dir, run the following script, providing the user login that will have the second factor removed when prompted.
+In the `/opt/mfaprovider` dir, run the following script, providing the user login that will have the second factor removed when prompted.
 
 ```bash
 ./removeSecondFactor.sh
@@ -229,7 +232,7 @@ The above script will update the MfaProvider, by downloading the source code fro
 
 ## Enable or Disable Second Factor
 
-- Na pasta do projeto `scripts/MfaProvider`, edite o arquivo  `src/main/resource/factor.properties` e utilize `true` para habilitar ou `false` para desabilitar o fator desejado. Após, ainda no diretório `scripts/MfaProvider`, execute o deploy da aplicação, através do comando:
+After you run the installation script, you will have the MfaProvider source code available at `scripts/MfaProvider`. Edit the file `src/main/resource/factor.properties` and set to `true` to enable or to `false` to disable the factor you want to edit. After that, while you still are in the `scripts/MfaProvider` dir, run the following to deploy the MfaProvider for the changes to take effect:
 
 ```bash
 ./deploy.sh
