@@ -1,11 +1,11 @@
-## Introduction
+# Removing the second factor from a user
 
 The MfaProvider has a service responsible for removing the second factor from a user.
 This service currently is consumed by the script `/opt/mfaprovider/removeSecondFactor.sh`
 
 If you want to consume that service from another application (a web admin interface, for example), follow the instructions provided in the next section.
 
-## Endpoint removeSecondFactor
+## Endpoint `removeSecondFactor`
 
 To consume the service, a GET request is needed. The authentication protocol used is of the type "Basic", so you need to provide a username and password. They are the same you provided when installing the MfaProvider (username and password for the REST endpoints).
 

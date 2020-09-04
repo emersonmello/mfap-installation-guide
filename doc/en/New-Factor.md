@@ -1,4 +1,4 @@
-## Introduction
+# How to implement a new factor according to the current architecture
 
 The MfaProvider development aimed to be extensible and low coupled. To add a new authentication factor, the developer should have prior experience with *Java*, *Spring MVC* and *Apache Velocity*.
 
@@ -55,7 +55,7 @@ Ex: Entry related to the TOTP, which was registered with the code 503:
 
 ## Conclusion
 
-Once you finish adding the new factor according to the instructions provided in this tutorial, you have to re-deploy the MfaProvider, following the instructions in the [README](README.md) file and restarting the IdP.
+Once you finish adding the new factor according to the instructions provided in this tutorial, you have to re-deploy the MfaProvider, following the instructions in the [Main multi-factor installation guide (IdP and MfaProvider)](README.md) file and restarting the IdP.
 
 
 
