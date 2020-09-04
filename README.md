@@ -27,3 +27,12 @@ Based on the [Multi-factor Authentication Profile standard (REFEDS MFA Profile)]
   - [Como remover o segundo fator associado a conta de um usuário](doc/pt_BR/Implementacao-remover-fator.md)
   - [Como montar um ambiente local de desenvolvimento para o MFaP](doc/pt_BR/Ambiente-DEV-local-MFaP.md)
     - [Como desenvolver o novo fator de autenticação](doc/pt_BR/Novo-fator.md)
+
+## Authors
+- [Emerson Ribeiro de Mello](https://github.com/emersonmello) - Federal Institute of Santa Catarina (IFSC)
+- [Carlos Eduardo da Silva](https://www.researchgate.net/profile/Carlos_Da_Silva6) - Sheffield Hallam University
+- [Michelle Silva Wangham](https://www.researchgate.net/profile/Michelle_Wangham)  - Universidade do Vale do Itajaí (UNIVALI)
+- Samuel Bristot Loli - Federal Institute of Santa Catarina (IFSC)
+- [Shirlei Aparecida Chaves](https://github.com/shirlei) - Federal Institute of Santa Catarina (IFSC)
+- [Gabriela Cavalcanti da Silva](https://github.com/gabicavalcante) - Federal University of Rio Grande do Norte
+- Bruno Bristot Loli - CIASC
