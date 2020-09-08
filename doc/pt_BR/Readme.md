@@ -1,6 +1,7 @@
 # Roteiro de instalação completo da solução multi-fator (IdP e MfaProvider).
 
 - [Roteiro de instalação completo da solução multi-fator (IdP e MfaProvider).](#roteiro-de-instalação-completo-da-solução-multi-fator-idp-e-mfaprovider)
+  - [Organização dos repositórios do projeto GT-AMPTo](#organização-dos-repositórios-do-projeto-gt-ampto)
   - [Primeira Instalação](#primeira-instalação)
     - [Pré-requisitos](#pré-requisitos)
     - [Configurações FCM para Diálogo de Confirmação](#configurações-fcm-para-diálogo-de-confirmação)
@@ -16,6 +17,22 @@
   - [Utilitários para Administrador](#utilitários-para-administrador)
     - [Remover segundo fator de determinado usuário](#remover-segundo-fator-de-determinado-usuário)
     - [Habilitar e desabilitar métodos de segundo fator](#habilitar-e-desabilitar-métodos-de-segundo-fator)
+
+## Organização dos repositórios do projeto GT-AMPTo
+
+- **Guia de instalação e script para automatizar a instalação**
+  - https://git.rnp.br/GT-AMPTo/roteiro-instalacao
+  - Use esse repositório para fazer a instalação automatizada da solução MFaP no Provedor de Identidade. O script irá baixar os códigos do [MFaProvider](https://git.rnp.br/GT-AMPTo/MfaProvider) e do [MfaProviderIdp](https://git.rnp.br/GT-AMPTo/mfadialogo)
+- **MFaProvider**
+  - https://git.rnp.br/GT-AMPTo/MfaProvider
+  - Aplicação responsável por fazer autenticação MFA dos usuários e que apresenta um SP (*dashboard*) para os usuários habilitarem seus fatores de autenticação
+- **Biblioteca MFaP para o IdP**
+  - https://git.rnp.br/GT-AMPTo/mfadialogo
+  - Biblioteca a ser invocada pelos `AuthFlow` do IdP (no arquivo `.xml`) e que permitirá interagir com o [MFaProvider](https://git.rnp.br/GT-AMPTo/MfaProvider)
+- **Aplicativo móveis para atuar com o Diálogo de Confirmação** 
+  - https://git.rnp.br/GT-AMPTo/App2Ampto - versão Android
+  - https://git.rnp.br/GT-AMPTo/amptoios - versão iOS
+  - Necessário se desejar usar o Diálogo de Confirmação como um segundo fator de autenticação
 
 
 ## Primeira Instalação

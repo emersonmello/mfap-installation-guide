@@ -2,6 +2,7 @@
 
 
 - [Multi-factor installation guide (IdP and MfaProvider)](#multi-factor-installation-guide-idp-and-mfaprovider)
+  - [Organization of the GT-AMPTo's repositories](#organization-of-the-gt-amptos-repositories)
   - [First Installation](#first-installation)
     - [Prerequisites](#prerequisites)
     - [FCM configuration for the Phone Prompt](#fcm-configuration-for-the-phone-prompt)
@@ -16,6 +17,22 @@
   - [Admin Utilities](#admin-utilities)
     - [User Second Factor Removal](#user-second-factor-removal)
     - [Enable or Disable Second Factor](#enable-or-disable-second-factor)
+
+## Organization of the GT-AMPTo's repositories
+
+- **Multi-factor installation guide**
+  - https://git.rnp.br/GT-AMPTo/roteiro-instalacao
+  - Use this repository to perform the automated installation of the MFaP solution at the Identity Provider. The script will download codes from [MFaProvider](https://git.rnp.br/GT-AMPTo/MfaProvider) and [MfaProviderIdp](https://git.rnp.br/GT-AMPTo/mfadialogo) repositories
+- **MFaProvider**
+  - https://git.rnp.br/GT-AMPTo/MfaProvider
+  - Application responsible for performing MFA authentication of users and which presents a dashboard for users to enable their authentication factors
+- **MFaP library for the IdP**
+  - https://git.rnp.br/GT-AMPTo/mfadialogo
+  - Library to be invoked by the IdP's `AuthFlow`(in the `.xml` file) and that will allow to interact with the [MFaProvider](https://git.rnp.br/GT-AMPTo/MfaProvider)
+- **Mobile applications specific for Phone Prompt** 
+  - https://git.rnp.br/GT-AMPTo/App2Ampto - Android version
+  - https://git.rnp.br/GT-AMPTo/amptoios - iOS version
+  - Required if you want to use the Phone Prompt as a second authentication factor
 
 ## First Installation
 
