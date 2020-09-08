@@ -19,6 +19,7 @@ Based on the [Multi-factor Authentication Profile standard (REFEDS MFA Profile)]
   - [Removing the second factor from a user](doc/en/Factor-Removal-Implementation.md)
   - [How to setup a local development environment](doc/en/setup-local-dev.md)
     - [How to implement a new factor according to the current architecture](doc/en/New-Factor.md)
+  - How to configure Service Provider to request that Identity Providers perform MFA
 
 ## Manuais em Português
 
@@ -27,6 +28,7 @@ Based on the [Multi-factor Authentication Profile standard (REFEDS MFA Profile)]
   - [Como remover o segundo fator associado a conta de um usuário](doc/pt_BR/Implementacao-remover-fator.md)
   - [Como montar um ambiente local de desenvolvimento para o MFaP](doc/pt_BR/Ambiente-DEV-local-MFaP.md)
     - [Como desenvolver o novo fator de autenticação](doc/pt_BR/Novo-fator.md)
+  - [Como configurar provedores de serviços (SP) para solicitar que os provedores de identidade (IdPs) realizem MFA](doc/pt_BR/sp-mfa.md)
 
 ## Authors
 - [Emerson Ribeiro de Mello](https://github.com/emersonmello) - Federal Institute of Santa Catarina (IFSC)
