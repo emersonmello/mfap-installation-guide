@@ -19,7 +19,7 @@ Based on the [Multi-factor Authentication Profile standard (REFEDS MFA Profile)]
   - [Removing the second factor from a user](doc/en/Factor-Removal-Implementation.md)
   - [How to setup a local development environment](doc/en/setup-local-dev.md)
     - [How to implement a new factor according to the current architecture](doc/en/New-Factor.md)
-  - How to configure Service Provider to request that Identity Providers perform MFA
+  - [How to configure Service Provider to request that Identity Providers perform MFA](doc/en/sp-mfa.md)
 
 ## Manuais em Português
 
