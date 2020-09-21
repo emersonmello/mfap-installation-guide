@@ -21,7 +21,7 @@
 ## Organization of the GT-AMPTo's repositories
 
 - **Multi-factor installation guide**
-  - https://git.rnp.br/GT-AMPTo/roteiro-instalacao
+  - https://git.rnp.br/GT-AMPTo/mfap-installation-guide
   - Use this repository to perform the automated installation of the MFaP solution at the Identity Provider. The script will download codes from [MFaProvider](https://git.rnp.br/GT-AMPTo/MfaProvider) and [MfaProviderIdp](https://git.rnp.br/GT-AMPTo/mfadialogo) repositories
 - **MFaProvider**
   - https://git.rnp.br/GT-AMPTo/MfaProvider
@@ -115,11 +115,11 @@ sudo apt-get install mongodb
 
 >**Obs:** run all the commands as user root
 
-1.  Clone the `roteiro-instalacao` project to the directory of your choice. For instance, your home dir.
+1.  Clone the `mfap-installation-guide` project to the directory of your choice. For instance, your home dir.
 ```bash
-git clone https://git.rnp.br/GT-AMPTo/roteiro-instalacao.git
+git clone https://git.rnp.br/GT-AMPTo/mfap-installation-guide.git
 ```
-> **Obs:** If you run into certificate issues, you can run the following: `git -c http.sslVerify=false clone https://git.rnp.br/GT-AMPTo/roteiro-instalacao.git`
+> **Obs:** If you run into certificate issues, you can run the following: `git -c http.sslVerify=false clone https://git.rnp.br/GT-AMPTo/mfap-installation-guide.git`
 
 2.   Enter the directory where you have cloned the repository and cd into `scripts`. This will be our working dir in the next steps.
 ```bash

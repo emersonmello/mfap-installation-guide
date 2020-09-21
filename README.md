@@ -33,7 +33,7 @@ Based on the [Multi-factor Authentication Profile standard (REFEDS MFA Profile)]
 ## Organization of the GT-AMPTo's repositories
 
 - **Multi-factor installation guide**
-  - https://git.rnp.br/GT-AMPTo/roteiro-instalacao
+  - https://git.rnp.br/GT-AMPTo/mfap-installation-guide
   - Use this repository to perform the automated installation of the MFaP solution at the Identity Provider. The script will download codes from [MFaProvider](https://git.rnp.br/GT-AMPTo/MfaProvider) and [MfaProviderIdp](https://git.rnp.br/GT-AMPTo/mfadialogo) repositories
 - **MFaProvider**
   - https://git.rnp.br/GT-AMPTo/MfaProvider

@@ -21,7 +21,7 @@
 ## Organização dos repositórios do projeto GT-AMPTo
 
 - **Guia de instalação e script para automatizar a instalação**
-  - https://git.rnp.br/GT-AMPTo/roteiro-instalacao
+  - https://git.rnp.br/GT-AMPTo/mfap-installation-guide
   - Use esse repositório para fazer a instalação automatizada da solução MFaP no Provedor de Identidade. O script irá baixar os códigos do [MFaProvider](https://git.rnp.br/GT-AMPTo/MfaProvider) e do [MfaProviderIdp](https://git.rnp.br/GT-AMPTo/mfadialogo)
 - **MFaProvider**
   - https://git.rnp.br/GT-AMPTo/MfaProvider
@@ -126,12 +126,12 @@ Após, reinicie o Tomcat: `sudo systemctl restart tomcat8`
 
 **Observação:** executar todos os comandos como root
 
-1. Faça o download do projeto `roteiro-instalacao` para o diretório de sua preferência. Pode ser utilizado o diretório home do usuário por exemplo.
+1. Faça o download do projeto `mfap-installation-guide` para o diretório de sua preferência. Pode ser utilizado o diretório home do usuário por exemplo.
     ```bash
-    git clone https://git.rnp.br/GT-AMPTo/roteiro-instalacao.git
+    git clone https://git.rnp.br/GT-AMPTo/mfap-installation-guide.git
     ```
     - **Observação:** Em caso de problemas com certificado, utilize o comando:
-      -  `git -c http.sslVerify=false clone https://git.rnp.br/GT-AMPTo/roteiro-instalacao.git`  
+      -  `git -c http.sslVerify=false clone https://git.rnp.br/GT-AMPTo/mfap-installation-guide.git`  
 1. Dentro do diretório baixado do git,  acesse o diretório `scripts`. Este será nosso diretório base para execução dos próximos passos.
     ```bash
     cd scripts

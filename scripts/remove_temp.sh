@@ -15,7 +15,7 @@ rm -rf flows/authn/fido-ecp-flow/
 rm -rf flows/authn/mfa-failure-request-flow/
 rm -rf flows/authn/mfa-provider-flow/
 
-cd ~/git/roteiro-instalacao
+cd ~/git/mfap-installation-guide
 rm -rf scripts/backup/opt/
 rm -rf scripts/insert_apache.txt
 rm -rf scripts/scriptMongo.js

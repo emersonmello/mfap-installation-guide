@@ -64,10 +64,10 @@ Segue imagem exemplificando o local dos atributos:
 1.   Faça o download do projeto `roterio-instalacao` para o diretório de sua preferência. Pode ser utilizado o diretório home do usuário por exemplo.
 
      ```bash
-     git clone https://git.rnp.br/GT-AMPTo/roteiro-instalacao.git
+     git clone https://git.rnp.br/GT-AMPTo/mfap-installation-guide.git
      ```
 
-     **Obs: Em caso de problemas com certificado, utilize o comando: `git -c http.sslVerify=false clone https://git.rnp.br/GT-AMPTo/roteiro-instalacao.git`**  
+     **Obs: Em caso de problemas com certificado, utilize o comando: `git -c http.sslVerify=false clone https://git.rnp.br/GT-AMPTo/mfap-installation-guide.git`**  
 
 1.   Dentro do diretório baixado do git,  acesse o diretório `scripts`. Este será nosso diretório base para execução dos próximos passos.
 
