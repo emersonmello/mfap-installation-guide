@@ -7,7 +7,7 @@ If you want to consume that service from another application (a web admin interf
 
 ## Endpoint `removeSecondFactor`
 
-To consume the service, a GET request is needed. The authentication protocol used is of the type "Basic", so you need to provide a username and password. They are the same you provided when installing the MfaProvider (username and password for the REST endpoints).
+To consume the service, a GET request is needed. The authentication protocol used is of the type "Basic", so you need to provide a username and password. They're the same ones you've provided when installing the MfaProvider (username and password for the REST endpoints).
 
 The endpoint address is: ```$host/mfa/resource/remove/$username```
 

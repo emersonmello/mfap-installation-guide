@@ -10,7 +10,7 @@ In order to implement a new factor, it is necessary to make changes in the MfaPr
 1) Create a model class for the new Factor, with the necessary attributes to be stored in the database.
    
      - The class has to be created in the ``br.rnp.factor`` package
-       <br> ex: ``br.rnp.factor.TOTPFactor.java``
+       <br> e.g.: ``br.rnp.factor.TOTPFactor.java``
 
 2) Edit the enum: ``br.rnp.modelo.enumerations.TipoAutenticacao.java`` and add a new entry containing the information of the new factor.
 

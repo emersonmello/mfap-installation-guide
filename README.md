@@ -1,13 +1,13 @@
 # Multi-factor installation guide
 
-This repository presents a guide to install a comprehensive and open source solution (available at https://git.rnp.br/GT-AMPTo/MfaProvider) to offer multi-factor authentication for Shibboleth Identity Providers (version 3.3.1).
+This repository presents a guide to install a comprehensive and open-source solution (available at https://git.rnp.br/GT-AMPTo/MfaProvider) to offer multi-factor authentication for Shibboleth Identity Providers (version 3.3.1).
 
 Based on the [Multi-factor Authentication Profile standard (REFEDS MFA Profile)](https://refeds.org/profile/mfa), our solution [(MFaProvider)](https://git.rnp.br/GT-AMPTo/MfaProvider) provides three extra second factors:
 
 - One-Time Password - TOTP standard 
   - you can use Google Authenticator
 - FIDO2 (WebAuthN)
-  - you can use physical token such as Yubikey
+  - you can use physical tokens such as Yubikey
 - Phone Prompt - Mobile App developed by us
   - [Android source code](https://git.rnp.br/GT-AMPTo/App2Ampto) 
   - [iOS source code](https://git.rnp.br/GT-AMPTo/amptoios)

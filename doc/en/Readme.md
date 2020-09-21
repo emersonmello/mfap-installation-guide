@@ -63,7 +63,7 @@ Follow the next steps in order to configure Google Firebase Cloud Messaging (FCM
 
 ### Host settings 
 
-In order to the IdP be able to make requests to its own address, it is necessary to adjust the `/etc/hosts` configuration.
+In order for the IdP to be able to make requests to its address, it is necessary to adjust the `/etc/hosts` configuration.
 
 1.  Edit the `/etc/hosts` file:
 ```bash
@@ -149,7 +149,7 @@ When you finish the installation, check the section [Tests](#tests) to verify if
 
 ### Advanced Installation
 
-In the scripts dir, edit the `config.ini` file as the following:
+In the scripts dir, edit the `config.ini` file like the following:
 
 a) In case you want to change `pathnames`:
 

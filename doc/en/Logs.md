@@ -1,7 +1,7 @@
 # Log Management Manual
 
 The MfaProvider allows log tracking to identify actions related to registration, what factor was used during the authentication, and other relevant information. 
-A part of this solution is as a module within the context of the Shibboleth-Idp application and another part is in a context-specific to the MfaProvider application. Below is the relevant information for consulting the logs.
+Below is the relevant information for consulting the logs.
 
 ## MfaProvider module - IdP
 

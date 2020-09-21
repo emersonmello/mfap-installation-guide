@@ -37,7 +37,7 @@ restsecurity.password=####
 
 ```
 
-5. To execute the application, in the menu click on `Gradle Tasks > conta > gretty > tomcatStart`
+5. To execute the application, click on `Gradle Tasks > conta > gretty > tomcatStart` in the menu.
 
 6. With the application running, generate the SP metadata file by accessing the URL `https://localhost:9443/conta/saml/web/metadata/getNewMetaData`, or using `curl` in the command line: `curl -X GET --user '%s:%s' https://localhost:9443/conta/saml/web/metadata/getNewMetaData --insecure > sp-metadata.xml`
 
@@ -79,4 +79,4 @@ restsecurity.password=####
 
 With the application running (item 5 from the section [Importing the project to Eclipse](###importing-the-project-to-eclipse)), visit the URL `https://localhost:9443/conta` from the browser.
 
-You'll see the IdP login page and after you authenticate you'll be redirected to the URL `https://localhost:9443/conta/mfa/cadastrar/dashboard` listing all the available options for the second factor.
+You'll see the IdP login page, and after authentication, you'll be redirected to the URL `https://localhost:9443/conta/mfa/cadastrar/dashboard` listing all the available options for the second factor.
