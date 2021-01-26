@@ -51,6 +51,7 @@ Based on the [Multi-factor Authentication Profile standard (REFEDS MFA Profile)]
 ## Authors
 - [Emerson Ribeiro de Mello](https://github.com/emersonmello) - Federal Institute of Santa Catarina (IFSC)
 - [Carlos Eduardo da Silva](https://www.researchgate.net/profile/Carlos_Da_Silva6) - Sheffield Hallam University
+- [Felipe Cardoso](https://github.com/fpcardoso) - Federal Institute of Santa Catarina (IFSC)
 - [Michelle Silva Wangham](https://www.researchgate.net/profile/Michelle_Wangham)  - Universidade do Vale do Itajaí (UNIVALI)
 - Samuel Bristot Loli - Federal Institute of Santa Catarina (IFSC)
 - [Shirlei Aparecida Chaves](https://github.com/shirlei) - Federal Institute of Santa Catarina (IFSC)
