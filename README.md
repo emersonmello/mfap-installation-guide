@@ -47,13 +47,19 @@ Based on the [Multi-factor Authentication Profile standard (REFEDS MFA Profile)]
   - Required if you want to use the Phone Prompt as a second authentication factor
 
 
+## Publications
+
+- Ribeiro de Mello, E., Silva Wangham, M., Bristot Loli, S. et al. **Multi-factor authentication for shibboleth identity providers**. J Internet Serv Appl 11, 8 (2020). https://doi.org/10.1186/s13174-020-00128-1. https://rdcu.be/cbzPJ
+- MELLO, E. R.; WANGHAM, M. S. ; LOLI, S. B. ; SILVA, C. E. ; SILVA, G. C. **Autenticação multi-fator em provedores de identidade Shibboleth**. In: Simpósio Brasileiro em Segurança da Informação e de Sistemas Computacionais (SBSeg), 2018, Natal. Anais do Simpósio Brasileiro em Segurança da Informação e de Sistemas Computacionais (SBSeg). Porto Alegre: SBC, 2018. p. 85-98. [download](https://wordpress.sj.ifsc.edu.br/gtampto/wp-content/uploads/sites/21/2017/05/mello-gt-ampto-sbseg2018.pdf)
+- SILVA, G. C. ; SILVA, C. E. ; MELLO, E. R. ; WANGHAM, M. S. ; LOLI, S. B. **Transposição da Autenticação Federada para uma Solução de Controle de Acesso Físico no contexto da Internet das Coisas**. In: Salão de Ferramentas do Simpósio Brasileiro em Segurança da Informação e de Sistemas Computacionais (SBSeg), 2018, Natal. Anais Estendidos do Simpósio Brasileiro em Segurança da Informação e de Sistemas Computacionais (SBSeg). Porto Alegre: SBC, 2018. p. 73-80. [download](https://wordpress.sj.ifsc.edu.br/gtampto/wp-content/uploads/sites/21/2017/05/gtampto-iot-sbseg2018.pdf)
+- SILVA, G. C.; SILVA, C.E. **Uma Proposta de Arquitetura para Autorização Federada com Internet das Coisas**. In Workshop de Trabalhos de Iniciação Científica e de Graduação (WTICG) do Simpósio Brasileiro em Segurança da Informação e de Sistemas Computacionais (SBSeg), 2017, Brasília.
 
 ## Authors
 - [Emerson Ribeiro de Mello](https://github.com/emersonmello) - Federal Institute of Santa Catarina (IFSC)
 - [Carlos Eduardo da Silva](https://www.researchgate.net/profile/Carlos_Da_Silva6) - Sheffield Hallam University
-- [Felipe Cardoso](https://github.com/fpcardoso) - Federal Institute of Santa Catarina (IFSC)
 - [Michelle Silva Wangham](https://www.researchgate.net/profile/Michelle_Wangham)  - Universidade do Vale do Itajaí (UNIVALI)
 - Samuel Bristot Loli - Federal Institute of Santa Catarina (IFSC)
 - [Shirlei Aparecida Chaves](https://github.com/shirlei) - Federal Institute of Santa Catarina (IFSC)
 - [Gabriela Cavalcanti da Silva](https://github.com/gabicavalcante) - Federal University of Rio Grande do Norte
 - Bruno Bristot Loli - CIASC
+- [Felipe Cardoso](https://github.com/fpcardoso) - Federal Institute of Santa Catarina (IFSC)
